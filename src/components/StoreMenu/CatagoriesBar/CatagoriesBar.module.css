@@ -1,0 +1,70 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0px 24px 16px 24px;
+    background-color: #ffffffff;
+       position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.MainContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    width: 100%;
+    position: relative;
+}
+.catbnconatiner{
+    display: flex;  
+    overflow-x: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+    white-space: nowrap;
+}
+
+.catbnconatiner::-webkit-scrollbar {
+    display: none;
+}
+
+.catbtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:13px 12px;
+    background-color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    font-family: var(--lato);
+    color: #8C8C8C;
+    cursor: pointer;
+    text-transform: uppercase;
+    border-bottom: 1px solid #E7E7E7;
+}
+.catbtn.active {
+    color: #4B3827;
+    font-family: var(--lexend);
+    font-weight: 500;
+    border-bottom: 2px solid #D8A05A;
+}
+
+.countbadge{
+    position: absolute;
+    right: -25px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to left, #ffffff 70%, rgba(255,255,255,0));
+    
+}
+
+.countbadge p{
+    background-color: #6C7A5F;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 8px 0 0 8px;
+    font-size: 14px;
+    margin: 0;
+}

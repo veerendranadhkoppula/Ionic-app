@@ -1,0 +1,178 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0px 24px 24px 24px;
+}
+.MainContainer {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  justify-content: left;
+  flex-direction: column;
+}
+.Top {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+}
+.TopLeft {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+.TopLeft p {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4b3827;
+  margin: 0;
+}
+.TopLeft h5 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #6c7a5f;
+  margin: 0;
+}
+.TopRight {
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+}
+.TopRight p {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4b3827;
+  margin: 0;
+}
+.TopRight svg {
+  cursor: pointer;
+}
+.Bottom {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 8px;
+  background-color: #8c8c8c33;
+  border-radius: 8px;
+}
+.paydetails {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0px 9px;
+}
+.ItemsTotal,
+.charges,
+.discount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.ItemsTotal h5,
+.charges h5,
+.discount h5 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+.ItemsTotal h4,
+.charges h4,
+.discount h4 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+.line {
+  border: 1px solid #8c8c8c33;
+  width: 100%;
+}
+.totalpayPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px 9px;
+}
+.totalpayPrice h4 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4b3827;
+  margin: 0;
+}
+.totalpayPrice h5 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4b3827;
+  margin: 0;
+}
+.anotherline {
+  border: 1px solid #8c8c8c33;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.arrow {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+.BottomWrapper {
+  overflow: hidden;
+  transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.Bottom {
+   overflow: hidden;
+  transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.anotherline {
+  transition: opacity 0.3s ease;
+}
+
+.CuponsApplied{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-direction: row;
+}
+.CouponAppliedHead {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 4px;
+}
+.CouponAppliedHead h5{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #D0892F;
+  margin: 0;
+}
+.CuponsApplied h4{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #D0892F;
+  margin: 0;
+}

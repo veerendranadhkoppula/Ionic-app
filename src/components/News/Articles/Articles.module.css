@@ -1,0 +1,238 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 0px 24px 100px 24px;
+}
+.MainContainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+.Top{
+    display: flex;
+    justify-content: left;
+}
+.Top h3{
+    font-size: 16px;
+    color: #4B3827;
+    font-weight: 500;
+    font-family: var(--lato);
+    margin: 0;
+}
+.Bottom{
+    display: flex;
+    gap: 24px;
+    justify-content: left;
+    flex-direction: column;
+    width: 100%;
+}
+.articleCard{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 11.5px;
+    flex-direction: row;
+    background:transparent;
+    width: 100%;
+}
+.leftimg{
+    display: flex;
+    justify-content: left;
+    /* width: 100%; */
+}
+.leftimg img{
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    min-width: 149px;
+    max-height: 138px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.rightContent{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+.rightContentTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}   
+.badge{
+    display: flex;
+    justify-content: left;
+  
+}
+.badge p{
+    font-size: 12px;
+    color: #6C7A5F;
+    font-weight: 600;
+    font-family: var(--lato);
+    margin: 0;
+    background-color: #6C7A5F26;
+    border-radius: 4px;
+    padding: 3px 6px;
+}
+.title{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+   
+}
+.title h3{
+    font-size: 14px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+/* Expandable title styles (same look as existing title) */
+.ExpandableTitle{ position: relative; width: 100%; }
+.titlePreview{ transition: opacity 260ms ease, max-height 260ms ease; overflow: hidden; }
+.titlePreview.hidden{ opacity: 0; max-height: 0; }
+.ellipsis{ cursor: pointer; color: inherit; padding-left: 6px; }
+.fullTitle{ max-height: 0; opacity: 0; overflow: hidden; transition: max-height 320ms ease, opacity 320ms ease; }
+.fullTitle.open{ max-height: 400px; opacity: 1; }
+.collapseButton{ background: transparent; border: none; cursor: pointer; color: inherit; font-size: 18px; padding: 4px 0 0 8px; }
+.title p{
+    font-size: 12px;
+    color: #8C8C8C;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+     max-width: 166px;
+
+}
+.rightContentBottom{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+.rightContentBottomLeft{
+    display: flex;
+    justify-content: left;
+}
+.rightContentBottomLeft p{
+    font-size: 12px;
+    color: #8C8C8C;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.rightContentBottomRight{
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+    gap: 1px;
+    align-items: center;
+    cursor: pointer;
+}
+.rightContentBottomRight p{
+    font-size: 12px;
+    color: #6C7A5F;
+    font-weight: 500;
+    font-family: var(--lato);
+    margin: 0;
+}
+
+/* ── Skeleton ──────────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeletonBase {
+  background: linear-gradient(90deg, #efefef 25%, #e0e0e0 50%, #efefef 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+.skeletonCard {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 11.5px;
+  flex-direction: row;
+  width: 100%;
+}
+
+.skeletonImg {
+  min-width: 149px;
+  max-width: 149px;
+  height: 138px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.skeletonRight {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
+.skeletonRightTop {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeletonBadge {
+  height: 20px;
+  width: 60px;
+  border-radius: 4px;
+}
+
+.skeletonTitleLine {
+  height: 14px;
+  width: 90%;
+}
+
+.skeletonSubLine {
+  height: 12px;
+  width: 70%;
+}
+
+.skeletonRightBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skeletonMinutes {
+  height: 12px;
+  width: 50px;
+}
+
+.skeletonReadBtn {
+  height: 12px;
+  width: 70px;
+}
+
+/* View more link shown when there are more than the visible batch */
+.viewMoreContainer{
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+.viewMore{
+  font-family: var(--lato);
+  font-size: 14px;
+  font-weight: 400;
+  color: #6C7A5F; /* match orders style */
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 0;
+}

@@ -1,0 +1,168 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 430px;
+  background-color: #ffffff;
+
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+
+  overflow: hidden;
+
+  transform: translateY(100%);
+  animation: slideUp 0.3s ease forwards;
+}
+.close {
+  animation: slideDown 0.3s ease forwards;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease forwards;
+}
+.overlayClose {
+  animation: fadeOut 0.3s ease forwards;
+}
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 9px;
+}
+.Top {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: white;
+
+  display: flex;
+  justify-content: left;
+  padding: 32px 22px 15px 22px;
+}
+.Top h3{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.Botttom {
+  flex: 1;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 0px 24px 24px 24px;
+}
+.Botttom::-webkit-scrollbar {
+  display: none;
+}
+.AddAdressCoantainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+    padding: 7px;
+    align-items: center;
+    border: 1px solid #6C7A5F;
+    border-radius: 8px;
+}
+.AddAdressCoantainer p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #6C7A5F;
+    font-family: var(--lato);
+    margin: 0;
+}
+.AddAdressCoantainer svg{
+    cursor: pointer;
+}
+.AdressesContainers{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+}
+.AdressCard{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 12px;
+    border: 1px solid #4B382740;
+    border-radius: 8px;
+}
+.AdressCard h3{
+    font-size: 14px;
+    color: #6C7A5F;
+    font-weight: 700;
+    font-family: var(--lato);
+    margin: 0;
+}
+.AdressCard h4{
+     font-size: 12px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+
+}
+.AdressCard p{
+     font-size: 12px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.AdressCard h5{
+        font-size: 12px;
+        color: #4B3827;
+        font-weight: 400;
+        font-family: var(--lato);
+        margin: 0;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  to {
+    background: rgba(0, 0, 0, 0);
+  }
+}

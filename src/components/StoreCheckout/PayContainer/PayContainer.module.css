@@ -1,0 +1,45 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #6C7A5F;
+    padding: 28px 62px 28px 40px;
+}
+.MainCoantiner{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+}
+.left{
+    display: flex;
+    justify-content: left;
+  
+}
+.left h4{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFFFFF;
+    margin: 0;
+}
+.right{
+    display: flex;
+    justify-content: right;
+}
+.right h4{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* muted/disabled state for the sticky pay bar */
+.disabled {
+    opacity: 0.45;
+    filter: grayscale(20%);
+    transition: opacity 200ms ease, filter 200ms ease;
+}

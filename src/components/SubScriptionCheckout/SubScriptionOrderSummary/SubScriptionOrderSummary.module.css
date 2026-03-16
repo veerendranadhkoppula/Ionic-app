@@ -1,0 +1,126 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffffff;
+    padding: 24px 24px 32px 24px;
+}
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 32px;
+}
+.EmailContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 16px;
+}
+.EmailTitle{
+    display: flex;
+    justify-content: left;
+}
+.EmailTitle h3{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.useremail{
+    display: flex;
+    background-color: #F5F5F5;
+    padding: 17px 16px;
+    width: 100%;
+    border-radius: 8px;
+    justify-content: left;
+}
+.useremail p{
+    color: #8C8C8C;
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    margin: 0;
+}
+.OrderSummaryContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 24px;
+}
+.Heading{
+    display: flex;
+    justify-content: left;
+}
+.Heading h3{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.OrderDetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 16px;
+}
+.Item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.ItemName{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+     gap: 4px;
+
+}
+.ItemName p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+    max-width: 150px;
+}
+.ItemQuantity p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ItemPrice{
+    display: flex;
+    justify-content: right;
+}
+.ItemName h4{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ItemPrice p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #8C8C8C;
+    opacity: 25%;
+    margin: 0;
+}

@@ -1,0 +1,21 @@
+.main{
+    display: flex;
+    background-color: #ffffff;
+    padding: 0px 0px 130px 24px;
+    width: 100%;
+
+}
+.TagLineContainer{
+    display: flex;
+   justify-content: left;
+    width: 100%;
+    /* max-width: 183px; */
+}
+.TagLineContainer h3{
+    font-family: var(--lexend);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 120%;
+    color: #6C7A5F80;
+    margin: 0;
+}

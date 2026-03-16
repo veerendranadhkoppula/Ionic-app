@@ -1,0 +1,55 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  background-color: #ffffff;
+  padding: 16px 25px 16px 24px;
+}
+
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+
+.TopConatiner {
+  width: 100%;
+}
+.TopConatiner img{
+    width: 100%;
+    max-width: 100%;
+
+}
+.BannerImage {
+  width: 100%;
+  border-radius: 16px;
+  transition: opacity 0.4s ease-in-out;
+}
+
+
+.BottomContainer {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.dot {
+  width: 6px;
+  height: 4px;
+  background-color: #6C7A5F80;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+
+.activeDot {
+  width: 23px;
+  height: 4px;
+  border-radius: 10px;
+  background-color: #6C7A5F;
+}

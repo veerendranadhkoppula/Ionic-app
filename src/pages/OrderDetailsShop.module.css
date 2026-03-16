@@ -1,0 +1,537 @@
+.Top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #6C7A5F;
+  padding: 56px 36px 17px 24px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.TopLeft{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  gap: 4px;
+}
+.TopLeft svg{
+  cursor: pointer;
+}
+.TopLeft h4{
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+.TopRight{
+  display: flex;
+  justify-content: right;
+}
+.TopRight p{
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--lato);
+  margin: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.Footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 21px 22px 21px;
+  background: transparent;
+  flex-direction: row;
+  gap: 8px;
+  background-color: #ffffff;
+
+}
+.ReorderButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #6C7A5F;
+  border-radius: 12px;
+  padding: 10px 10px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  cursor: pointer;
+  flex-direction: row;
+  margin: 0;
+  border:  1px solid #6C7A5F;
+  gap: 4px;
+}
+.InvoiceButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background:#6C7A5F33;
+  border-radius: 12px;
+  padding: 10px 10px;
+  color: #6C7A5F;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+  font-family: var(--lato);
+  cursor: pointer;
+  flex-direction: row;
+  border: 1px solid #6C7A5F33;
+}
+.InvoiceButton p, .ReorderButton p{
+  margin: 0;
+}
+.main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px 32px 24px;
+  background-color: #ffffff;
+  width: 100%;
+
+}
+.MainConatiner{
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+.TopContainer{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #8C8C8C33;
+}
+.OrderIdandStatus, .OrderDetails{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+.OrderId, .OrderDetailsLeft{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-direction: row;
+  gap: 2px;
+}
+.OrderId p, .OrderDetailsLeft p{
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  margin: 0;
+}
+.OrderId h4, .OrderDetailsLeft h4{
+  font-size: 12px;
+  color: #4B3827;
+  font-weight: 400;
+  font-family: var(--lato);
+  margin: 0;
+}
+.OrderStatus, .OrderDetailsRight{
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  flex-direction: row;
+  gap: 4px;
+ 
+}
+.OrderStatus p{
+  font-size: 12px;
+  font-weight: 400;
+  color: #E54842;
+  font-family: var(--lato);
+  margin: 0;
+}
+.OrderDetailsRight p{
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.MiddleContainer{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+}
+.MiddleContainer h3{
+  font-size: 16px;
+  font-weight: 500;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Address{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 12px;
+  border: 1px solid #4B382740;
+  border-radius: 8px;
+}
+.Address h4{
+  font-size: 14px;
+  font-weight: 700;
+  color: #6C7A5F;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Address p{
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Address h5{
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+  max-width: 200px;
+}
+.Address h3{
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.BottomContainer{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+}
+.BottomContainer h3{
+  font-size: 16px;
+  font-weight: 500;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.orderlisting{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px 10px;
+  background-color: #F5F5F5;
+  border-radius: 8px;
+  border: none;
+}
+.Item{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: row;
+
+}
+.Item h4{
+  font-size: 14px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+  max-width: 150px;
+}
+.Item p{
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Item h6{
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.ItemsTotal{
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+.Total{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: row;
+
+}
+.Total h4{
+  font-size: 16px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Total h5{
+  font-size: 16px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.line{
+  width: 100%;
+  height: 1px;
+  background-color: #8C8C8C33;
+}
+.calculationsConatiner{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0px 11px;
+}
+.itemsCoutnmoney, .taxesContainer, .CuponsConatiner{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+.itemsCoutnmoney h4, .taxesContainer h4{
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Cupons{
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 4px;
+
+}
+.Cupons h4, .CuponsConatiner h4{
+  font-size: 12px;
+  font-weight: 400;
+  color: #D0892F;
+  font-family: var(--lato);
+  margin: 0;
+}
+.cancelledStatus p{
+  color: #E54842;
+}
+
+.deliveredStatus p{
+  color: #6C7A5F;
+}
+
+.ongoingStatus p{
+  color: #FFA500;
+}
+
+/* ── Modal shared overlay ── */
+.ModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ── Cancel Order Modal ── */
+.CancelModal {
+  width: 100%;
+  max-width: 320px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 21px 36px;
+  box-sizing: border-box;
+}
+
+.CancelModalTitle {
+  font-family: 'Lato', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #4B3827;
+  margin: 0 0 4px 0;
+  text-align: center;
+}
+
+.CancelModalDesc {
+  width: 215px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #8C8C8C;
+  margin: 0 auto 24px auto;
+  text-align: center;
+}
+
+.CancelModalReasonLabel {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #8C8C8C;
+  margin: 0 0 16px 0;
+  text-align: left;
+}
+
+.CancelReasons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+
+.CancelReasonRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.RadioBtn {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 1px solid #8C8C8C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.RadioBtnSelected {
+  border-color: #687857;
+}
+
+.RadioDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #687857;
+}
+
+.CancelReasonText {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #8C8C8C;
+  margin: 0;
+}
+
+.CancelDisclaimer {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #8C8C8C;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.CancelCTAs {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+}
+
+.CancelNoBtn {
+  padding: 9px 38px;
+  border-radius: 8px;
+  background: rgba(229, 72, 66, 0.2);
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #E54842;
+  cursor: pointer;
+}
+
+.CancelYesBtn {
+  padding: 9px 38px;
+  border-radius: 8px;
+  background: #E54842;
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.CancelYesBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Order Cancelled Success Modal ── */
+.SuccessModal {
+  width: 100%;
+  max-width: 320px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.SuccessModalTitle {
+  font-family: 'Lato', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #4B3827;
+  margin: 0 0 4px 0;
+  text-align: center;
+}
+
+.SuccessModalDesc {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #8C8C8C;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.SuccessDoneBtn {
+  padding: 9px 27px;
+  border-radius: 8px;
+  background: #687857;
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #ffffff;
+  cursor: pointer;
+}

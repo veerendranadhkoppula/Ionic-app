@@ -1,0 +1,645 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffffff;
+}
+.MainConatiner{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 16px;
+    justify-content: left;
+}
+.Top{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+    flex-direction: row;
+    gap: 4px;
+    background-color: #6C7A5F;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 56px 24px 17px 24px;
+}
+.TopRight{
+    display: flex;
+    justify-content: left;
+    
+}
+.TopRight h3{
+    font-family: var(--lato);
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin: 0;
+}
+.Bottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px 24px 40px 24px;
+}
+.OngoingCards, .CompletedCards, .CancelledCards{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: left;
+}
+.OngoingCard{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    padding: 24px 10px;
+}
+.OngoingCardTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+.OngoingCardTopOrderId{
+    display: flex;
+    justify-content: left;
+}
+.OngoingCardTopOrderId p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.spanra{
+    font-weight: 700;
+}
+.OngoingCardTopStatus{
+    display: flex;
+    justify-content: right;
+}
+.OngoingCardTopStatus p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #D0892F;
+    background-color: #D0892F1A;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin: 0;
+}
+.OngoingCardMiddle{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.OngoingCardMiddleTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    
+}
+.OngoingCardMiddleTopByBarista .OngoingCardMiddleTopProdname{
+    display: flex;
+    justify-content: left;
+}
+.OngoingCardMiddleTopByBarista p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.OngoingCardMiddleTopProdname p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OngoingCardMiddleBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.OngoingCardMiddleBottomOtherItems {
+    display: flex;
+    justify-content: left;
+}
+.OngoingCardMiddleBottomOtherItemsCount{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+   gap: 8px;
+}
+.OngoingCardMiddleBottomOtherItems p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+    cursor: pointer;
+}
+.OngoingCardMiddleBottomOtherItemsCount h5{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+
+}
+.OngoingCardMiddleBottomOtherItemsCount p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0px 0px 0px 0px;
+}
+.OngoingCardBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.OngoingCardBottomTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.OngoingCardBottomTopdate{
+    display: flex;
+    justify-content: left;
+}
+.OngoingCardBottomTopdate h4{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OngoingCardBottomTopAmount {
+    display: flex;
+    justify-content: right;
+}
+.OngoingCardBottomTopAmount h4{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OngoingCardBottomBottom button{
+    width: 100%;
+    height: 35px;
+    background-color: #6C7A5F;
+    border: 1px solid #6C7A5F;
+    border-radius: 8px;
+    font-family: var(--lato);
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+
+
+
+.CompletedCard{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    padding: 24px 10px;
+}
+.CompletedCardTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+.CompletedCardTopOrderId{
+    display: flex;
+    justify-content: left;
+}
+.CompletedCardTopOrderId p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.spanra{
+    font-weight: 700;
+}
+.CompletedCardTopStatus{
+    display: flex;
+    justify-content: right;
+}
+.CompletedCardTopStatus p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #47890D;
+    background-color: #47890D26;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin: 0;
+}
+.CompletedCardMiddle{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.CompletedCardMiddleTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    
+}
+.CompletedCardMiddleTopByBarista .CompletedCardMiddleTopProdname{
+    display: flex;
+    justify-content: left;
+}
+.CompletedCardMiddleTopByBarista p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.CompletedCardMiddleTopProdname p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.CompletedCardMiddleBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.CompletedCardMiddleBottomOtherItems {
+    display: flex;
+    justify-content: left;
+}
+.CompletedCardMiddleBottomOtherItemsCount{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+   gap: 8px;
+}
+.CompletedCardMiddleBottomOtherItems p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+    cursor: pointer;
+}
+.CompletedCardMiddleBottomOtherItemsCount h5{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+
+}
+.CompletedCardMiddleBottomOtherItemsCount p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    text-decoration: underline;
+    margin: 8px 0px 0px 0px;
+}
+.CompletedCardBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.CompletedCardBottomTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.CompletedCardBottomTopdate{
+    display: flex;
+    justify-content: left;
+}
+.CompletedCardBottomTopdate h4{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.CompletedCardBottomTopAmount {
+    display: flex;
+    justify-content: right;
+}
+.CompletedCardBottomTopAmount h4{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.CompletedCardBottomBottom button{
+    width: 100%;
+    height: 35px;
+    background-color: #6C7A5F;
+    border: 1px solid #6C7A5F;
+    border-radius: 8px;
+    font-family: var(--lato);
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+}
+
+
+
+.CancelledCard{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    padding: 24px 10px;
+}
+.CancelledCardTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+.CancelledCardTopOrderId{
+    display: flex;
+    justify-content: left;
+}
+.CancelledCardTopOrderId p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.spanra{
+    font-weight: 700;
+}
+.CancelledCardTopStatus{
+    display: flex;
+    justify-content: right;
+}
+.CancelledCardTopStatus p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #E54842;
+    background-color: #E548421A;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin: 0;
+}
+.CancelledCardMiddle{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.CancelledCardCardMiddleTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    
+}
+.CancelledCardMiddleTopByBarista .CancelledCardMiddleTopProdname{
+    display: flex;
+    justify-content: left;
+}
+.CancelledCardMiddleTopByBarista p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.CancelledCardMiddleTopProdname p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.CancelledCardMiddleBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.CancelledCardMiddleBottomOtherItems {
+    display: flex;
+    justify-content: left;
+}
+.CancelledCardMiddleBottomOtherItemsCount{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+   gap: 8px;
+}
+.CancelledCardMiddleBottomOtherItems p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+    cursor: pointer;
+}
+.CancelledCardMiddleBottomOtherItemsCount h5{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+
+}
+.CancelledCardMiddleBottomOtherItemsCount p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 8px 0px 0px 0px;
+}
+.CancelledCardBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.CancelledCardBottomTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.CancelledCardBottomTopdate{
+    display: flex;
+    justify-content: left;
+}
+.CancelledCardBottomTopdate h4{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.CancelledCardBottomTopAmount {
+    display: flex;
+    justify-content: right;
+}
+.CancelledCardBottomTopAmount h4{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.CancelledCardBottomBottom button{
+    width: 100%;
+    height: 35px;
+    background-color: #6C7A5F;
+    border: 1px solid #6C7A5F;
+    border-radius: 8px;
+    font-family: var(--lato);
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+}
+.CancelledCardBottomBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 6px;
+}
+.CancelledRefundstatus{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+.CancelledRefundstatus p{
+    font-family: var(--lato);
+    font-size: 12px;
+    font-weight: 400;
+    color: #6C7A5F;
+    margin: 0;
+}
+/* RATING SECTION */
+
+.RatingContainer {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.RatingTopLine {
+  width: 100%;
+  height: 1px;
+  background-color: #8C8C8C33;
+}
+
+.RatingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.RatingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.RatingBlock p {
+  font-family: var(--lato);
+  font-size: 12px;
+  color: #8C8C8C;
+  margin: 0;
+}
+
+.RatingDivider {
+  width: 1px;
+  height: 40px;
+  background-color: #8C8C8C33;
+}
+
+.Stars {
+  display: flex;
+  gap: 6px;
+}
+
+.starWrapper {
+  cursor: pointer;
+}
+.moreText{
+  font-family: var(--lato);
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8C8C;
+  margin: 0;
+  padding-top:5px;
+  padding-left: 6px;
+  text-decoration: underline;
+}
+
+/* View more link shown when there are more than the visible batch */
+.viewMoreContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+.viewMore{
+    font-family: var(--lato);
+    font-size: 14px;
+    font-weight: 400;
+    color: #6C7A5F; /* updated per request */
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 0;
+}

@@ -1,0 +1,219 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+ 
+  z-index: 1000;
+}
+
+
+.overlayFooter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 2147483647;
+}
+.sheet {
+  width: 100%;
+  max-height: 430px;
+  background: #ffffff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.28s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+
+.header {
+  padding: 31px 24px 16px 24px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4B3827;
+  font-family: var(--lato);
+}
+
+
+.content {
+  padding: 0 24px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputGroup label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6c6c6c;
+}
+
+
+
+select {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius:8px;
+  border: 1px solid #4B382740;
+  font-size: 12px;
+  background: #ffffff;
+  color: #4B3827;
+  font-family: var(--lato);
+  font-weight: 400;
+  outline: none;
+  box-sizing: border-box;
+}
+.addns{
+    width: 100%;
+  padding: 11px 16px;
+  border-radius:8px;
+  border: 1px solid #4B382740;
+  font-size: 12px;
+  background: #ffffff;
+  color: #4B3827;
+  font-family: var(--lato);
+  font-weight: 400;
+  outline: none;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+input:disabled {
+  background: #ffffff;
+  color: #4B3827;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  border: 1px solid #4B382740;
+}
+
+
+
+
+
+.row {
+  display: flex;
+  gap: 18px;
+}
+
+.row input,
+.row select {
+  flex: 1;
+}
+
+
+.footer {
+  padding: 16px 24px 20px 24px;
+  background: #ffffff;
+  border-top: 1px solid #f1f1f1;
+}
+
+.footer button {
+  width: 100%;
+  padding: 10px 11px;
+  border-radius: 12px;
+  border: none;
+  background: #6C7A5F;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: var(--lato);
+  font-weight: 500;
+  cursor: pointer;
+}
+.floatingInput {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.floatingLabel {
+  position: absolute;
+  top: 4.4px;
+  left: 16px;
+  font-size: 12px;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  font-weight: 400;
+  background: #ffffff;
+  padding: 0 0px;
+}
+
+.floatingInput input {
+  padding-top: 20px; 
+}
+.saveAsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.saveAsSection p {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6c6c6c;
+  margin: 0;
+  font-family: var(--lato);
+}
+
+.saveOptions {
+  display: flex;
+  gap: 12px;
+}
+
+.saveOption {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #D6D6D6;
+  background: #F5F5F5;
+  font-size: 13px;
+  font-family: var(--lato);
+  font-weight: 500;
+  color: #7A7A7A;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saveOption.active {
+  background: #6C7A5F40; 
+  border: 1px solid #6C7A5F;
+  color: #6C7A5F;
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+}
+.disabledButton {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

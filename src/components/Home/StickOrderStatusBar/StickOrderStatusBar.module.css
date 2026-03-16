@@ -1,0 +1,254 @@
+.main{
+    position: fixed;
+    bottom: calc(100px + env(safe-area-inset-bottom));
+    left: 0;
+    width: 100%;
+    z-index: 9;
+    padding: 0 16px 6px;
+}
+.MainContainer{
+    display: flex;
+    justify-content: left;
+    width: 100%;
+    gap: 15px;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 11px 20px 15px 16px;
+    border-radius: 4px;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.10);
+}
+.top{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+}
+.TopLeft{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.TopLeft h3{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #4B3827;
+    margin: 0;
+}
+.TopLeft h4{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+.TopRight{
+    position: relative;
+    display: flex;
+    justify-content: right;
+    cursor: pointer;
+}
+
+.dots{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown{
+    position: absolute;
+    top: 0px;
+    right: 25px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    padding: 13px 9px 11px 10px;
+    width: 139px;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown p{
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    cursor: pointer;
+}
+
+.dropdown p:first-child {
+    padding-bottom: 11px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+
+.dropdown p:last-child {
+    padding-top: 11px;
+}
+
+.dropdown p:hover{
+    background-color: transparent;
+    opacity: 0.7;
+}
+
+/* Muted state — shown when cancel is not allowed (already accepted) */
+.menuItemMuted {
+    opacity: 0.35;
+    cursor: not-allowed !important;
+}
+
+.bottom {
+    width: 100%;
+}
+
+/* ── Progress tracker ────────────────────────────────────────────────── */
+
+/* Outer container — relative so children can be absolutely positioned */
+.progressTrack {
+    position: relative;
+    width: 100%;
+    height: 22px;          /* tall enough to contain the tick circle */
+    display: flex;
+    align-items: center;
+}
+
+/* Full-width grey base track */
+.trackBase {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #8C8C8C33;
+    border-radius: 99px;
+}
+
+/* Green fill — grows from left; transition animates the width change */
+.trackFill {
+    position: absolute;
+    left: 0;
+    height: 4px;
+    background-color: #6C7A5F;
+    border-radius: 99px;
+    transition: width 0.55s ease;
+}
+
+/* Fixed dots — 3 nodes at 0 %, 50 %, 100 % of the track */
+.fixedDot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #6C7A5F80;
+    transition: background-color 0.4s ease;
+}
+
+/* Each dot pinned to its position, centred on the track line */
+.dot1 { left: 0%;   transform: translateX(0);      }  /* flush left  */
+.dot2 { left: 50%;  transform: translateX(-50%);   }
+.dot3 { left: 100%; transform: translateX(-100%);  }  /* flush right */
+
+/* Dot turns green once the tick has reached or passed it */
+.dotPassed {
+    background-color: #6C7A5F;
+}
+
+/* Floating tick circle — slides along the track */
+.tickCircle {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #6C7A5F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.55s ease;
+    z-index: 2;
+    /* translateX is handled inline per-step to avoid clipping at edges */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Cancel order popup ───────────────────────────────────────────────── */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px 18px;
+    width: 311px;
+    display: flex;
+    flex-direction: column;
+    gap: 27px;
+}
+
+.popupTexts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    text-align: center;
+}
+
+.popupTitle {
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 14px;
+    color: #4B3827;
+    margin: 0;
+}
+
+.popupSubtitle {
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+
+.popupButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    justify-content: center;
+}
+
+.btnNo {
+    font-family: var(--lato);
+    font-weight: 700;
+    font-size: 12px;
+    color: #E54842;
+    background: #E5484233;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 34px;
+    cursor: pointer;
+}
+
+.btnYes {
+    font-family: var(--lato);
+    font-weight: 700;
+    font-size: 12px;
+    color: #ffffff;
+    background: #E54842;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 33px;
+    cursor: pointer;
+}

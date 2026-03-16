@@ -1,0 +1,40 @@
+.container {
+  --background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+}
+
+.description {
+  color: #666;
+  margin: 0 0 24px 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Dev reset button is hidden by default; shown only when the component receives showReset */
+.devReset {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #fff;
+  background: #d9534f;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+}

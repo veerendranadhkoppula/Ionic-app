@@ -1,0 +1,402 @@
+.Top{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  background-color: #6C7A5F;
+  padding: 56px 36px 17px 24px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.Top{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  gap: 4px;
+}
+.Top svg{
+  cursor: pointer;
+}
+.Top h4{
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 24px;
+}
+.maincontainer{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+   justify-content: left;
+}
+.ActiveSubscriptions{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: left;
+}
+.ActiveSubscriptions h3{
+    color: #4B3827;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ActiveSubscriptionsCards{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: left;
+    width: 100%;
+}
+.ActiveSubCard{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    padding: 15px 18px;
+    background-color: #F5F5F5;
+    border-radius:8px;
+
+}
+.ActiveSubCardTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+}
+.ActiveSubdetails{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+.ActiveSubdetailsLeft{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 4px;
+}
+.ActiveSubdetailsLeft h4{
+    color: #4B3827;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ActiveSubdetailsLeft p{
+    color: #6C7A5F;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ActiveSubdetailsLeft span{
+    color: #4B3827;
+    font-weight: 700;
+}
+.ActiveSubdetailsRight p{
+    color: #47890D;
+    background-color: #47890D26;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+.activesubprodname{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.activesubprodname p{
+    color: #8C8C8C;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.activesubprodname h3{
+    color: #4B3827;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.activesubitem{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.activesubitem p{
+    color: #8C8C8C;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.activesubitem h4{
+    color: #4B3827;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ActiveSubCardBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.ActiveSubCardBottom p{
+    color: #4B3827;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ctaforviewordernadcancel{
+    display: flex;
+    justify-content: center;
+ align-items: center;
+   padding: 8px 12px;
+   background-color: #6C7A5F;
+   border: 1px solid #6C7A5F;
+   font-size: 16px;
+   color: #FFFFFF;
+    font-weight: 500;
+    font-family: var(--lato);
+    cursor: pointer;
+    border-radius: 8px;
+}
+.PastSubscriptions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.PastSubscriptions h3 {
+  color: #4B3827;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+
+.PastSubscriptionsCards {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.PastSubCard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding: 15px 18px;
+  background-color: #F5F5F5;
+  border-radius: 8px;
+}
+
+.PastSubCardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.PastSubdetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #8C8C8C33;
+}
+
+.PastSubdetailsLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.PastSubdetailsLeft h4 {
+  color: #4B3827;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+  font-family: var(--lato);
+}
+
+.PastSubdetailsLeft span {
+  font-weight: 700;
+}
+
+.PastSubdetailsLeft p {
+  color: #6C7A5F;
+  font-size: 12px;
+  margin: 0;
+  font-family: var(--lato);
+  font-weight: 400;
+}
+
+.PastSubdetailsRight p {
+  color: #E54842;
+  background-color: #E548421A;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  margin: 0;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.pastsubprodname,
+.pastsubitem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pastsubprodname p,
+.pastsubitem p {
+  color: #8C8C8C;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  margin: 0;
+}
+
+.pastsubprodname h3 {
+  font-size: 12px;
+  color:#4B3827;
+  font-family: var(--lato);
+  font-weight: 400;
+  margin: 0;
+}
+
+.pastsubitem h4 {
+  font-size: 14px;
+  color: #4B3827;
+  font-family: var(--lato);
+  font-weight: 400;
+  margin: 0;
+}
+
+.PastSubCardBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.PastSubCardBottom p {
+  font-size: 12px;
+  margin: 0;
+  color: #4B3827;
+  font-family: var(--lato);
+  font-weight: 400;
+}
+
+.ctaforvieworder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #6C7A5F;
+  border: 1px solid #6C7A5F;
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--lato);
+  border-radius: 8px;
+}
+
+/* ── Cancel Subscription Modal ── */
+.ModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.CancelModal {
+  width: calc(100% - 48px);
+  max-width: 270px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 25px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.CancelModalTitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+.CancelModalBody {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  margin: 0 0 16px 0;
+  text-align: center;
+  line-height: 1.5;
+}
+.CancelModalButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  width: 100%;
+}
+.CancelModalCancelBtn {
+  flex: 1;
+  border-radius: 8px;
+  background-color: rgba(110, 126, 87, 0.20);
+  border: none;
+  padding: 7px 24px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6E7E57;
+  font-family: var(--lato);
+  cursor: pointer;
+}
+.CancelModalKeepBtn {
+  flex: 1;
+  border-radius: 8px;
+  background-color: #6E7E57;
+  border: none;
+  padding: 7px 24px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-family: var(--lato);
+  cursor: pointer;
+}
+.CancelModalKeepBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

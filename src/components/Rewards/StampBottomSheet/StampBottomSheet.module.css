@@ -1,0 +1,163 @@
+.main {
+  display: flex;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  background-color: #ffffff;
+  padding: 20px 24px calc(51px + env(safe-area-inset-bottom)) 24px;
+
+  max-height: 80vh;
+  border-radius: 12px 12px 0 0;
+  z-index: 1000;
+
+  transform: translateY(100%);
+  animation: slideUp 0.3s ease forwards;
+
+  overflow-y: auto;
+}
+.close {
+  animation: slideDown 0.3s ease forwards;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+
+  animation: fadeIn 0.3s ease forwards;
+}
+.backdropClose {
+  animation: fadeOut 0.3s ease forwards;
+}
+.MainConatiner{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+.TopConatiner{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.TopConatinerLeft{
+    display: flex;
+    justify-content: left;
+}
+.TopConatinerLeft h3{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 14px;
+    color: #4B3827;
+    margin: 0;
+
+}
+.TopConatinerRight{
+    display: flex;
+    justify-content: right;
+
+}
+.BottomConatiner{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #8C8C8C33;
+}
+.One, .Two, .Three, .Four{
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+
+    flex-direction: row;
+}
+.OneLeft, .TwoLeft, .ThreeLeft, .FourLeft{
+    display: flex;
+    justify-content: left;
+    
+}
+.OneLeft img, .TwoLeft img, .ThreeLeft img, .FourLeft img{
+    max-width: 32px;
+    max-height: 32px;
+    width: 100%;
+    height: 100%;
+
+}
+.OneRight, .TwoRight, .ThreeRight, .FourRight{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.OneRight h3, .TwoRight h3, .ThreeRight h3, .FourRight h3{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 14px;
+    color: #4B3827;
+    margin: 0;
+}
+.OneRight p, .TwoRight p, .ThreeRight p, .FourRight p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    max-width: 250px;
+    margin: 0;
+}
+.note{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 10px;
+    color: #8C8C8C;
+    margin: 0;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  to {
+    background: rgba(0, 0, 0, 0);
+  }
+}

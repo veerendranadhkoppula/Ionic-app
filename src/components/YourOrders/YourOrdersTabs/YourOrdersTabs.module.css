@@ -1,0 +1,35 @@
+.tabsContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 0px 24px;
+    
+}
+.Maintabs{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 24px;
+    width: 100%;
+    border-bottom: 1px solid #E7E7E7;
+    
+}
+.Maintabs button{
+    background: #ffffff;
+    border: none;
+    font-size: 14px;
+    font-weight: 300;
+    color: #8C8C8C;
+    font-family: var(--lexend);
+    cursor: pointer;
+    padding: 12px 33px;
+    position: relative;
+}
+.Maintabs button.active{
+    color: #4B3827;
+    font-weight: 500;
+    border-bottom: 2px solid #D8A05A;
+}

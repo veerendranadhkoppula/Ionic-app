@@ -1,0 +1,241 @@
+.main{
+    display: flex;
+    justify-content: left;
+   
+    width: 100%;
+    background-color: #ffffffff;
+    padding: 0px 24px 32px 24px;   
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 16px;
+    width: 100%;
+}
+.Heading{
+    display: flex;
+    justify-content: left;
+}
+.Heading h4{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #4b3827;
+    margin: 0;
+}
+.CuponsCoinsContainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+}
+.CuponsCoinsContainer h6{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 8px 0px 0px 14px;
+}
+.CuponsContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 17px 16px;
+    border: 1px solid #8C8C8C66;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.CoinsContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding:8px 16px;
+    border: 1px solid #8C8C8C66;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.CuponsContainerLeft{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    flex: 1;
+}
+
+.CuponsContainerLeft h4{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+
+.couponInput{
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #2D2D2D;
+    padding: 0;
+}
+
+.couponInput::placeholder{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+}
+
+.couponInput:disabled{
+    color: #2D2D2D;
+    -webkit-text-fill-color: #2D2D2D;
+    opacity: 1;
+}
+
+.inputError{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 11px;
+    color: #A83434;
+    margin: 2px 0 0 0;
+}
+
+.CuponsContainerRight{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.CuponsContainerRight p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #6C7A5F;
+    margin: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    cursor: pointer;
+}
+
+.actionSave{
+    font-family: var(--lato);
+    font-weight: 600;
+    font-size: 12px;
+    color: #6C7A5F;
+    margin: 0;
+    cursor: pointer;
+}
+
+.actionRemove{
+    font-family: var(--lato);
+    font-weight: 600;
+    font-size: 12px;
+    color: #A83434;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* ── Applied coupon chip ─────────────────────────────────────────── */
+.appliedCoupon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.appliedCode {
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #4B3827;
+   
+}
+
+.appliedDiscount {
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 11px;
+    color: #6C7A5F;
+    background-color: #EEF3EA;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+.CoinsContainerLeft{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.CoinsContainerLeft h4{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #4B3827;
+    margin: 0;
+}
+.CoinsContainerLeft p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+.CoinsContainerRight{
+    display: flex;
+    justify-content: right;
+    cursor: pointer;
+
+}
+.customCheckbox {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+}
+
+.customCheckbox input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 24px;
+  width: 24px;
+  border: 1px solid #3C435033;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: 0.2s ease;
+}
+
+.customCheckbox input:checked + .checkmark {
+  background-color: #6C7A5F;
+  border-color: #6C7A5F;
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.customCheckbox input:checked + .checkmark::after {
+  display: block;
+}
+
+.customCheckbox .checkmark::after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

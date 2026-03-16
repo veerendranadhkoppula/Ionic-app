@@ -1,0 +1,418 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffffff;
+    padding: 22px 24px 77px 24px;
+}
+.MainConatiner{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 41px;
+    width: 100%;
+}
+.Top{
+    display: flex;
+    justify-content: left;
+    width: 100%;
+    flex-direction: column;
+    gap: 28px;
+}
+.TopTop{
+    display: flex;
+    justify-content: left;
+    width: 100%;
+    gap: 24px;
+    flex-direction: column;
+    padding-left: 14px;
+}
+.direction{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.direction h4{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.directionLocation{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+.directionLocation p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #6C7A5F;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    margin: 0;
+}
+.direction a{
+    text-decoration: none;
+    color: inherit;
+}
+.PickUpSlot{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.PickUpSlot p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.PickUpSlotTime{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+.PickUpSlotTime p{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OrderStatus{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.OrderStatus p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.OrderStatusBadge{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 7.7px;
+}
+.OrderStatusBadge p{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #6C7A5F;
+  position: relative;
+}
+
+
+.statusDot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(108, 122, 95, 0.3);
+  transform: translate(-50%, -50%);
+  animation: pulse 1.5s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.TopBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #F5F5F5;
+    padding: 12px 10px 12px 14px;
+    border-radius: 12px;
+}
+.TopBottom p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.ServedByDetails{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 230px;
+}
+.ServedByDetails h3{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 600;
+    color: #4B3827;
+    margin: 0;
+}
+.ServedByDetails p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.Bottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+
+}
+.BottomTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #F5F5F5;
+    padding: 15px 11px 15px 15px;
+    border-radius: 12px;
+}
+.OrderDetails{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+    align-items: end;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #0000001A;
+    
+}
+.OrderDetailsLeft{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.OrderDetailsLeft p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.OrderDetailsLeft h4{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OrderDetailsRight{
+    display: flex;
+    justify-content: right;
+
+}
+.OrderDetailsRight h4{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OrderDetailsList{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 16px;
+     border-bottom: 1px solid #0000001A;
+}
+.OrderDetailsListItem{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+}
+.OrderDetailsListItemLeft{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.prodname{
+    display: flex;
+    justify-content: left;
+}
+.prodname h4{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.prodaddons{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+.prodaddons p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.OrderDetailsListItemRight{
+    display: flex;
+    justify-content: right;
+}
+.OrderDetailsListItemRight h4{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OrderCalculations{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 16px;
+     border-bottom: 1px solid #0000001A;
+}
+.ItemsTotal, .Taxes{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+}
+.ItemsTotal p, .Taxes p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.ItemsTotal h5, .Taxes h5{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #8C8C8C;
+    margin: 0;
+}
+.Coupons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+}
+.CouponsLeft{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.CouponsLeft p{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #D0892F;
+    margin: 0;
+}
+.CouponsLeft h5{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #D0892F;
+    margin: 0;
+}
+.CouponsRight{
+    display: flex;
+    justify-content: right;
+}
+.CouponsRight h5{
+    font-size: 12px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #D0892F;
+    margin: 0;
+}
+.OrderTotal{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+}
+.OrderTotal p{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.OrderTotal h5{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    margin: 0;
+}
+.BottomBottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.BottomBottom p{
+    font-size: 14px;
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #4B3827;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    margin: 0;
+}
+.statusCancelled {
+  background-color: #E04F4F;
+}
+
+.statusCancelled::after {
+  background-color: rgba(224, 79, 79, 0.3);
+}
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #0000001A;
+}

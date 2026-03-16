@@ -1,0 +1,89 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #6c7a5f;
+  padding: 48px 26px 48px 26px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.MainConatiner {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  width: 100%;
+}
+.Top {
+  display: flex;
+  justify-content: right;
+  width: 100%;
+  cursor: pointer;
+}
+.BottomTop {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 18px;
+}
+.StatusBadge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.StatusBadge img {
+  width: 100%;
+  height: 100%;
+  max-width: 59px;
+  max-height: 59px;
+}
+.OrderStatusText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.OrderStatusText h3 {
+  font-size: 14px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0;
+}
+.OrderStatusText p {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0;
+}
+.cancelBackground {
+  background-color: #E54842;
+}
+.Bottom{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+}
+.OrderIdorSubscrpitionId{
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  width: 100%;
+  gap: 8px;
+  flex-direction: row;
+}
+.OrderIdorSubscrpitionId p{
+  font-size: 14px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0;
+}

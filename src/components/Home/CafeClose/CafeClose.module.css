@@ -1,0 +1,70 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+   background-color: #ffff;
+   padding: 16px 24px;
+}
+.MainConatiner{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    background-color: #F4ECE4;
+    border-radius: 12px;
+    padding: 13px 32px 13px 12px;
+}
+.left{
+    display: flex;
+    justify-content: left;
+}
+.left img{
+    width: 100%;
+    height: auto;
+    max-width: 81px;
+    object-fit: cover;
+}
+.right{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+}
+.deatils{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.deatils h3{
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    color: #4B3827;
+    font-family: var(--lato);
+}
+.deatils p{
+    font-size: 10px;
+    font-weight: 400;
+    margin: 0;
+    color: #4B3827;
+    font-family: var(--lato);
+}
+.Timings{
+    display: flex;
+    justify-content: left;
+}
+.Timings p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+    padding: 3px 5px 3px 6px;
+    border-radius: 12px;
+    margin: 0;
+    font-family: var(--lato);
+    background-color: #6C7A5F;
+
+}

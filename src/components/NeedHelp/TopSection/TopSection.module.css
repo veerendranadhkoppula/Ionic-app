@@ -1,0 +1,34 @@
+.main{
+    display: flex;
+    width: 100%;
+    /* height: 100%; */
+      height: auto;  
+    background-color:#6C7A5F;
+    padding: 56px 24px 17px 24px;
+    border-bottom-left-radius: 12px;
+    max-height: 108px;
+    border-bottom-right-radius: 12px;
+}
+.MainContainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+}
+.LeftConatiner{
+    display: flex;
+    justify-content: left;
+
+}
+.RightContainer{
+    display: flex;
+    justify-content: left;
+}
+.RightContainer h4{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFFFFF;
+    margin: 0;
+}

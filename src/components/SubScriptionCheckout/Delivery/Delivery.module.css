@@ -1,0 +1,242 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffffff;
+    padding: 0px 24px 32px 24px;
+}
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 24px;
+}
+.Top{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+}
+.Top h3{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ChooseCtas{
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+    flex-direction: row;
+}
+.shipbtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+   padding: 8px 10px;
+    background-color: #6C7A5F;
+    color: #FFFFFF;
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 14px;
+    border: 1px solid #3C435033;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.pickbtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+   padding: 8px 10px;
+    background: transparent;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 14px;
+    border: 1px solid #8C8C8C80;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.Bottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+   
+}
+.ShipaddressContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 8px;
+}
+.ShipAddressTop{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+.ShipAddressTop h3{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ShipAddressTop svg{
+    cursor: pointer;
+}
+.addedAddressBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 8px;
+    padding: 16px 12px;
+    background-color: #ffffff;
+    border: 1px solid #4B382740;
+    border-radius: 8px;
+}
+.addedAddressBox h4{
+    font-size: 14px;
+    font-weight: 700;
+    color: #6C7A5F;
+    font-family: var(--lato);
+    margin: 0;
+}
+.addedAddressBox h5{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.addedAddressBox p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.addedAddressBox h6{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.billingaddressContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 8px;
+}
+.billingAddressTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+.billingAddressTop p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.customCheckbox input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.customCheckbox {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  border: 1px solid #3C435033;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: 0.2s ease;
+}
+
+.customCheckbox input:checked + .checkmark {
+  background-color: #6C7A5F;
+  border-color: #6C7A5F;
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.customCheckbox input:checked + .checkmark::after {
+  display: block;
+}
+
+.customCheckbox .checkmark::after {
+  left: 5px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.locationstore{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 8px;
+    padding: 19px 13px;
+    background-color: #ffffff;
+    border: 1px solid #4B382740;
+    border-radius: 8px;
+}
+.locationstore h4{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.locationstore p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.locationstore h5{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+    cursor: pointer;
+}
+.locationstore h6{
+    font-size: 12px;
+    font-weight: 400;
+    color: #6C7A5F;
+    font-family: var(--lato);
+    margin: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}

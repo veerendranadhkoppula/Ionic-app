@@ -1,0 +1,323 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 39px 24px 24px 24px;
+}
+.MainConatiner{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    justify-content: left;
+    flex-direction: column;
+}
+.Bottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #8C8C8C33;
+}
+.CouponCard{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: left;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.CouponCardSelected {
+    border: 2px solid #6C7A5F;
+    box-shadow: 0 2px 12px rgba(108, 122, 95, 0.18);
+    border-radius: 10px;
+}
+.discount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+ background: url('./1.png');
+ width: 100%;
+ max-width: 110px;
+ height: 109px;
+ object-fit: cover;
+ object-position: center;
+}
+
+
+.discount h4{
+    font-family: var(--lexend);
+    font-weight: 400;
+    font-size: 20px;
+    color: #FFFFFF;
+    margin: 0;
+    text-align: center;
+    padding: 4px;
+}
+.details{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 18px;
+    padding: 7px 9px 11px 9px;
+    width: 100%;
+    
+}
+.detailsTop{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+
+}
+.cupontext{
+    display: flex;
+    justify-content: left;
+}
+.cupontext p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+.cuponcode{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+   padding: 1px 2px;
+   width: fit-content;
+   cursor: pointer;
+   border-bottom: 0.5px solid #6C7A5F;
+}
+.cuponcode p{
+    font-family: var(--lexend);
+    font-weight: 400;
+    font-size: 14px;
+    color: #6C7A5F;
+    margin: 0;
+    text-transform: uppercase;
+}
+.detailsBottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.validity{
+    display: flex;
+    justify-content: left;
+}
+.validity p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 10px;
+    color: #8C8C8C;
+    margin: 0;
+}
+.applybtn{
+    width: 72px;
+    height: 32px;
+    background-color: #6C7A5F1A;
+    border: 1px solid #6C7A5F;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--lexend);
+    font-weight: 600;
+    font-size: 14px;
+    color: #6C7A5F;
+}
+.CouponInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #8C8C8C33;
+  border-radius: 12px;
+  padding: 0 16px 0px 0px;
+  height: 44px;
+  width: 100%;
+}
+.CouponInput {
+  --padding-start: 16px;
+  --padding-end: 0px;
+  --padding-top: 13px;
+  --padding-bottom: 12px;
+
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8C8C8C;
+
+  flex: 1;
+}
+.CouponInput::part(native)::placeholder {
+  color: #8C8C8C;
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+}
+.ApplyText {
+  background: transparent;
+  border: none;
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8C8C8C;
+  cursor: pointer;
+  padding: 0;
+}
+
+
+.CouponInput::part(native) {
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  padding: 0 !important;
+  color: #8C8C8C !important;
+}
+
+
+.CouponWrapperActive {
+  border-color: #637A57;
+  box-shadow: 0 2px 8px rgba(99, 122, 87, 0.12);
+}
+
+.CouponWrapperActive .CouponInput::part(native) {
+  color: #637A57 !important;
+  caret-color: #637A57 !important;
+  -webkit-text-fill-color: #637A57 !important; 
+}
+
+.ApplyTextActive {
+  color: #637A57;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: #637A57;
+  text-underline-offset: 2px;
+}
+
+.InactiveCoupon {
+  opacity: 0.5;
+}
+
+
+.InactiveDiscount {
+  background-color: #C6CCBF;
+
+  border: 2px dotted #6C7A5F;
+
+  border-image: repeating-conic-gradient(
+    #C6CCBF 0deg 10deg,
+    transparent 10deg 20deg
+  ) 1;
+}
+
+
+.InactiveCode {
+  border-bottom: 0.5px solid #8C8C8C;
+}
+
+.InactiveCode p {
+  color: #8C8C8C;
+}
+
+
+.InactiveApplyBtn {
+  background-color: #F2F2F2;
+  border: 1px solid #C6CCBF;
+  color: #C6CCBF;
+  cursor: not-allowed;
+}
+
+.copiedText {
+  /* match the coupon code <p> styling so 'Copied' looks identical to the code text */
+  font-family: var(--lexend);
+  font-weight: 400;
+  font-size: 14px;
+  color: #6C7A5F;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Skeleton ──────────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeletonBase {
+  background: linear-gradient(90deg, #efefef 25%, #e0e0e0 50%, #efefef 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.skeletonDiscount {
+  width: 72px;
+  min-width: 72px;
+  height: 90px;
+  background: linear-gradient(90deg, #d6dcd0 25%, #c8d0c0 50%, #d6dcd0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 0;
+}
+
+.skeletonDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 10px;
+  flex: 1;
+}
+
+.skeletonDesc {
+  height: 12px;
+  width: 75%;
+}
+
+.skeletonCode {
+  height: 12px;
+  width: 50%;
+}
+
+.skeletonBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.skeletonExpiry {
+  height: 11px;
+  width: 80px;
+}
+
+.skeletonBtn {
+  height: 28px;
+  width: 64px;
+  border-radius: 6px;
+}

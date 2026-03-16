@@ -1,0 +1,248 @@
+.main {
+  display: flex;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 24px 24px 32px;
+  justify-content: center;
+}
+
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.Top {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.Heading h3 {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  color: #4b3827;
+  margin: 0;
+}
+
+.Form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 16px;
+  border: 1px solid #4b382733;
+  border-radius: 8px;
+}
+
+.InputGroup {
+  border-bottom: 1px solid #d9d1c7;
+}
+
+.IonInput {
+  --padding-start: 16px;
+  --padding-end: 0px;
+  --padding-top: 0px;
+  --padding-bottom: 8px;
+  --min-height: 0;
+
+  font-size: 14px;
+  font-family: var(--lato);
+  color: #4b3827;
+}
+
+.IonInput::part(native) {
+  padding-top: 0;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 0;
+  line-height: 1.4;
+}
+
+.IonInput::part(native)::placeholder {
+  color: #8c8c8c;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+}
+
+/* ROW */
+.Row {
+  display: flex;
+  gap: 14px;
+}
+
+.Row .InputGroup {
+  flex: 1;
+}
+
+.DropdownWrapper {
+  position: relative;
+}
+
+.DropdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 3px 4px 16px;
+  border-bottom: 1px solid #d9d1c7;
+  cursor: pointer;
+}
+
+.PlaceholderText {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-family: var(--lato);
+}
+
+.SelectedText {
+  font-size: 14px;
+  color: #4b3827;
+  font-family: var(--lato);
+}
+
+.Arrow {
+  transition: transform 0.3s ease;
+}
+
+.Rotate {
+  transform: rotate(180deg);
+}
+
+.DropdownList {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.Open {
+  max-height: 420px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.Option {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-family: var(--lato);
+  color: #4b3827;
+  cursor: pointer;
+}
+
+.Option:not(:last-child) {
+  border-bottom: 1px solid #efe9e2;
+}
+
+.Radio {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #d1c7bd;
+  border-radius: 50%;
+}
+
+.TextAreaGroup {
+  margin-top: 16px;
+}
+.TextAreaGroup textarea {
+  width: 100%;
+  height: 110px;
+  border: 1px solid #d9d1c7;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 12px;
+  font-family: var(--lato);
+  color: #4b3827;
+  background-color: #ffffff;
+  resize: none;
+}
+
+.TextAreaGroup textarea::placeholder {
+  color: #9b8f84;
+}
+
+.Bottom {
+  margin: 0px;
+}
+
+.conform {
+  width: 100%;
+  background-color: #6c7a5f;
+  color: #fff;
+  font-size: 16px;
+  font-family: var(--lato);
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.conform:disabled {
+  background-color: #d1d1d1;
+  cursor: not-allowed;
+}
+
+.Overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.SuccessPopup {
+  background: #ffffff;
+  width: calc(100% - 48px);
+  max-width: 360px;
+  border-radius: 16px;
+  padding: 18px 23px 16px 22px;
+  text-align: center;
+}
+
+.IconWrapper {
+  margin-bottom: 16px;
+}
+
+.SuccessPopup h3 {
+  font-size: 14px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #4b3827;
+  margin: 0 0 4px;
+}
+
+.SuccessPopup p {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #8c8c8c;
+  margin: 0 0 24px;
+  line-height: 1.4;
+}
+
+.DoneButton {
+  background-color: #6c7a5f;
+  color: #ffffff;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 700;
+  padding: 7px 27px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}

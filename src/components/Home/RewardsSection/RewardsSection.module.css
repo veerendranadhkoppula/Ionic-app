@@ -1,0 +1,82 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 0px 24px 24px 24px;
+}
+.maincontainer{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items:center;
+    width: 100%;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #D8A05A;
+}
+.left{
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    justify-content: left;
+}
+.stamps, .Beans{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 1px;
+}
+.stampsTop, .BeansTop{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+.stampsTop p, .BeansTop p{
+    font-size: 16px;
+    color: #4B3827;
+    font-weight: 700;
+    font-family: var(--lato);
+    margin: 0;
+}
+.stampsBottom, .BeansBottom{
+    display: flex;
+    justify-content: left;
+}
+.stampsBottom p, .BeansBottom p{
+    font-size: 14px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.right{
+    display: flex;
+    flex-direction: row;
+    gap: 21px;
+    align-items: center;
+    justify-content: right;
+}
+.right h4{
+    font-size: 12px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+    max-width: 170px;
+}
+/* .arrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+    background-color: #D8A05A;
+    border-radius: 50%;
+    cursor: pointer;
+} */
+.arrow svg{
+    cursor: pointer;
+}

@@ -1,0 +1,158 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.MainCoantiner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  gap: 16px;
+}
+
+.Top {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 56px 24px 17px 24px;
+  background-color: #6C7A5F;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.TopRight, .TopLeft {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+}
+.TopRight h1 {
+  font-size: 16px;
+  margin: 0;
+  color: #ffffff;
+  font-weight: 500;
+  font-family: var(--lato);
+}
+
+
+.Bottom {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 0px 24px;
+  background-color: #ffffff;
+  gap: 21px;
+}
+
+.BottomTop h3 {
+  font-size: 16px;
+  margin: 0;
+  color: #4B3827;
+  font-weight: 500;
+  font-family: var(--lato);
+}
+
+.BottomBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+
+.Faqs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+.FaqRow {
+  cursor: pointer;
+  background: transparent;
+  border-bottom: 1px solid #4B382733;
+  /* border-radius: 0 0 16px 16px;
+  box-shadow: 0 6px 0 -4px rgba(0, 0, 0, 0.15); */
+  overflow: hidden;
+}
+.FaqHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 14px 15px 4px;
+}
+
+.FaqHeader span {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #4B3827;
+}
+
+
+.Arrow {
+  transition: transform 0.35s ease;
+}
+
+.Open .Arrow {
+  transform: rotate(180deg);
+}
+
+.Rotate {
+  transform: rotate(180deg);
+}
+.FaqBody {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.Open .FaqBody {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.FaqBody p {
+  margin: 0;
+  padding: 0 16px 16px 7.5px;
+  font-size: 12px;
+  font-family: var(--lato);
+  color: #4B3827;
+}
+
+
+.ContactUs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 82px;
+}
+
+.ContactUsHeading h3 {
+  font-size: 16px;
+  margin: 0;
+  color: #6C7A5F;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  font-family: var(--lato);
+  cursor: pointer;
+}
+.ContactUsPara{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: left;
+}
+.ContactUsPara p {
+  font-size: 12px;
+  margin: 0;
+  color: #4B3827;
+  font-family: var(--lato);
+}
+
+.InfoSpam {
+  color: #6C7A5F;
+  text-decoration: underline;
+}

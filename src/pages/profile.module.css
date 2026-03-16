@@ -1,0 +1,393 @@
+.Main {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.MainConatiner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  gap: 32px;
+  justify-content: left;
+}
+.Top {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 4px;
+  background-color: #6c7a5f;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 56px 24px 17px 24px;
+  align-items: center;
+}
+.TopRight p {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+.Middle {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.MiddleTop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ProfileCircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ProfileCircle img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.MiddleBottom p {
+  font-family: var(--lato);
+  font-size: 12px;
+  font-weight: 400;
+  color: #4b3827;
+  margin: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+.Bottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 26px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+.BottomTop{
+    display: flex;
+    justify-content: left;
+   
+    
+}
+.BottomTop h4{
+    font-family: var(--lato);
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    margin: 0;
+}
+.BottomBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.InfoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #4B382733;
+  padding-bottom: 16px;
+  padding-left: 15px;
+}
+
+.InfoLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.InfoLeft span {
+  font-size: 12px;
+  color: #8C8C8C;
+  font-weight: 400;
+  font-family: var(--lato);
+}
+
+.InfoLeft p {
+  font-size: 14px;
+  color: #4B3827;
+  margin: 0;
+  font-weight: 400;
+  font-family: var(--lato);
+}
+
+.InfoLeft input {
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background-color: #ffffff;
+  text-decoration: none;
+  font-family: var(--lato);
+  color: #4b3827;
+  padding: 2px 0;
+  
+}
+.InfoRowActive {
+  border-bottom: 1px solid #4B3827;
+}
+
+.EditIcon {
+  cursor: pointer;
+}
+
+.ActionRow {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  padding-bottom: 24px;
+}
+
+.UpdateBtn {
+  background-color: #6C7A5F;
+  color: #FFFFFF;
+  border: 1px solid #6C7A5F;
+  border-radius: 8px;
+  padding: 4px 16px;
+  width: 100%;
+  font-family: var(--lexend);
+  font-size: 14px;
+}
+
+.UpdateBtn:disabled {
+  background-color: #8C8C8C33;
+  color: #8C8C8C;
+}
+
+.CancelBtn {
+  background-color:#6C7A5F1A;
+  border: 1px solid #6C7A5F;
+  color: #6C7A5F;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 100%;
+  font-family: var(--lexend);
+  font-size: 14px;
+}
+.InfoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+
+
+.otpCard {
+  background: #ffffff;
+  width: 268px;
+  padding: 17px 30px 15px 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  cursor: default;
+}
+
+.otpTitle {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--lato);
+  color: #4B3827;
+  margin: 0;
+}
+
+.otpSubtitle {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--lato);
+  color: #818686;
+  margin-top: 4px;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.otpEmail {
+  color: #4B3827;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: var(--lato);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+.otpInputWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+  margin-bottom: 24px;
+}
+
+.otpInput {
+  width: 36px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(75, 56, 39, 0.2);
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--lato);
+  color: #4B3827;
+  padding: 0 0 12px 0;
+  background: transparent;
+  outline: none;
+}
+
+.otpInput:focus {
+  outline: none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  border-bottom: 1px solid #4B3827;
+}
+
+.otpInputFilled {
+  border-bottom: 1px solid #4B3827;
+}
+.confirmBtn {
+  background: #6C7A57;
+  color: white;
+  border: 1px solid #6C7A57;
+  border-radius: 8px;
+  padding: 4px 56px;
+  font-size: 14px;
+  font-family: var(--lexend);
+  font-weight: 400;
+  line-height: 24px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.resendText {
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.resendTimerRow {
+  margin-top: 4px;
+}
+
+.resendCountdown {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--lato);
+  color: #4B3827;
+}
+
+
+
+.successCard {
+  background: #ffffff;
+  width: 268px;
+  padding: 18px 23px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  cursor: default;
+}
+
+.successIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.successTitle {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--lato);
+  color: #4B3827;
+  margin: 0;
+  padding-bottom: 4px;
+}
+
+.successSubtitle {
+  width: 223px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--lato);
+  color: #8C8C8C;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.doneBtn {
+  display: inline-block;
+  background: #6C7A57;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 26px;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.errorText {
+  color: red;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.resendActive {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #4B3827;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--lato);
+  cursor: pointer;
+}
+.editEmailIcon {
+  margin-left: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}

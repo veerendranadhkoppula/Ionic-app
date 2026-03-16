@@ -1,0 +1,286 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  width: 100%;
+}
+.MainConatiner{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+      background: url('./1.png');
+    background-position: center;
+    width: 100%;
+}
+.Top{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: 100%;
+    background: url('./1.png');
+    background-position: center;
+    background-size: cover;
+}
+.Bottom{
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+    width: 100%;
+    background-color:#FFFFFF ;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 23px 45px 24px;
+}
+.BottomTop{
+    display: flex;
+    flex-direction: column;
+    gap: 41px;
+}
+.BottomTopOne{
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+.One{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 8px;
+}
+.OneBottom{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+.OneBottom img{
+    max-width: 44px;
+    max-height: 48.5px;
+    width: 100%;
+    min-width: 44px;
+    min-height: 48.5px;
+    height: 100%;
+}
+.OneTop{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.skip{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 14px;
+    color: #4B3827;
+    background: transparent;
+    text-decoration: underline;
+    border: none;
+}
+.ErrorText {
+  margin-top: 8px;
+
+  font-family: var(--lato);
+  font-size: 12px;
+  font-weight: 400;
+
+  color: #E53935; 
+  line-height: 1.4;
+  margin: 0px;
+  animation: fadeIn 0.2s ease;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Two{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.Two h3{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #4B3827;
+    margin: 0;
+}
+.Two p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+.Three {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+
+.InputBox {
+  width: 100%;
+  /* max-width: 350px; */
+  padding: 13px 15px 13px 15px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8C8C;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #4B382733;
+  outline: none;
+  /* box-shadow: 0 6px 0 -4px rgba(0, 0, 0, 0.15); */
+
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.InputBox::placeholder {
+  color: #9a9a9a;
+  font-weight: 400;
+}
+
+
+.BottomTopTwo{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.BottomTopTwoTop p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}
+.SpanText{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #4B3827CC;
+    text-decoration: underline;
+}
+.BottomTopTwoBottom{
+    display: flex;
+    justify-content: left;
+}
+.continue{
+    width: 100%;
+    /* max-width: 350px; */
+    padding: 13px 15px 13px 15px;
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #6C7A5F80;
+    border: none;
+      cursor: pointer;
+    border-radius: 12px;
+}
+
+.continueActive {
+    background-color: #6C7A5F;
+}
+.BottomBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 32px;
+}
+.BottomBottomOne{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 6.55px;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #8C8C8C;
+}
+.InputBox {
+  --padding-start: 16px;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --background: transparent;
+  --border-width: 0;
+  --highlight-height: 0;
+   --color: #4B3827 !important;
+  --placeholder-color: #8C8C8C;
+}
+.InputBox:focus-within {
+  border-bottom: 1px solid #4B3827;
+}
+.InputBox.hasValue {
+  border-bottom: 1px solid #4B3827;
+}
+
+.BottomBottomOne p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    white-space: nowrap;
+    margin: 0;
+}
+.BottomBottomTwo{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 12px;
+}
+.google, .apple, .samsung{
+    width: 100%;
+
+    padding: 11px 15px 11px 15px;
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 15px;
+    color: #6C7A5F;
+    background-color: #FFFFFF;
+    border: 1px solid #6C7A5F80;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    gap: 12px;
+}
+.ErrorText {
+  /* margin-top: 8px; */
+  width: 100%;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+  font-family: var(--lato);
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  line-height: 1.4;
+}
+
+.InputBox:focus {
+  color: #4B3827;
+  border-bottom-color: #4B3827;
+}
+
+
+
+
+/* .InputBox::placeholder {
+  color: #9a9a9a;
+} */

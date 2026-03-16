@@ -1,0 +1,492 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  width: 100%;
+  background-color: #ffffff;
+}
+.MainConatiner{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+   gap: 32px;
+}
+.Top{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 16px;
+
+}
+.TopOne{
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  background-color: #6C7A5F;
+     padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 56px;
+  gap: 19px;
+   border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding-bottom: 19px;
+}
+.TopOneTop{
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+}
+
+.TopOneTop p{
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+
+}
+.TopOneBottom{
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  gap: 8px;
+  padding-left: 10px;
+  align-items: center;
+}
+.TopOneBottomLeft{
+  display: flex;
+  justify-content: left;
+
+}
+.TopOneBottomLeft svg{
+  width: 100%;
+  height: 100%;
+  max-width: 54px;
+  max-height: 54px;
+}
+.TopOneBottomLeft img{
+  width:54px;
+  height: 54px;
+  max-width: 54px;
+  max-height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.TopOneBottomRight{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  /* gap: 4px; */
+
+}
+.TopOneBottomRight h3{
+  font-family: var(--lexend);
+  font-weight: 400;
+  font-size: 20px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  margin: 0;
+}
+.TopOneBottomRight p{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #FFFFFF;
+  margin: 0;
+}
+.TopTwo{
+  display: flex;
+  justify-content: left;
+  padding-left: 25px;
+  padding-right: 25px;
+  flex-direction: column;
+  gap: 24px;
+}
+.TopTwoTop{
+  display: flex;
+  justify-content: left;
+}
+.TopTwoTop h4{
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4B3827;
+  margin: 0;
+}
+.TopTwoBottom{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: left;
+}
+.One, .Two, .Three, .Four{
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+.OneLeft, .OneRight, .TwoLeft, .TwoRight, .ThreeLeft, .ThreeRight, .FourLeft, .FourRight{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #4B382740;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  max-width: 161.93px;
+  max-height: 51px;
+  min-height: 51px;
+  /* min-width: 161px; */
+}
+.OneLeft p, .OneRight p, .TwoLeft p, .TwoRight p, .ThreeLeft p, .ThreeRight p, .FourLeft p, .FourRight p{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4B3827;
+  margin: 0;
+}
+.Bottom{
+  display: flex;
+  justify-content: left;
+  padding-left: 25px;
+  padding-right: 25px;
+  flex-direction: column;
+  gap: 24px;
+}
+.BottomTop{
+  display: flex;
+  justify-content: left;
+}
+.BottomTop h4{
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4B3827;
+  margin: 0;
+}
+.BottomBottom{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: left;
+}
+.BottomBottomOne, .BottomBottomTwo, .BottomBottomThree{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.line{
+  width: 100%;
+  height: 1px;
+  background-color: #8C8C8C33;
+
+}
+.BottomBottomOneTop, .BottomBottomTwoTop, .BottomBottomThreeTop{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.BottomBottomOneTopLeft,  .BottomBottomTwoTopLeft,  .BottomBottomThreeTopLeft {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  padding-left: 25px;
+}
+.BottomBottomOneTopLeft p{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4B3827;
+  margin: 0;
+}
+.BottomBottomTwoTopLeft p, .BottomBottomThreeTopLeft p{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4B3827;
+  margin: 0;
+}
+.BottomBottomFour{
+  display: flex;
+  justify-content: left;
+}
+.BottomBottomFour p{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #CB4747;
+  margin: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.LMain{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #ffffff;
+}
+.LMainContainer{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  gap: 16px;
+}
+.LTop{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 29px;
+  background-color: #6C7A5F;
+  padding-top: 57px;
+  padding-bottom: 21px;
+  padding-left: 25px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.LTopTop{
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+.LTopTop h3{
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+.LTopBottom{
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  gap: 10px;
+  padding-left: 14.5px;
+}
+.LTopBottomLeft img{
+  width: 100%;
+  height: 100%;
+  max-width: 54px;
+  max-height: 54px;
+}
+.LTopBottomRight{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 8px;
+}
+.LTopBottomRight h3{
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+.LLSCta{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  color: #6C7A57;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--lato);
+  border: 1px solid #6C7A57;
+  cursor: pointer;
+  padding: 7px 42px;
+}
+
+.GuestTitle{
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #FFFFFF;
+  margin: 0 0 8px 0;
+}
+.LBottom{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 24px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.LBottomTop{
+  display: flex;
+  justify-content: left;
+}
+.LBottomTop h4{
+  font-family: var(--lato);
+  font-size: 16px;
+  font-weight: 500;
+  color: #4B3827;
+  margin: 0;
+}
+.LBottomBottom{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.LOne, .LTwo{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.LOneTop, .LTwoTop{
+  display: flex;
+  justify-content: space-between;
+}
+.LOneTopLeft, .LTwoTopLeft{
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 8px;
+  padding-left: 17px;
+}
+.LOneTopLeft p, .LTwoTopLeft p{
+  font-family: var(--lato);
+  font-size: 14px;
+  font-weight: 400;
+  color: #4B3827;
+  margin: 0;
+}
+.LLine{
+  width: 100%;
+  height: 1px;
+  background-color: #E2E2E2;
+}
+
+.comingSoonBanner{
+  position: absolute;
+  top:90%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(75,56,39,0.95);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  font-family: var(--lato);
+  font-size: 13px;
+  z-index: 40;
+  max-width: 90%;
+  text-align: center;
+}
+.logoutModal {
+  --height: auto;
+  --width: 100%;
+  --max-width: 420px;
+  --border-radius: 0;
+}
+
+
+.logoutModal::part(backdrop) {
+  background: rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+
+.logoutModal::part(content) {
+  background: transparent;
+  box-shadow: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation: modalFadeScale 0.28s ease-out forwards;
+}
+
+@keyframes modalFadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.logoutWrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px 42px;
+
+  width: 100%;
+  max-width: 268px;
+
+  text-align: center;
+}
+
+
+.logoutWrapper h2 {
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0px 0px 4px 0px;
+  color: #4B3827;
+  font-family: var(--lato);
+}
+
+
+.logoutWrapper p {
+  font-size: 12px;
+  color: #8C8C8C;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0px 0px 27px 0px;
+
+}
+
+
+.logoutActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+
+.noBtn {
+  flex: 1;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: #6C7A5F33;
+  color: #6C7A5F;
+  font-family: var(--lato);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.yesBtn {
+  flex: 1;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: #6C7A5F;
+  color: #FFFFFF;
+  font-family: var(--lato);
+  font-size: 12px;
+  font-weight: 700;
+}

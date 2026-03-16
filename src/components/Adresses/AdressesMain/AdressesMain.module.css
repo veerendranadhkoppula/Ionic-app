@@ -1,0 +1,223 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 27px 24px 22px 24px;
+}
+.MainContainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    width: 100%;
+    gap: 32px;
+}
+.Top{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+}
+.AdreessCard{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 12px;
+    border-radius:8px;
+    background-color: #FFFFFF;
+    border: 1px solid #4B382740;
+}
+.AddressPlace, .AdresserName, .AddressDetails, .AdresserPhone{
+    display: flex;
+    justify-content: left;
+}
+.AddressPlace h3{
+    font-family: var(--lato);
+    font-weight: 700;
+    font-size: 14px;
+    color: #6C7A5F;
+    margin: 0;
+}
+.AdresserName p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #4B3827;
+    margin: 0;
+}
+.AddressDetails p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #4B3827;
+    margin: 0;
+    max-width: 200px;
+}
+.AdresserPhone p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #4B3827;
+    margin: 0;
+}
+.AdressActionIcons{
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+    gap: 8px;
+    cursor: pointer;
+}
+.AddButton{
+    width: 100%;
+    padding: 10px 10px;
+    background-color: #ffffff;
+    border: 1px solid #6C7A5F;
+    color: #6C7A5F;
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.EmptyStateWrapper{
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: calc(100vh - 140px);
+}
+
+.EmptyTitle{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4B3827;
+  margin: 24px 0 4px 0;
+
+}
+
+.EmptySubtitle{
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8C8C8C;
+  margin: 0;
+  text-align: center;
+  margin: 0 0 24px 0px;
+  max-width: 340px;
+}
+
+.EmptyCTAWrapper{
+  width: 100%;
+
+ 
+}
+
+.EmptyCTA{
+  width: 100%;
+  padding: 11px 10px;
+  border-radius: 12px;
+  background: #6C7A5F;
+  border: none;
+  color: #ffffff;
+  font-family: var(--lato);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.DisabledButton {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.DeleteOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+
+.DeleteModal {
+  width: 90%;
+  max-width: 340px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px 28px;
+  text-align: center;
+  animation: popupScale 0.25s ease;
+}
+
+
+.DeleteModal h2 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #4B3827;
+  margin: 0px 0px 8px 0px;
+}
+
+.DeleteModal p {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 12px;
+  color: #8C8C8C;
+  margin: 0px 0px 16px 0px;
+  
+}
+
+.DeleteActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.CancelBtn {
+  flex: 1;
+  padding: 7px 24px;
+  border-radius: 8px;
+  border: none;
+  background-color: #6C7A5F33;
+  color: #6C7A5F;
+  font-family: var(--lato);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+
+.DeleteBtn {
+  flex: 1;
+  padding: 7px 24px;
+  border-radius: 8px;
+  border: none;
+  background-color: #6C7A5F;
+  color: #ffffff;
+  font-family: var(--lato);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 20px;
+}
+@keyframes popupScale {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,209 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0px 24px 32px 24px;
+  background-color: #ffffff;
+}
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  gap: 16px;
+}
+.top {
+  display: flex;
+  justify-content: left;
+}
+.top h4 {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b3827;
+  margin: 0;
+}
+.bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  max-width: 341px;
+  background: linear-gradient(180deg, #fff9f3 0%, #f7e6d2 100%);
+  gap: 16px;
+  width: 100%;
+  border-radius: 12px;
+  padding: 18px 13px;
+}
+.StampsDetails {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.StampsDetailsLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+}
+.StampsDetailsLeft p {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+.StampsDetailsRight {
+  display: flex;
+  justify-content: right;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+.StampsDetailsRight p {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #4b3827;
+  margin: 0;
+}
+.StampsDetailsRight h4 {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #ffffff;
+  margin: 0;
+  padding: 2px 7px;
+  background-color: #d0892f;
+  border-radius: 50%;
+}
+.Stamps {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 8px;
+}
+.Howitworks {
+  display: flex;
+  justify-content: right;
+}
+.Howitworks p {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 12px;
+  color: #6c7a5f;
+  margin: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  text-underline-offset: 2px;
+}
+.StampCollects {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.stampWrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.collectedImg {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+}
+
+.shadow0::before,
+.shadow1::before,
+.shadow2::before,
+.shadow3::before,
+.shadow4::before {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #8C8C8C59;
+  border-radius: 50%;
+  z-index: 1;
+}
+.uncollectedCircle {
+  width: 50px;
+  height: 50px;
+  background-color: #ffffff;
+  border: 1px solid rgba(140, 140, 140, 0.5);
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uncollectedCircle img {
+  width: 28px;
+  height: auto;
+}
+
+.shadow0::before {
+  top: -4px;
+  right: -4px;
+}
+
+
+.shadow1::before {
+  top: -3px;
+  left: -5px;
+}
+
+.shadow2::before {
+  left: -4px;
+  top: -4px;
+}
+
+
+.shadow3::before {
+  right: -4px;
+  top: -3px;
+}
+
+
+.shadow4::before {
+  bottom: -4px;
+  left: 2;
+}
+.secondRow.shadow0::before {
+  top: 4px;
+  right: 4px;
+}
+
+.secondRow.shadow1::before {
+  top: 3px;
+  left: 5px;
+}
+
+.secondRow.shadow2::before {
+  left: 4px;
+  top: 4px;
+}
+
+.secondRow.shadow3::before {
+  right: 4px;
+  top: 3px;
+}
+
+.secondRow.shadow4::before {
+  bottom: 4px;
+  left: -2px;
+}
+@media (max-width: 380px) {
+  .StampCollects {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

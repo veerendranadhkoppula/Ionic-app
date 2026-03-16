@@ -1,0 +1,340 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100svh;
+  padding: 0px 24px 32px 24px;
+  background-color: #ffffff;
+}
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+   height: 100%; 
+  
+}
+.top {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 20;
+  padding-top: 16px;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+.Scan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 13px 19px 13px 19px;
+  background: transparent;
+  border-bottom: 2px solid #d8a05a;
+  color: #4b3827;
+  font-family: var(--lexend);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
+}
+.transhistory{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 13px 19px 13px 19px;
+    background: transparent;
+    color: #8C8C8C;
+    font-family: var(--lexend);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 24px;
+    cursor: pointer;
+}
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #E7E7E7;
+}
+.bottom {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 16px;
+  padding-bottom: 24px;
+}
+.scanContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 16px;
+     background: linear-gradient(180deg, #fff9f3 0%, #f7e6d2 100%);
+     padding: 16px 7px;
+     border-radius: 8px;
+}
+.ScanDetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 4px;
+    padding-left: 17px;
+}
+.ScanDetails h3{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ScanDetails p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ScanCode{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.QRContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 12px 0;
+}
+
+.qrGuestText {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 13px;
+  color: #8C8C8C;
+  text-align: center;
+  margin: 8px 0 12px 0;
+}
+.ScanCode img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+.ScanCode p{    
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+    letter-spacing: 4px;
+}
+.transhistoryContainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+   width: 100%;
+}
+.transhistoryCard{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
+    width: 100%;
+    background: linear-gradient(90deg, #F2EBE3 0%, #F2F1F033 100%);
+    padding: 13px 8px 14px 13px;
+    border-radius: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.transhistoryCardSelected {
+    border: 2px solid #D8A05A;
+    box-shadow: 0 2px 12px rgba(216, 160, 90, 0.18);
+}
+.transhistoryCardLeft{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 9px;
+}
+.Ordertype{
+    display: flex;
+    justify-content: left;
+}
+.Ordertype p{
+    font-size: 10px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.OrderDetails{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 4px;
+}
+.OrderDetails h4{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.OrderDetails p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.transhistoryCardRight{
+    display: flex;
+    justify-content: right;
+   align-items: flex-end;
+   flex-direction: column;
+    gap: 7px;
+}
+.status p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #34A853;
+    font-family: var(--lato);
+    margin: 0;
+}
+.dateandtime p{
+    font-size: 10px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.activeTab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 13px 19px;
+  background: transparent;
+  border-bottom: 2px solid #d8a05a;
+  color: #4b3827;
+  font-family: var(--lexend);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.inactiveTab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 13px 19px;
+  background: transparent;
+  color: #8c8c8c;
+  font-family: var(--lexend);
+  font-weight: 300;
+  font-size: 14px;
+  cursor: pointer;
+}
+.statusPositive p {
+  font-size: 14px;
+  font-weight: 400;
+  color: #34a853;
+  font-family: var(--lato);
+  margin: 0;
+}
+
+.statusNegative p {
+  font-size: 14px;
+  font-weight: 400;
+  color: #EA4335;
+  font-family: var(--lato);
+  margin: 0;
+}
+
+.emptyText {
+  font-size: 13px;
+  font-weight: 400;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  margin: 0;
+  text-align: center;
+  padding-top: 24px;
+}
+
+/* View more link shown when there are more than the visible batch */
+.viewMoreContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+.viewMore{
+    font-family: var(--lato);
+    font-size: 14px;
+    font-weight: 400;
+    color: #6C7A5F;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* ── Skeleton ──────────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* Use same neutral card background as Workshops skeleton details */
+  background-color: #F5F5F5;
+  padding: 13px 8px 14px 13px;
+  border-radius: 12px;
+}
+
+
+.skeletonLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.skeletonTag {
+  height: 12px;
+  width: 70px;
+}
+
+.skeletonTitle {
+  height: 14px;
+  width: 120px;
+}
+
+.skeletonOrderId {
+  height: 11px;
+  width: 90px;
+}
+
+.skeletonRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+}
+
+.skeletonAmount {
+  height: 14px;
+  width: 60px;
+}
+
+.skeletonDate {
+  height: 11px;
+  width: 80px;
+}

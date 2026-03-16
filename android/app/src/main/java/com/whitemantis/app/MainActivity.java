@@ -1,4 +1,6 @@
 package com.whitemantis.app;
 
-public class MainActivity {
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {
 }

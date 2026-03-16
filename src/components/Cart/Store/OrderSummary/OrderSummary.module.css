@@ -1,0 +1,169 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 16px 24px 32px 24px;
+
+}
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 24px;
+}
+.top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+.top h4{
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.top p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.bottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    height: 100%;
+}
+.addedprodcard{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+   
+}
+.prodleft{
+    display: flex;
+    flex-direction: row;
+    gap: 7.67px;
+    align-items: center;
+}
+.prodimg{
+    width: 69px;
+    height: 69px;
+    /* border-radius: 8px; */
+    overflow: hidden;
+    flex-shrink: 0;
+   
+}
+.prodimg img{
+    width: 69px;
+    height: 69px;
+    object-fit: contain;
+    display: block;
+}
+.proddetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 17px;
+}
+.proddetails h3{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+    max-width: 150px;
+}
+.proddetails p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.prodright{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    height: 100%;
+    gap: 18px;
+    align-items: flex-end;
+}
+.prodright p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #6E736A;
+    font-family: var(--lato);
+    margin: 0;
+    text-decoration: underline;
+
+}
+.incredecre {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #6C7A5F;
+  border-radius: 10px;
+  padding: 4px 10.13px;
+  background-color: #6C7A5F1A;
+}
+
+.incredecre button {
+  background:transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6C7A5F;
+  font-family: var(--lexend);
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.incredecre button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.incredecre span {
+ font-size: 14px;
+  font-weight: 600;
+  color: #6C7A5F;
+  font-family: var(--lexend);
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.closebtn {
+  font-size: 14px;
+  color: #6C7A5F;
+  cursor: pointer;
+}
+
+.outofstockcard {
+  opacity: 0.5;
+}
+
+.remove {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.outofstocktext {
+  color: #6E736A;
+  text-decoration: none;
+}
+.simpleRemove {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

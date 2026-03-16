@@ -1,5 +1,17 @@
 {
   "name": "whitemantis",
-  "integrations": {},
-  "type": "react-vite"
+  "type": "react-vite",
+  "integrations": {
+    "capacitor": {}
+  },
+  "proxies": [
+    {
+      "path": "/auth",
+      "proxyUrl": "https://whitemantis-app.vercel.app"
+    },
+    {
+      "path": "/api",
+      "proxyUrl": "https://whitemantis-app.vercel.app"
+    }
+  ]
 }

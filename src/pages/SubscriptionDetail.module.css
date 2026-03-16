@@ -1,0 +1,508 @@
+.Top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #6C7A5F;
+  padding: 56px 36px 17px 24px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.TopLeft{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  gap: 4px;
+}
+.TopLeft svg{
+  cursor: pointer;
+}
+.TopLeft h4{
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  margin: 0;
+}
+.TopRight{
+  display: flex;
+  justify-content: right;
+}
+.TopRight p{
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--lato);
+  margin: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.Footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 7px 33px 26px 33px;
+    background-color: #ffffff;
+}
+.FooterButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background: #6C7A5F;
+    border-radius: 8px;
+    padding: 8.5px 10px;
+    color: #ffffff;
+    border: 1px solid #6C7A5F;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--lato);
+}
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 24px;
+    background-color: #ffff;
+}
+.MainConatiner{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+}
+.one{
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    width: 100%;
+    flex-direction: row;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+.oneleft{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 8px;
+}
+.oneleft h4{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+
+}
+.oneleft span{
+    color: #4B3827;
+}
+.oneRight{
+    display: flex;
+    justify-content: right;
+}
+.oneRight p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #6C7A5F;
+    font-family: var(--lato);
+    margin: 0;
+
+}
+/* ── Status badges (matching ShopOrders/CafeOrders pill style) ── */
+.activeBadge {
+    display: flex;
+   
+    justify-content: center;
+    gap: 4px;
+    background-color: #47890D26;
+    border-radius: 4px;
+    padding: 3px 8px;
+    height: fit-content;
+}
+.activeBadge p {
+    font-size: 12px;
+    font-weight: 400;
+    color: #47890D;
+    font-family: var(--lato);
+    margin: 0;
+}
+.cancelledBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background-color: #E548421A;
+    border-radius: 4px;
+    padding: 3px 8px;
+}
+.cancelledBadge p {
+    font-size: 12px;
+    font-weight: 400;
+    color: #E54842;
+    font-family: var(--lato);
+    margin: 0;
+}
+.two{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+.two p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.subitemcard{
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+    width: 100%;
+    flex-direction: column;
+    padding: 14px;
+    background-color: #F5F5F5;
+    border-radius: 12px;
+}
+.subitemcardTop{
+    display: flex;
+    justify-content: left;
+    gap:5px;  
+    flex-direction: column;
+}
+.subitemcardTop p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.subitemcardTop h4{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.subitemcardBottom{
+    display: flex;
+    justify-content: left;
+    gap: 1px;
+    flex-direction: row;
+}
+.subitemcardBottom p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+}
+.subitemcardBottom h4{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.three{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+.three p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.adressCard{
+    display: flex;
+    justify-content: left;
+    gap: 8px;
+    width: 100%;
+    flex-direction: column;
+    padding: 16px 12px;
+    background-color: #F5F5F5;
+    border-radius: 8px;
+}
+.nameandloc{
+    display: flex;
+    justify-content: space-between;
+ width:100%;
+    flex-direction: row;
+}
+.nameandloc p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.nameandloc h4{
+    font-size: 12px;
+    font-weight: 400;
+    color: #6C7A5F;
+    font-family: var(--lato);
+    margin: 0;
+}
+.adressCard h5{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+    max-width: 130px;
+}
+.adressCard h6{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.four{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+.four p{
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.paymentdetails{
+    display: flex;
+    justify-content: left;
+    gap: 16px;
+    width: 100%;
+    flex-direction: column;
+}
+.NextPayment{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-direction: row;
+    padding-bottom: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: 1px solid #8C8C8C33;
+}
+.NextPaymentLeft{
+    display: flex;
+    justify-content: left;
+    gap: 1px;
+    flex-direction: row;
+}
+.NextPaymentLeft p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.NextPaymentLeft h4{
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    margin: 0;
+
+}
+.NextPaymentRight{
+    display: flex;
+    justify-content: right;
+    flex-direction: row;
+ gap: 4px;
+ align-items: center;
+}
+.NextPaymentRight p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.Viewpaymenthistory{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 18px;
+}
+.Viewpaymenthistorytab{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0px 8.5px;
+    flex-direction: row;
+}
+.Viewpaymenthistorytab p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.Viewpaymenthistorycard{
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    flex-direction: row;
+    padding-bottom: 16px;
+    padding-left: 8.5px;
+    padding-right: 8.5px;
+   border-bottom: 1px solid #8C8C8C1a;
+}
+.ViewpaymenthistorycardLeft{
+    display: flex;
+    justify-content: left;
+    gap: 8px;
+    flex-direction: column;
+    
+}
+.ViewpaymenthistorycardLeft p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ViewpaymenthistorycardLeftBottom{
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    gap: 4px;
+}
+.ViewpaymenthistorycardLeftBottom p{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ViewpaymenthistorycardRight{
+    display: flex;
+    justify-content: right;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+.ViewpaymenthistorycardRight h4{
+    font-size: 12px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ViewpaymenthistorycardRight p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6C7A5F;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-family: var(--lato);
+    margin: 0;
+    cursor: pointer;
+}
+
+/* View more link for payment history */
+.viewMoreContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+.viewMore{
+    font-family: var(--lato);
+    font-size: 14px;
+    font-weight: 400;
+    color: #6C7A5F; /* updated per request */
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* ── Cancel Subscription Modal ── */
+.ModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.CancelModal {
+    width: 100%;
+    max-width: 270px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px 28px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+.CancelModalTitle {
+    font-size: 14px !important;
+    font-weight: 400;
+    color: #4B3827 !important;
+    font-family: var(--lato);
+    margin: 0 0 8px 0 !important;
+    text-align: center;
+}
+.CancelModalBody {
+    font-size: 12px !important;
+    font-weight: 500;
+    color: #8C8C8C !important;
+    font-family: var(--lato);
+    margin: 0 0 16px 0 !important;
+    text-align: center;
+    line-height: 1.5;
+}
+.CancelModalButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    width: 100%;
+}
+.CancelModalCancelBtn {
+    flex: 1;
+    border-radius: 8px;
+    background-color: rgba(110, 126, 87, 0.20);
+    border: none;
+    padding: 7px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6E7E57;
+    font-family: var(--lato);
+    cursor: pointer;
+}
+.CancelModalKeepBtn {
+    flex: 1;
+    border-radius: 8px;
+    background-color: #6E7E57;
+    border: none;
+    padding: 7px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: var(--lato);
+    cursor: pointer;
+}

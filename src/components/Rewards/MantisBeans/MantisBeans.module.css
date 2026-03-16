@@ -1,0 +1,93 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 24px 24px 32px 24px;
+    background-color: #ffffff;
+}
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+    gap: 16px;
+}
+.top{
+    display: flex;
+    justify-content: left;
+}
+.top h3{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    color: #4B3827;
+    margin: 0;
+}
+.bottom{
+    display: flex;
+   flex-direction: column;
+   justify-content: left;
+   gap: 8px;
+   width: 100%;
+}
+.beansEarningsCard{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    padding: 18px 13px 9px 15px;
+    background-color: #6C7A5F;
+    border-radius:8px;
+}
+.beansEarningsCardLeft{
+    display: flex;
+    justify-content: left;
+    gap: 8px;
+    flex-direction: column;
+}
+.beansEarningsCardLeft h3{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #FFFFFF;
+    margin: 0;
+}
+.beansEarningsCardLeft h4{
+    font-family: var(--lexend);
+    font-weight: 400;
+    font-size:20px;
+    color: #FFFFFF;
+    margin: 0;
+}
+.beansEarningsCardRight{
+    display: flex;
+    justify-content: right;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5.58px;
+}
+.beansEarningsCardRight img{
+    width: 100%;
+    height: 100%;
+    max-width: 88px;
+    max-height: 56px;
+    object-fit: cover;
+}
+.beansEarningsCardRight h5{
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 12px;
+    color: #FFFFFF;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin: 0;
+    cursor: pointer;
+}
+.bottom p{
+    font-family: var(--lato);
+    font-weight: 400;
+    font-size: 12px;
+    color: #8C8C8C;
+    margin: 0;
+}

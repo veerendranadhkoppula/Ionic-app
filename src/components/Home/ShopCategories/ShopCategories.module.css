@@ -1,0 +1,95 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 0px 22px 32px 24px;
+}
+.maincontainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+.Top{
+    display: flex;
+    justify-content: left;
+    
+}
+.Top p{
+    font-size: 16px;
+    color: #4B3827;
+    font-weight: 600;
+    font-family: var(--lato);
+    margin: 0;
+}
+.Bottom{
+    display: flex;
+    gap: 16px;
+    justify-content: left;
+    flex-direction: row;
+}
+.ShopcatCard{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 9px;
+    background: linear-gradient(
+        180deg,
+        #FFF9F3 0%,
+        #F7E6D2 100%
+    );
+    padding: 16px 7px 0px 6px;
+    width: 100%;
+    border-radius: 8px;
+    max-width: 135px;
+}
+.ShopcatCard p{
+    font-size: 14px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ShopcatCard img{
+    width: 100%;
+    min-height: 79px;
+    max-width: 91px;
+    max-height: 79px;
+    object-fit: cover;
+}
+.ShopcatCardtwo{
+     display: flex;
+   
+    align-items: center;
+    flex-direction: column;
+    gap: 9px;
+    background: linear-gradient(
+        180deg,
+        #FFF9F3 0%,
+        #F7E6D2 100%
+    );
+    padding: 16px 7px 0px 6px;
+    width: 100%;
+    border-radius: 8px;
+    max-width: 135px;
+    position: relative;
+}
+.ShopcatCardtwo p{
+    font-size: 14px;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    margin: 0;
+}
+.ShopcatCardtwo img{
+    width: 100%;
+    max-height: 79px;
+    object-fit: cover;
+    position: absolute;
+    bottom: 0px;
+    
+}

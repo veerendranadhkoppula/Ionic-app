@@ -1,2 +1,77 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&family=Lato:wght@300;400;600;700;800&display=swap');
+
+
+
+
+:root {
+  --lexend: 'Lexend';
+  --lato: 'Lato';
+  /* Override Ionic primary color so focused/active inputs use the brand color */
+  /* --ion-color-primary: #4B3827;
+  --ion-color-primary-rgb: 75, 56, 39;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255; */
+
+}
+ion-header {
+  --background: transparent;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  
+}
+ion-footer {
+  --background: transparent;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+   z-index: 10;
+}
+.header-md {
+  --background: transparent;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  -webkit-box-shadow: none;
+}
+
+
+ion-header::after {
+  display: none;
+}
+ion-content {
+  --background: #ffffff;
+  background: #ffffff;
+}
+ion-page {
+  background: #ffffff;
+}
+
+
+ion-toolbar {
+  --background: transparent;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+
+ion-toolbar::after {
+  display: none;
+}
+
+
+/* ion-input::part(native),
+ion-textarea::part(native),
+input,
+textarea {
+  color: #4b3827 !important; 
+  -webkit-text-fill-color: #4b3827 !important; 
+  caret-color: #4b3827 !important;
+} */
+.StripeElement{
+  background-color: #ffffff !important;
+}

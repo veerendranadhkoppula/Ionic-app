@@ -1,0 +1,53 @@
+.main{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color:#ffffff;
+    padding: 0px 24px 24px 24px;
+    justify-content: center;
+    align-items: center;
+    max-height: 100px;
+}
+.MainContainer{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    height: 100%;
+}
+.top{
+    display: flex;
+    justify-content: left;
+   
+}
+.top h3{
+    font-size: 16px;
+    margin: 0;
+    color: #4B3827;
+    font-weight: 500;
+    font-family: var(--lato);
+}
+.bottom{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: left;
+}
+.bottom p{
+    font-size: 12px;
+    margin: 0;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+}
+.InfoSpam{
+    color: #6C7A5F;
+    font-size: 12px;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    cursor: pointer;
+    font-family: var(--lato);
+}

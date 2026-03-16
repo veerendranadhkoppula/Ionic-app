@@ -1,0 +1,250 @@
+.main {
+  display: flex;
+  justify-content: left;
+
+  width: 100%;
+  background-color: #ffffffff;
+  padding: 0px 24px 32px 24px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 18px;
+  width: 100%;
+  border-bottom: 1px solid #8c8c8c33;
+  padding-bottom: 32px;
+}
+.Heading {
+  display: flex;
+  justify-content: left;
+}
+.Heading h4 {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b3827;
+  margin: 0;
+}
+.CuponsCoinsContainer {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+}
+.CuponsCoinsContainer h6 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 8px 0px 0px 14px;
+}
+
+.CoinsContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 8px 24px 8px 16px;
+  border: 1px solid #8c8c8c40;
+  border-radius: 8px;
+}
+.CuponsContainerLeft {
+  display: flex;
+  justify-content: left;
+}
+.CuponsContainerLeft h4 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+.CuponsContainerRight p {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #6c7a5f;
+  margin: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+}
+.CoinsContainerLeft {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 4px;
+}
+.tooltip {
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  gap: 1px;
+  align-items: center;
+}
+
+.tooltipWrapper h4 {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #4b3827;
+  margin: 0;
+}
+.CoinsContainerLeft p {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+.CoinsContainerRight {
+  display: flex;
+  justify-content: right;
+  cursor: pointer;
+  align-items: center;
+}
+.customCheckbox {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+}
+
+.customCheckbox input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 24px;
+  width: 24px;
+  border: 1px solid #3c435033;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: 0.2s ease;
+}
+
+.customCheckbox input:checked + .checkmark {
+  background-color: #6c7a5f;
+  border-color: #6c7a5f;
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.customCheckbox input:checked + .checkmark::after {
+  display: block;
+}
+
+.customCheckbox .checkmark::after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tooltipWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.tooltipContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tooltipIcon {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+}
+
+.tooltipBox {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 11px 8px;
+  width: 200px;
+
+  background: #8c8c8c;
+  color: white;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  border-radius: 8px;
+  flex-direction: row;
+  gap: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.tooltipContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tooltipContent p {
+  margin: 0;
+  color: white;
+  font-size: 14px;
+  font-family: var(--lato);
+  font-weight: 400;
+  line-height: 20px;
+  flex: 1;
+}
+
+.closeIcon {
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.tooltipContainer:hover .tooltipBox {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+.tooltipBox p {
+  margin: 0;
+  color: white;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+}
+
+.tooltipBox::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: #8c8c8c transparent transparent transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

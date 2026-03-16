@@ -1,0 +1,120 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff;
+}
+.MainContainer{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    gap:8px;
+}
+.Top{
+    display: flex;
+
+    justify-content: left;
+
+}
+.Top img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    object-position: center;
+
+}
+.Bottom{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    background-color: #ffffff;
+}
+.BottomTop{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    gap: 16px;
+}
+.BottomTopTop{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+}
+.BottomTopTopRight{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+}
+.VegTypeHere{
+    display: flex;
+    justify-content: left;
+}
+.ProductTitle{
+    display: flex;
+    justify-content: left;
+}
+.ProductTitle h2{
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #4B3827;
+    font-family: var(--lato);
+}
+.BottomTopTopLeft{
+    display: flex;
+    justify-content: right;
+    background-color: #ffffff;
+    border-bottom: 1px solid #4B382733;
+    border-radius: 4px;
+    padding: 8px 7px 9px 7px;
+    cursor: pointer;
+}
+.BottomTopdesc{
+    display: flex;
+    justify-content: left;
+}
+.BottomTopdesc p{
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+}
+.BottomBottom{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: left;
+}
+.BottomBottomHeading{
+    display: flex;
+    justify-content: left;
+}
+.BottomBottomHeading h4{
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #4B3827;
+    font-family: var(--lato);
+}
+.RecipeDeatails{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: left;
+}
+.RecipeDeatails p{
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #8C8C8C;
+    font-family: var(--lato);
+}

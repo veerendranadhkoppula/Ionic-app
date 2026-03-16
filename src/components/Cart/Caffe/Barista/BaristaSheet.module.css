@@ -1,0 +1,247 @@
+.main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 14px 24px 0px 24px;
+  height: 100%;
+  max-height: 450px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+.MainContainer {
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  gap: 1px;
+  flex-direction: column;
+}
+.Top {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 2;
+  padding-bottom: 10px;
+}
+
+.TopTop {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: row;
+}
+.TopTopLeft {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 16px;
+}
+.TopTopLeft h4 {
+  font-size: 16px;
+  font-family: var(--lato);
+  font-weight: 500;
+  color: #4b3827;
+  margin: 0;
+}
+.TopTopLeft p {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #8c8c8c;
+  margin: 0;
+}
+.TopTopRight {
+  display: flex;
+  justify-content: right;
+}
+.TopBottom {
+  display: flex;
+  justify-content: right;
+  width: 100%;
+}
+.TopBottom p {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #4b3827;
+  margin: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+}
+.Bottom {
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  gap: 17px;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+.Bottom::-webkit-scrollbar {
+  display: none; 
+}
+.BaristaItem {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  padding: 12px 0px 16px 0px;
+  border-bottom: 1px solid #4b38271a;
+}
+.BaristaItemLeft {
+  display: flex;
+  justify-content: left;
+  gap: 8px;
+  flex-direction: row;
+}
+.BaristaImage {
+  display: flex;
+  justify-content: left;
+}
+.BaristaImage img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  max-width: 50px;
+  max-height: 50px;
+}
+.BaristaDetails {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 8px;
+}
+.BaristaNameandTag {
+  display: flex;
+  justify-content: left;
+  gap: 2px;
+  flex-direction: column;
+}
+.BaristaNameandTag h4 {
+  font-size: 14px;
+  font-family: var(--lato);
+  font-weight: 600;
+  color: #4b3827;
+  margin: 0;
+}
+.BaristaNameandTag p {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #8c8c8c;
+  margin: 0;
+  max-width: 175px;
+}
+.viewmore {
+  display: flex;
+  justify-content: left;
+}
+.viewmore p {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #4b3827;
+  margin: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+}
+.BaristaItemRight {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #8c8c8c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #6c7a5f;
+  border-color: #6c7a5f;
+}
+
+.tick {
+  color: white;
+  font-size: 10px;
+  font-weight: 400;
+}
+.descriptionWrapper {
+  overflow: hidden;
+  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.descriptionInner p {
+  margin: 0;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #8c8c8c;
+}
+.ConfirmCta {
+  width: 100%;
+  padding: 23px 2px;
+  background-color: #ffff;
+  border-radius: 12px;
+  position: sticky;
+  bottom: 0;
+  background: #ffffff;
+  z-index: 2;
+}
+.ConfirmCta button {
+  width: 100%;
+  padding: 11px 10px;
+  background-color: #6c7a5f;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: var(--lato);
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.ConfirmCta button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+ z-index: 9999;
+}
+
+.overlayVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet {
+  width: 100%;
+  max-height: 90%;
+  transform: translateY(100%);
+  z-index: 10000; 
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sheetOpen {
+  transform: translateY(0%);
+}

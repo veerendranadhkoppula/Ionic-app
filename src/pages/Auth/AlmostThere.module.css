@@ -1,0 +1,312 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  width: 100%;
+}
+.MainConatiner {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  background: url("./1.png");
+  background-position: center;
+  width: 100%;
+}
+ion-input {
+  --padding-start: 0;
+  --padding-end: 0;
+  --background: transparent;
+}
+.NameRow{
+  display: flex;
+  gap: 12px;
+  flex-direction: row;
+}
+.Top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30%;
+  width: 100%;
+  background: url("./1.png");
+  background-position: center;
+  background-size: cover;
+}
+.Bottom {
+  display: flex;
+  flex-direction: column;
+  height: 70%;
+  width: 100%;
+  gap: 40px;
+  background-color: #ffffff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  justify-content: left;
+  padding: 35px 23px 50px 24px;
+}
+.BottomTop {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.BottomTopOne {
+  display: flex;
+  justify-content: left;
+}
+.BottomTopOne img {
+  max-width: 44px;
+    max-height: 48.5px;
+    width: 100%;
+    min-width: 44px;
+    min-height: 48.5px;
+    height: 100%;
+}
+.BottomTopTwo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: left;
+}
+.BottomTopTwo h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4b3827;
+  font-family: var(--lato);
+}
+.BottomTopTwo p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: #8c8c8c;
+  font-family: var(--lato);
+}
+.BottomBottom {
+  display: flex;
+  justify-content: left;
+}
+.continue {
+  width: 100%;
+  padding: 12px 10px;
+  background-color: #6c7a5f;
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.continueActive {
+  background-color: #6C7A5F;
+}
+.BottomTopForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.InputBox {
+  width: 100%;
+  padding: 13px 15px;
+  font-size: 12px;
+  font-family: var(--lato);
+  color: #8c8c8c;
+
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #4B382733;
+
+  outline: none;
+
+}
+
+.PhoneRow {
+  display: flex;
+  /* align-items: center; */
+  gap: 12px;
+}
+.CountryStatic {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+
+  /* border-bottom: 1px solid #4B382733; */
+}
+.Flag {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+}
+.Code {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #8C8C8C;
+}
+
+.CountryCode {
+  width: 64px;
+  padding: 13px 12px;
+  border: none;
+  border-bottom: 1px solid #4b382733;
+  background: transparent;
+  font-size: 12px;
+  text-align: center;
+}
+.PhoneInput {
+  flex: 1;
+
+  padding: 13px 15px;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #8C8C8C;
+
+  background: transparent;
+
+  border: none;
+  border-bottom: 1px solid #4B382733;
+ 
+
+  outline: none;
+
+ 
+
+  appearance: none;
+}
+.PhoneInput:focus,
+.CountrySelect:focus {
+  outline: none;
+  border-bottom-color: #4B382733;
+}
+
+.SelectBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 13px 15px;
+
+
+  font-size: 12px;
+  font-family: var(--lato);
+  color: #8c8c8c;
+   width: 340px;
+  color: #8c8c8c;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #4B382733;
+}
+
+.PasswordBox {
+  position: relative;
+}
+
+.EyeIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.CountrySelect {
+  width: 70px;
+  padding: 13px 12px;
+
+  font-family: var(--lato);
+  font-size: 12px;
+  color: #8c8c8c;
+
+  background: transparent;
+
+  border: none;
+  border-bottom: 1px solid #4b382733;
+  
+
+  outline: none;
+  appearance: none;
+
+  
+}
+
+.SelectBox {
+  width: 100%;
+  padding: 13px 15px;
+
+  font-family: var(--lato);
+  font-size: 12px;
+  color: #8c8c8c;
+
+  background: transparent;
+
+  border: none;
+
+  border-bottom: 1px solid #4b382733;
+ 
+
+  outline: none;
+  appearance: none;
+
+
+}
+.SelectWrapper {
+  position: relative;
+}
+
+.SelectArrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  border: none;
+  border-radius: 16px;
+
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.ArrowUp {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.ReferralMessage {
+  margin-top: 3px;
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #47890D; 
+}
+
+.ReferralError {
+  margin-top: 3px;
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #D93025; 
+}
+
+
+.ReferralInput {
+  width: 100%;
+  padding: 13px 15px;
+  padding-left: 16px !important;
+  font-size: 14px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #6C7A5F; 
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #4B382733;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.ReferralInput::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
+}

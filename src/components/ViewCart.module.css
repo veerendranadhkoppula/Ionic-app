@@ -1,0 +1,53 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+      position: fixed;
+  bottom: 85px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+    background-color: #6C7A5F;
+    padding: 12px 34px 13px 38px;
+}
+.disabled{
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.viewCartContainer{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+}
+.viewCartLeft{
+    display: flex;
+    justify-content: left;
+
+}
+.viewCartLeft p{
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #ffffff;
+    margin: 0;
+    font-size: 14px;
+}
+.viewCartRight{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    flex-direction: row;
+}
+.viewCartRight p{
+    font-family: var(--lato);
+    font-weight: 400;
+    color: #ffffff;
+    margin: 0;
+    font-size: 14px;
+}
+.viewCartRight svg{
+    cursor: pointer;
+}

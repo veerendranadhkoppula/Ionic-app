@@ -1,20 +1,5 @@
-/**
- * apiSubscriptions.ts
- *
- * Master subscription data  →  GET /api/web-subscription   (web-subscription collection)
- * Payment history           →  GET /api/web-orders?where[stripeSubscriptionID][equals]=<stripeSubId>
- * Cancel subscription       →  GET /api/web-subscription/:id/cancel
- *
- * Key backend fields (web-subscription):
- *   subsStatus        : "active" | "inactive" | "cancelled"
- *   nextPaymentDate   : ISO string — updated by invoice.paid webhook from Stripe period_end
- *   stripeSubscriptionID : Stripe sub_… id
- *   items[0].product  : depth-2 populated product doc (has subFreq array)
- *   items[0].subFreqID: matched to product.subFreq[].id for frequency label
- *   financials        : { subtotal, subscriptionDiscount, wtCoinsDiscount, shippingCharge, taxAmount, total }
- */
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

@@ -18,7 +18,7 @@ const submitContactForm = async (data: {
     console.debug("Contact form: logging failed", err);
   }
 
-  const res = await fetch("https://whitemantis-app.vercel.app/api/app-contact-form", {
+  const res = await fetch("https://endpoint.whitemantis.ae/api/app-contact-form", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const submitContactForm = async (data: {
     if (res.status === 400) {
       try {
         console.info("Contact form: retrying without Content-Type header as fallback");
-        const retry = await fetch("https://whitemantis-app.vercel.app/api/app-contact-form", {
+        const retry = await fetch("https://endpoint.whitemantis.ae/api/app-contact-form", {
           method: "POST",
           body: JSON.stringify(data),
           redirect: "follow",

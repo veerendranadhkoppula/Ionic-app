@@ -142,7 +142,7 @@ const ShopOrders: React.FC = () => {
         // extract the frequency id/subFreq (needed for checkout) and product/variant ids.
         if (matched) {
           try {
-            const API_BASE = "https://whitemantis-app.vercel.app/api";
+            const API_BASE = "https://endpoint.whitemantis.ae/api";
             const res = await fetch(`${API_BASE}/web-subscription/${matched.id}?depth=2`, {
               method: "GET",
               headers: token ? { Authorization: `JWT ${token}` } : undefined,

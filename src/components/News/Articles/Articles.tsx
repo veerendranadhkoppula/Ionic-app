@@ -60,10 +60,11 @@ const Articles = () => {
   return (
     <div className={styles.main}>
       <div className={styles.MainContainer}>
-        <div className={styles.Top}>
-          <h3>Latest Articles</h3>
-        </div>
-
+       {(loading || articles.length > 0) && (
+  <div className={styles.Top}>
+    <h3>Latest Articles</h3>
+  </div>
+)}
         <div className={styles.Bottom}>
           {showSkeleton && (
             <>
@@ -101,14 +102,20 @@ const Articles = () => {
             </div>
           )}
 
-          {!loading && !error && articles.length === 0 && (
-            <div style={{ width: "100%" }}>
-              <NoState
-                title={"No articles available right now."}
-                subtitle={"Check back later for new articles."}
-              />
-            </div>
-          )}
+      {!loading && !error && articles.length === 0 && (
+  <div style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "70vh",
+    width: "100%"
+  }}>
+    <NoState
+      title={"No articles available right now."}
+      subtitle={"Check back later for new articles."}
+    />
+  </div>
+)}
 
           <div style={{ display: showSkeleton ? "none" : "contents" }}>
             {!error && articles.slice(0, visibleCount).map((article) => (

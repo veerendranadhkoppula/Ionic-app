@@ -10,7 +10,7 @@
  *   GET  /api/web-orders/:id/cancel   (triggers refund handler)
  */
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

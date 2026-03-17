@@ -1,4 +1,4 @@
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

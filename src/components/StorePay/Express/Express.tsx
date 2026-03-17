@@ -6,7 +6,7 @@ import tokenStorage from "../../../utils/tokenStorage";
 import type { StoreCheckoutAddress } from "../../../api/apiStoreCart";
 import type { SubscriptionAddress } from "../../../api/apiStoreSubscription";
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 interface SubscriptionResultData {
   subscriptionId        : string;

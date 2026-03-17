@@ -448,9 +448,11 @@ const CafeMenu: React.FC = () => {
         })();
         } catch (error) {
           console.error("❌ Menu load failed:", error);
-        } finally {
-          setMenuLoaded(true);
-        }
+       } finally {
+  setMenuLoaded(true);
+  // Safety: if no items loaded, ensure image preload flag is set
+  setMenuImagesPreloaded(true);
+}
     };
 
     loadMenu();

@@ -19,7 +19,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getItem, getToken } from "../utils/tokenStorage";
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 const POLL_INTERVAL_MS = 10_000; // 10 seconds
 
 /**

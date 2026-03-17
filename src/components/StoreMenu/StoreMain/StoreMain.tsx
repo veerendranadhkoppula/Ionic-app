@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { useHistory } from "react-router-dom";
 import styles from "./StoreMain.module.css";
 import { FilterNode } from "../data/products";
@@ -201,9 +202,9 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
       const productValues = getProductValuesForPath(product, path);
       if (!productValues) return false;
 
-      return productValues
-        .map((v) => String(v).toLowerCase())
-        .includes(value.toLowerCase());
+    return productValues
+  .map((v) => String(v ?? "").toLowerCase())
+  .includes((value ?? "").toLowerCase());
     });
 
     if (matchedProduct) {
@@ -246,9 +247,9 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
       const pVals = getProductValuesForPath(product, path);
       if (!pVals || pVals.length === 0) return false;
 
-      return vals.some((v) =>
-        pVals.map((x) => String(x).toLowerCase()).includes(v.toLowerCase()),
-      );
+     return vals.some((v) =>
+  pVals.map((x) => String(x ?? "").toLowerCase()).includes((v ?? "").toLowerCase()),
+);
     });
   };
 
@@ -284,9 +285,9 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
       if (!productMatchesFilters(p, temp)) return false;
       const pVals = getProductValuesForPath(p, path);
       if (!pVals) return false;
-      return values.some((v) =>
-        pVals.map((x) => String(x).toLowerCase()).includes(v.toLowerCase()),
-      );
+    return values.some((v) =>
+  pVals.map((x) => String(x ?? "").toLowerCase()).includes((v ?? "").toLowerCase()),
+);
     }).length;
   };
 
@@ -329,11 +330,11 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
       const productValues = getProductValuesForPath(product, path);
       if (!productValues || productValues.length === 0) return false;
 
-      return values.some((val) =>
-        productValues
-          .map((v) => String(v).toLowerCase())
-          .includes(val.toLowerCase()),
-      );
+     return values.some((val) =>
+  productValues
+    .map((v) => String(v ?? "").toLowerCase())
+    .includes((val ?? "").toLowerCase()),
+);
     });
   });
 
@@ -353,7 +354,9 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
   }, [loading, products.length, actualActiveCategory]);
 
   return (
-    <div className={styles.main}>
+    <>
+
+      <div className={styles.main}>
       <div className={styles.MainContainer}>
         <div className={styles.prodsconatiner}>
           {loading && (
@@ -459,10 +462,42 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
               </div>
             );
           })}
-
-          {filteredProducts.length === 0 && (
-            <p>No products available in this category.</p>
-          )}
+{filteredProducts.length === 0 && !loading && (
+<div style={{
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "60vh",
+  width: "100%",
+  gap: "8px",
+  textAlign: "center",
+  padding: "24px",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -30%)"
+}}>
+    <h2 style={{
+      fontFamily: "var(--lexend)",
+      fontWeight: 400,
+      fontSize: "20px",
+      margin: 0,
+      color: "#6C7A5F"
+    }}>
+      Coming Soon
+    </h2>
+    <p style={{
+      fontFamily: "var(--lato)",
+      fontSize: "12px",
+      color: "#8C8C8C",
+      fontWeight: 400,
+      margin: 0
+    }}>
+      We're brewing something special for you
+    </p>
+  </div>
+)}
         </div>
 
         {isFilterOpen && (
@@ -560,52 +595,81 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
         </svg>
       </div>
       )}
-      {isBottomSheetOpen && selectedProduct && (
-        <StoreBottomSheet
-          product={selectedProduct}
-          onClose={() => setIsBottomSheetOpen(false)}
-        />
-      )}
-      {isAddSheetOpen && selectedProduct && (
-        <AddBottomSheet
-          product={selectedProduct}
-          onClose={() => setIsAddSheetOpen(false)}
-          onAddToCart={handleAddToCart}
-          onSubscribe={(product, variant) => {
-            setIsAddSheetOpen(false);
-            setSelectedProduct(product);
-            setSubscribeVariantId(variant?.id ?? null);
-            setIsSubscribeSheetOpen(true);
-          }}
-        />
-      )}
-      {isSubscribeSheetOpen && selectedProduct && (
-        <SubScribeBottomSheet
-          product={selectedProduct}
-          initialVariantId={subscribeVariantId ?? undefined}
-          onClose={() => setIsSubscribeSheetOpen(false)}
-        />
-      )}
+      </div>
 
-      {/* ── Conflict modal — shown when cafe cart has items ── */}
-      {conflictVisible && (
-        <CartConflictModal
-          existingOrigin="cafe"
-          incomingOrigin="store"
-          onReplace={handleConflictReplace}
-          onCancel={handleConflictCancel}
-        />
-      )}
+      {/* Sheets / modals / ViewCart: render into portal target (created in StoreMenu.tsx)
+          so they are mounted outside the scrollable IonContent and do not get
+          overlapped by the Ionic footer. We keep all logic/state unchanged. */}
+      {
+        (() => {
+          const sheets = (
+            <>
+              {isBottomSheetOpen && selectedProduct && (
+                <StoreBottomSheet
+                  product={selectedProduct}
+                  onClose={() => setIsBottomSheetOpen(false)}
+                />
+              )}
+              {isAddSheetOpen && selectedProduct && (
+                <AddBottomSheet
+                  product={selectedProduct}
+                  onClose={() => setIsAddSheetOpen(false)}
+                  onAddToCart={handleAddToCart}
+                  onSubscribe={(product, variant) => {
+                    setIsAddSheetOpen(false);
+                    setSelectedProduct(product);
+                    setSubscribeVariantId(variant?.id ?? null);
+                    setIsSubscribeSheetOpen(true);
+                  }}
+                />
+              )}
+              {isSubscribeSheetOpen && selectedProduct && (
+                <SubScribeBottomSheet
+                  product={selectedProduct}
+                  initialVariantId={subscribeVariantId ?? undefined}
+                  onClose={() => setIsSubscribeSheetOpen(false)}
+                />
+              )}
 
-      {/* ── ViewCart sticky bar — shown when store cart has items ── */}
-      {(() => { console.log(`🛍️ [StoreMain] render — storeCartCount=${storeCartCount}`); return null; })()}
-      {storeCartCount > 0 && (
-        <ViewCart
-          itemCount={storeCartCount}
-          onClick={() => history.push("/Cart")}
-        />
-      )}
-    </div>
+              {/* ── Conflict modal — shown when cafe cart has items ── */}
+              {conflictVisible && (
+                <CartConflictModal
+                  existingOrigin="cafe"
+                  incomingOrigin="store"
+                  onReplace={handleConflictReplace}
+                  onCancel={handleConflictCancel}
+                />
+              )}
+
+              {/* ── ViewCart sticky bar — shown when store cart has items ── */}
+              {(() => { console.log(`🛍️ [StoreMain] render — storeCartCount=${storeCartCount}`); return null; })()}
+              {storeCartCount > 0 && (
+                <ViewCart
+                  itemCount={storeCartCount}
+                  onClick={() => history.push("/Cart")}
+                />
+              )}
+            </>
+          );
+
+          // Prefer mounting into the #store-sheets-root created by the page so
+          // sheets become siblings of the IonFooter (like CafeMenu). If that
+          // container isn't present yet, fall back to rendering in place to
+          // avoid breaking behavior during SSR/hydration.
+          try {
+            if (typeof document !== "undefined") {
+              const container = document.getElementById("store-sheets-root");
+              if (container) return createPortal(sheets, container);
+            }
+          } catch {
+            // ignore and render in place
+          }
+
+          return sheets;
+        })()
+      }
+
+    </>
   );
 };
 

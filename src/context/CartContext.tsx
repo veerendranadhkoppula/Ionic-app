@@ -4,7 +4,7 @@ import { getSingleMenuItem } from "../api/apiCafe";
 import tokenStorage from "../utils/tokenStorage";
 import { buildCustomizationKey, deepSort } from "../utils/cartUtils";
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 const CART_URL = `${API_BASE}/app/cart`;
 
 export interface Product {
@@ -245,28 +245,6 @@ const normalizeCart = (rawCart: any): CartShape => {
   return { ...rawCart, items: rawItems };
 };
 
-// ============================================================
-// VARIANT STORE — client-side variant ledger
-//
-// WHY: The backend cart has ONE row per productId.  Posting the
-// same productId twice increments quantity — it never creates a
-// second row.  So three "same product, different customization"
-// adds would collapse to one backend row with qty=3.
-//
-// FIX: We maintain a client-side Map that tracks every variant
-// (unique rawSelectionKey) separately.  The backend row stores
-// the *total* quantity of all variants for that product.  We
-// expand backend rows into virtual display rows in expandCartItems.
-//
-// Virtual item IDs:  "<backendItemId>__<rawKey>"
-//   - uniquely identifies one variant
-//   - parsed with parseVirtualId()
-//   - the "plain backendId" form (no __) is used when there is
-//     exactly one variant (or no customizations at all)
-//
-// variantStoreRef shape:
-//   Map<productIdString, Map<rawKey, { normalized: any[], qty: number }>>
-// ============================================================
 
 type VariantEntry = { normalized: any[]; qty: number };
 
@@ -278,18 +256,11 @@ const parseVirtualId = (virtualId: string): { backendId: string; rawKey: string 
   return { backendId: virtualId.slice(0, idx), rawKey: virtualId.slice(idx + sep.length) };
 };
 
-// --- Cart Provider ---
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = React.useState<CartShape>(null);
-  // cartRef is kept in sync SYNCHRONOUSLY inside setCartAndRef so enqueued
-  // async functions always read the latest cart, not a stale closure value.
   const cartRef = React.useRef<CartShape>(null);
 
-  // ----------------------------------------------------------------
-  // variantStoreRef: pid (string) → Map<rawKey, { normalized, qty }>
-  // Persisted to localStorage under "cart_variants_v1".
-  // Replaces the old custStoreRef + rawKeyStoreRef approach.
-  // ----------------------------------------------------------------
+ 
   const variantStoreRef = React.useRef<Map<string, Map<string, VariantEntry>>>(
     (() => {
       try {
@@ -575,8 +546,7 @@ if (existing) {
 
         const headers = await getAuthHeaders();
 
-       if (backendItemId) {
-  // Send multiple increments if quantity > 1
+if (backendItemId) {
   for (let i = 0; i < quantity; i++) {
     const res = await authFetch(CART_URL, {
       method: "PATCH",
@@ -587,8 +557,8 @@ if (existing) {
     if (!res.ok) throw new Error(`addToCart PATCH increment failed: ${res.status}`);
   }
   console.log("🛒 [addToCart] PATCHed increment x", quantity, "on backendId:", backendItemId);
-} else {
-  const payload: any = { productId, quantity, customizations: normalized.length > 0 ? normalized : [] };
+        } else {
+          const payload: any = { productId, quantity: 1, customizations: normalized.length > 0 ? normalized : [] };
           console.log("🛒 [addToCart] POSTing new item:", JSON.stringify(payload).slice(0, 200));
           const res = await authFetch(CART_URL, {
             method: "POST",

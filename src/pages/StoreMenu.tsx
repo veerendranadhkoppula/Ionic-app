@@ -171,14 +171,16 @@ useEffect(() => {
               loading={loadingProducts}
             />
 
-
+          
           </>
         ))}
       </IonContent>
-      <IonFooter>  
-  <StickBar />
-</IonFooter>
-       
+       <IonFooter>
+        <StickBar />
+      </IonFooter>
+      {/* Portal target for store sheets so they render outside the scrollable IonContent
+          and do not get covered by the Ionic footer. */}
+      <div id="store-sheets-root" />
     </IonPage>
   );
 };

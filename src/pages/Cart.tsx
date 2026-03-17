@@ -406,11 +406,11 @@ const Cart: React.FC<Props> = () => {
       if (imageObj?.url) {
         imageUrl = String(imageObj.url);
         if (!imageUrl.startsWith("http"))
-          imageUrl = `https://whitemantis-app.vercel.app${imageUrl}`;
+          imageUrl = `https://endpoint.whitemantis.ae${imageUrl}`;
       } else if (typeof imageObj === "string") {
         imageUrl = imageObj;
         if (!imageUrl.startsWith("http"))
-          imageUrl = `https://whitemantis-app.vercel.app${imageUrl}`;
+          imageUrl = `https://endpoint.whitemantis.ae${imageUrl}`;
       }
     } catch {
       imageUrl = "";
@@ -701,11 +701,11 @@ const Cart: React.FC<Props> = () => {
             if (imageObj?.url) {
               imageUrl = String(imageObj.url);
               if (!imageUrl.startsWith("http"))
-                imageUrl = `https://whitemantis-app.vercel.app${imageUrl}`;
+                imageUrl = `https://endpoint.whitemantis.ae${imageUrl}`;
             } else if (typeof imageObj === "string") {
               imageUrl = imageObj;
               if (!imageUrl.startsWith("http"))
-                imageUrl = `https://whitemantis-app.vercel.app${imageUrl}`;
+                imageUrl = `https://endpoint.whitemantis.ae${imageUrl}`;
             }
           } catch {
             imageUrl = "";

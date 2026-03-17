@@ -90,7 +90,7 @@ if (product.image?.url) {
 }
 
 if (imageUrl && !imageUrl.startsWith("http")) {
-  imageUrl = `https://whitemantis-app.vercel.app${imageUrl}`;
+  imageUrl = `https://endpoint.whitemantis.ae${imageUrl}`;
 }
 
 return {

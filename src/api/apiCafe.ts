@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 // ── Best Sellers ──────────────────────────────────────────────────────────────
 
@@ -277,7 +277,7 @@ export async function getSingleMenuItem(
     image: item.image?.url
       ? item.image.url.startsWith("http")
         ? item.image.url
-        : `https://whitemantis-app.vercel.app${item.image.url}`
+        : `https://endpoint.whitemantis.ae${item.image.url}`
       : "",
     customizations: item.customizations || [],
     // Loyalty flags — present on single item response, absent from list endpoint
@@ -382,7 +382,7 @@ function extractImageUrl(image: any): string {
   if (image?.url) {
     return image.url.startsWith("http")
       ? image.url
-      : `https://whitemantis-app.vercel.app${image.url}`;
+      : `https://endpoint.whitemantis.ae${image.url}`;
   }
 
   return "";

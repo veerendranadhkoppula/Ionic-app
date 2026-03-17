@@ -5,7 +5,7 @@ import styles from "./Express.module.css";
 import tokenStorage from "../../../utils/tokenStorage";
 import { appendNotifications } from "../../../api/apiCafeNotifications";
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 interface ExpressProps {
   toPay             ?: number;

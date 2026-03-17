@@ -1,5 +1,5 @@
-const API_BASE = "https://whitemantis-app.vercel.app/api";
-export const MEDIA_BASE = "https://whitemantis-app.vercel.app";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
+export const MEDIA_BASE = "https://endpoint.whitemantis.ae";
 
 // ─── Sub-types ───────────────────────────────────────────────────────────────
 

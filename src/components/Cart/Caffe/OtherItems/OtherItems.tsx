@@ -130,11 +130,11 @@ const OtherItems: React.FC<OtherItemsProps> = ({ items = [], onEdit }) => {
                   if (typeof img === "string") {
                     productImage = img.startsWith("http")
                       ? img
-                      : `https://whitemantis-app.vercel.app${img}`;
+                      : `https://endpoint.whitemantis.ae${img}`;
                   } else if (img && typeof img === "object" && img.url) {
                     productImage = img.url.startsWith("http")
                       ? img.url
-                      : `https://whitemantis-app.vercel.app${img.url}`;
+                      : `https://endpoint.whitemantis.ae${img.url}`;
                   }
                 } catch {
                   productImage = noStateImg;

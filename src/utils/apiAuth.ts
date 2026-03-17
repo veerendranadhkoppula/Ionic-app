@@ -1,4 +1,4 @@
-export const API_BASE = "https://whitemantis-app.vercel.app/api";
+export const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 import tokenStorage from "./tokenStorage";
 

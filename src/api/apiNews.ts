@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 // ── News (Blogs) ─────────────────────────────────────────────────────────────
 
@@ -30,7 +30,7 @@ function lexicalToPlainText(root: any): string {
 function normImageUrl(url: string | null | undefined): string {
   if (!url) return "";
   if (url.startsWith("http")) return url;
-  return `https://whitemantis-app.vercel.app${url}`;
+  return `https://endpoint.whitemantis.ae${url}`;
 }
 
 function mapBlogDoc(d: any): NewsArticle {

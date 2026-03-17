@@ -9,7 +9,7 @@
  *  4. We store that JWT (not the Google idToken) as the app session token
  */
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 export interface GoogleAuthResponse {
   success: boolean;

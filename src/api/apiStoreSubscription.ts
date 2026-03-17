@@ -1,4 +1,4 @@
-const BASE_URL = "https://whitemantis-app.vercel.app";
+const BASE_URL = "https://endpoint.whitemantis.ae/";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Address type that the subscription checkout endpoint expects

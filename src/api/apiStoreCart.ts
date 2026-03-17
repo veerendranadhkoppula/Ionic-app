@@ -1,7 +1,7 @@
 ﻿import tokenStorage from "../utils/tokenStorage";
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
-const MEDIA_BASE = "https://whitemantis-app.vercel.app";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
+const MEDIA_BASE = "https://endpoint.whitemantis.ae";
 
 const CART_URL = `${API_BASE}/app/cart`;
 const CART_COLLECTION_URL = `${API_BASE}/app-cart`;

@@ -7,11 +7,11 @@
   "proxies": [
     {
       "path": "/auth",
-      "proxyUrl": "https://whitemantis-app.vercel.app"
+      "proxyUrl": "https://endpoint.whitemantis.ae.app"
     },
     {
       "path": "/api",
-      "proxyUrl": "https://whitemantis-app.vercel.app"
+      "proxyUrl": "https://endpoint.whitemantis.ae.app"
     }
   ]
 }

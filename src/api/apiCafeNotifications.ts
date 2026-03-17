@@ -14,7 +14,7 @@
  * PATCH /api/users/me  { pushToken }                      → register device token (backend field is "pushToken")
  */
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 import tokenStorage from "../utils/tokenStorage";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

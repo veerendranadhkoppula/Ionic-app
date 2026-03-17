@@ -28,7 +28,7 @@ ion-footer {
   background: transparent;
   box-shadow: none;
   border: none;
-   z-index: 10;
+   z-index: 1 !important;
 }
 .header-md {
   --background: transparent;
@@ -85,4 +85,7 @@ ion-input {
   --highlight-color-focused: transparent;
   --highlight-color-invalid: transparent;
   --highlight-color-valid: transparent;
+}
+ion-footer {
+  z-index: 10 !important;
 }

@@ -122,7 +122,7 @@ const StickOrderStatusBar = () => {
       if (token) headers["Authorization"] = `JWT ${token}`;
 
       const res = await fetch(
-        `https://whitemantis-app.vercel.app/api/app-orders/${orderId}`,
+        `https://endpoint.whitemantis.ae/api/app-orders/${orderId}`,
         { method: "GET", headers }
       );
 

@@ -1,6 +1,6 @@
 // ── User WT Coins ─────────────────────────────────────────────────────────────
 
-const API_BASE = "https://whitemantis-app.vercel.app/api";
+const API_BASE = "https://endpoint.whitemantis.ae/api";
 
 /**
  * Fetch the WT Coins global configuration.

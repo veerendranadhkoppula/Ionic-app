@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { IonPage, IonContent, IonText, IonInput } from "@ionic/react";
+import { IonPage, IonContent, IonText } from "@ionic/react";
 
 import { useHistory, useLocation } from "react-router-dom";
 import styles from "./Otp.module.css";
@@ -54,30 +54,7 @@ const Otp: React.FC = () => {
   const [resendCooldown, setResendCooldown] = useState<number>(0);
   const [resending, setResending] = useState(false);
 
-  const inputRefs = React.useRef<Array<HTMLIonInputElement | null>>([]);
-
-  const handleInput = async (e: CustomEvent, idx: number) => {
-    const input = e.target as HTMLIonInputElement;
-    const val = (e.detail.value || "").replace(/\D/g, "").slice(-1);
-
-    await input.setFocus(); // ensures internal input exists
-    input.value = val;
-
-    const newOtp = otp.substring(0, idx) + val + otp.substring(idx + 1);
-    setOtp(newOtp);
-
-    if (val) {
-      inputRefs.current[idx + 1]?.setFocus();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, idx: number) => {
-    const input = e.target as HTMLIonInputElement;
-
-    if (e.key === "Backspace" && !input.value) {
-      inputRefs.current[idx - 1]?.setFocus();
-    }
-  };
+ const inputRefs = React.useRef<Array<HTMLInputElement | null>>([]);
 
   const onVerify = async () => {
     setError(null);
@@ -98,30 +75,30 @@ const Otp: React.FC = () => {
 
       const resp: any = await api.verifyOtp(currentEncrypted, otp);
 
+      if (resp?.user) {
+        const currentUser = {
+          id: resp.user.id,
+          email: resp.user.email,
+          firstName: resp.user.firstName,
+          lastName: resp.user.lastName,
+          mobile: resp.user.mobile,
+          gender: resp.user.gender,
+        };
 
-   if (resp?.user) {
-  const currentUser = {
-    id: resp.user.id,
-    email: resp.user.email,
-    firstName: resp.user.firstName,
-    lastName: resp.user.lastName,
-    mobile: resp.user.mobile,
-    gender: resp.user.gender,
-  };
-
-  saveUser(currentUser as any);
-  setCurrentUser(currentUser as any);
-}
-
-
+        saveUser(currentUser as any);
+        setCurrentUser(currentUser as any);
+      }
 
       if (!resp.isNewUser) {
         history.replace("/home");
       } else {
-        history.replace(`/auth/almost?email=${encodeURIComponent(email || "")}`, {
-          email,
-          encryptedEmail: currentEncrypted,
-        });
+        history.replace(
+          `/auth/almost?email=${encodeURIComponent(email || "")}`,
+          {
+            email,
+            encryptedEmail: currentEncrypted,
+          },
+        );
       }
     } catch {
       setError("Invalid code");
@@ -278,19 +255,35 @@ const Otp: React.FC = () => {
                 <div className={styles.BottomTopThree}>
                   <div className={styles.OTPWrapper}>
                     {[0, 1, 2, 3].map((i) => (
-                      <IonInput
+                      <input
                         key={i}
-                        ref={(el) => {
-                          inputRefs.current[i] = el;
-                        }}
+                      ref={(el) => {
+  inputRefs.current[i] = el;
+}}
                         type="tel"
                         inputMode="numeric"
-                        maxlength={1}
-                        className={`${styles.OTPInput} ${otp[i] ? styles.activeOTP : ""}`}
-
-                        onIonInput={(e) => handleInput(e, i)}
-                        onKeyDown={(e) => handleKeyDown(e, i)}
-                        autofocus={i === 0}
+                        maxLength={1}
+                        className={`${styles.OTPInput} ${
+                          otp[i] ? styles.activeOTP : ""
+                        }`}
+                        value={otp[i] || ""}
+                        onChange={(e) => {
+                          const val = e.target.value
+                            .replace(/\D/g, "")
+                            .slice(-1);
+                          const newOtp =
+                            otp.substring(0, i) + val + otp.substring(i + 1);
+                          setOtp(newOtp);
+                          if (val && inputRefs.current[i + 1]) {
+                            inputRefs.current[i + 1]?.focus();
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Backspace" && !otp[i]) {
+                            inputRefs.current[i - 1]?.focus();
+                          }
+                        }}
+                        autoFocus={i === 0}
                       />
                     ))}
                   </div>

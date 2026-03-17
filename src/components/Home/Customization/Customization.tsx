@@ -42,6 +42,7 @@ interface CustomizationProps {
   isOpen: boolean;
   product: ProductWithCustomization | null;
   onClose: () => void;
+  existingCartCount?: number; 
   onConfirm: (data: {
     bagAmount: string;
     size: string;
@@ -97,6 +98,7 @@ const Customization: React.FC<CustomizationProps> = ({
   onClose,
   onConfirm,
   initialSelections,
+  
 }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<{
@@ -382,15 +384,16 @@ const Customization: React.FC<CustomizationProps> = ({
           )}
 
           <div className={styles.Bottom}>
-            <div className={styles.QuantityWrapper}>
-              <button
-                onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
-              >
-                −
-              </button>
-              <span>{quantity}</span>
-              <button onClick={() => setQuantity((prev) => prev + 1)}>+</button>
-            </div>
+           <div className={styles.QuantityWrapper}>
+  <button
+    onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+  >
+    −
+  </button>
+  <span>{quantity}</span>
+  <button onClick={() => setQuantity((prev) => prev + 1)}>+</button>
+</div>
+
 
             <button
               className={styles.AddItemButton}

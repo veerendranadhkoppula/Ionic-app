@@ -133,18 +133,31 @@
 
 .InputBox {
   width: 100%;
-  /* max-width: 350px; */
-  padding: 13px 15px 13px 15px;
+  padding: 13px 16px;
   font-size: 12px;
+  font-family: var(--lato);
   font-weight: 400;
-  color: #8C8C8C;
+  color: #4B3827;
   background: transparent;
   border: none;
   border-bottom: 1px solid #4B382733;
   outline: none;
-  /* box-shadow: 0 6px 0 -4px rgba(0, 0, 0, 0.15); */
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.25s ease;
+}
 
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+.InputBox::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
+}
+
+.InputBox:focus {
+  border-bottom: 1px solid #4B3827;
+}
+
+.InputBox.hasValue {
+  border-bottom: 1px solid #4B3827;
 }
 
 .InputBox::placeholder {
@@ -212,19 +225,30 @@
     background-color: #8C8C8C;
 }
 .InputBox {
-  --padding-start: 16px;
-  --padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --background: transparent;
-  --border-width: 0;
-  --highlight-height: 0;
-   --color: #4B3827 !important;
-  --placeholder-color: #8C8C8C;
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #4B3827;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #4B382733;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.25s ease;
 }
-.InputBox:focus-within {
+
+.InputBox::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
+}
+
+.InputBox:focus {
   border-bottom: 1px solid #4B3827;
 }
+
 .InputBox.hasValue {
   border-bottom: 1px solid #4B3827;
 }

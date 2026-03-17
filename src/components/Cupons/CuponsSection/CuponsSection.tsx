@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CuponsSection.module.css";
-import { IonInput } from "@ionic/react";
+
 import { useHistory, useLocation } from "react-router-dom";
 import { getCoupons, validateCoupon, Coupon } from "../../../api/apiCoupons";
 import tokenStorage from "../../../utils/tokenStorage";
@@ -128,18 +128,18 @@ const CuponsSection: React.FC = () => {
           <div className={`${styles.CouponInputWrapper} ${
             isActive ? styles.CouponWrapperActive : ""
           }`}>
-            <IonInput
-              className={styles.CouponInput}
-              placeholder="Enter Coupon Code"
-              type="text"
-              value={inputCode}
-              onIonInput={(e) => {
-                setInputCode(e.detail.value ?? "");
-                setInputError(null);
-              }}
-              onIonFocus={() => setInputFocused(true)}
-              onIonBlur={() => setInputFocused(false)}
-            />
+           <input
+  className={styles.CouponInput}
+  placeholder="Enter Coupon Code"
+  type="text"
+  value={inputCode}
+  onChange={(e) => {
+    setInputCode(e.target.value);
+    setInputError(null);
+  }}
+  onFocus={() => setInputFocused(true)}
+  onBlur={() => setInputFocused(false)}
+/>
             <button
               className={`${styles.ApplyText} ${isActive ? styles.ApplyTextActive : ""}`}
               disabled={!inputCode.trim() || inputLoading}

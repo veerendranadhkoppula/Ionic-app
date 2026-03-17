@@ -13,11 +13,7 @@
   background-position: center;
   width: 100%;
 }
-ion-input {
-  --padding-start: 0;
-  --padding-end: 0;
-  --background: transparent;
-}
+
 .NameRow{
   display: flex;
   gap: 12px;
@@ -110,19 +106,27 @@ ion-input {
 
 .InputBox {
   width: 100%;
-  padding: 13px 15px;
+  padding: 13px 16px;
   font-size: 12px;
   font-family: var(--lato);
-  color: #8c8c8c;
-
+  font-weight: 400;
+  color: #4B3827;
   background: transparent;
   border: none;
   border-bottom: 1px solid #4B382733;
-
   outline: none;
-
+  -webkit-appearance: none;
+  appearance: none;
 }
 
+.InputBox::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
+}
+
+.InputBox:focus {
+  border-bottom: 1px solid #4B3827;
+}
 .PhoneRow {
   display: flex;
   /* align-items: center; */
@@ -159,29 +163,22 @@ ion-input {
 }
 .PhoneInput {
   flex: 1;
-
-  padding: 13px 15px;
+  padding: 13px 0;
   font-size: 12px;
   font-family: var(--lato);
   font-weight: 400;
-  color: #8C8C8C;
-
+  color: #4B3827;
   background: transparent;
-
   border: none;
   border-bottom: 1px solid #4B382733;
- 
-
   outline: none;
-
- 
-
+  -webkit-appearance: none;
   appearance: none;
 }
-.PhoneInput:focus,
-.CountrySelect:focus {
-  outline: none;
-  border-bottom-color: #4B382733;
+
+.PhoneInput::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
 }
 
 .SelectBox {
@@ -293,16 +290,17 @@ ion-input {
 
 .ReferralInput {
   width: 100%;
-  padding: 13px 15px;
-  padding-left: 16px !important;
+  padding: 13px 16px;
   font-size: 14px;
   font-family: var(--lato);
   font-weight: 400;
-  color: #6C7A5F; 
+  color: #6C7A5F;
   background: transparent;
   border: none;
   border-bottom: 1px solid #4B382733;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
   margin-bottom: 12px;
 }
 

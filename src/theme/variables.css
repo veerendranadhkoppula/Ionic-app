@@ -75,3 +75,14 @@ textarea {
 .StripeElement{
   background-color: #ffffff !important;
 }
+ion-input {
+  --color: #4B3827;
+  --placeholder-color: #8C8C8C;
+  --placeholder-opacity: 1;
+  --background: transparent;
+  --padding-start: 16px;
+  --highlight-color: transparent;
+  --highlight-color-focused: transparent;
+  --highlight-color-invalid: transparent;
+  --highlight-color-valid: transparent;
+}

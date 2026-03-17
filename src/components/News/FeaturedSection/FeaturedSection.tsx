@@ -10,7 +10,11 @@ const FeaturedSection = () => {
   const intervalRef = useRef<number | undefined>(undefined);
   const { articles, loading } = useNewsList();
 
-  // Featured = isFeatured blogs first, fallback to all articles
+  // ── Touch/drag tracking ───────────────────────────────────
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const MIN_SWIPE_DISTANCE = 50; // px — less than this = tap, not swipe
+
   const featured: NewsArticle[] = articles.filter((a) => a.isFeatured).length > 0
     ? articles.filter((a) => a.isFeatured)
     : articles;
@@ -34,6 +38,40 @@ const FeaturedSection = () => {
 
   const handleManualChange = (index: number) => {
     setActiveIndex(index);
+  };
+
+  // ── Swipe handlers ────────────────────────────────────────
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchEndX.current = e.targetTouches[0].clientX;
+    // Pause auto slide while user is touching
+    clearInterval(intervalRef.current);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const distance = touchStartX.current - touchEndX.current;
+    const isSwipe = Math.abs(distance) > MIN_SWIPE_DISTANCE;
+
+    if (isSwipe) {
+      if (distance > 0) {
+        // Swiped LEFT → go to next
+        setActiveIndex((prev) =>
+          prev === featured.length - 1 ? 0 : prev + 1
+        );
+      } else {
+        // Swiped RIGHT → go to previous
+        setActiveIndex((prev) =>
+          prev === 0 ? featured.length - 1 : prev - 1
+        );
+      }
+    } else {
+      // Was just a tap — restart auto slide
+      startAutoSlide();
+    }
   };
 
   // Show skeleton while loading
@@ -70,7 +108,13 @@ const FeaturedSection = () => {
           <p>Featured Articles</p>
         </div>
 
-        <div className={styles.Bottom}>
+        {/* Swipe area */}
+        <div
+          className={styles.Bottom}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className={styles.info}>
             <h3 key={activeIndex} className={styles.fadeIn}>
               {featured[activeIndex].title}

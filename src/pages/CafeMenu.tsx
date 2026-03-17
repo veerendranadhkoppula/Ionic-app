@@ -1251,28 +1251,34 @@ const CafeMenu: React.FC = () => {
           disabled={Boolean(shopClosed)}
         />
       )}
-        <Customization
-        isOpen={isCustomizationOpen}
-        product={customizingProduct}
-        onClose={() => {
-          setIsCustomizationOpen(false);
-          setCustomizingProduct(null);
-        }}
-        onConfirm={async (payload) => {
-          if (!customizingProduct?.id) return;
-
-          const productId = customizingProduct.id;
-
-          try {
-            console.log('CafeMenu: Customization confirm (footer)', { productId, payload });
-            await addToCart(productId, payload);
-          } catch (err) {
-            console.error("Failed addToCart:", err);
-          }
-
-          setIsCustomizationOpen(false);
-          setCustomizingProduct(null);
-        }}
+       <Customization
+  isOpen={isCustomizationOpen}
+  product={customizingProduct}
+  existingCartCount={
+    customizingProduct?.id
+      ? (cart?.items || []).filter((ci: any) => {
+          const pid = Number(ci?.productId ?? ci?.product?.id ?? ci?.product?.value?.id);
+          return pid === Number(customizingProduct.id);
+        }).reduce((acc: number, it: any) => acc + (it.quantity || 0), 0)
+      : 0
+  }
+  onClose={() => {
+    setIsCustomizationOpen(false);
+    setCustomizingProduct(null);
+  }}
+     onConfirm={async (payload) => {
+  if (!customizingProduct?.id) return;
+  const productId = customizingProduct.id;
+  try {
+    console.log('CafeMenu: Customization confirm (footer)', { productId, payload });
+   const qty = payload.quantity ?? 1;
+await addToCart(productId, payload, qty);
+  } catch (err) {
+    console.error("Failed addToCart:", err);
+  }
+  setIsCustomizationOpen(false);
+  setCustomizingProduct(null);
+}}
       />
         <RepeatCustomization
           isOpen={Boolean(isRepeatOpen)}

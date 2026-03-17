@@ -39,7 +39,7 @@ export type CartContextShape = {
   shopId: number | null;
   loading: boolean;
   refreshCart: (shopId?: number | null) => Promise<CartShape | null>;
-  addToCart: (productId: number, customizations?: any) => Promise<CartShape | null>;
+ addToCart: (productId: number, customizations?: any, quantity?: number) => Promise<CartShape | null>;
   incrementItem: (itemId: string) => Promise<CartShape | null>;
   decrementItem: (itemId: string) => Promise<CartShape | null>;
   removeItem: (itemId: string) => Promise<CartShape | null>;
@@ -515,7 +515,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   //                    then record new backendId in variantStoreRef
   //  6. saveVariantStore(); refreshCart()
   // ----------------------------------------------------------------
-  const addToCart = React.useCallback(async (productId: number, customizations?: any): Promise<CartShape | null> => {
+ const addToCart = React.useCallback(async (productId: number, customizations?: any, quantity: number = 1): Promise<CartShape | null> => {
     return enqueue(async () => {
       setLoading(true);
       try {
@@ -535,14 +535,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           variantStoreRef.current.set(pid, new Map());
         }
         const variantMap = variantStoreRef.current.get(pid)!;
-        const existing = variantMap.get(incomingRawKey);
-        if (existing) {
-          existing.qty += 1;
-          console.log("🛒 [addToCart] existing variant qty→", existing.qty);
-        } else {
-          variantMap.set(incomingRawKey, { normalized, qty: 1 });
-          console.log("🛒 [addToCart] new variant created, rawKey:", incomingRawKey.slice(0, 80));
-        }
+       const existing = variantMap.get(incomingRawKey);
+if (existing) {
+  existing.qty += quantity;
+  console.log("🛒 [addToCart] existing variant qty→", existing.qty);
+} else {
+  variantMap.set(incomingRawKey, { normalized, qty: quantity });
+  console.log("🛒 [addToCart] new variant created, rawKey:", incomingRawKey.slice(0, 80));
+}
 
         // Persist variant ledger immediately
         saveVariantStore();
@@ -575,17 +575,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const headers = await getAuthHeaders();
 
-        if (backendItemId) {
-          console.log("🛒 [addToCart] PATCHing increment on backendId:", backendItemId);
-          const res = await authFetch(CART_URL, {
-            method: "PATCH",
-            headers: { ...headers, "Content-Type": "application/json" },
-            body: JSON.stringify({ itemId: backendItemId, action: "increment" }),
-          });
-          await parseJsonSafe(res);
-          if (!res.ok) throw new Error(`addToCart PATCH increment failed: ${res.status}`);
-        } else {
-          const payload: any = { productId, quantity: 1, customizations: normalized.length > 0 ? normalized : [] };
+       if (backendItemId) {
+  // Send multiple increments if quantity > 1
+  for (let i = 0; i < quantity; i++) {
+    const res = await authFetch(CART_URL, {
+      method: "PATCH",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId: backendItemId, action: "increment" }),
+    });
+    await parseJsonSafe(res);
+    if (!res.ok) throw new Error(`addToCart PATCH increment failed: ${res.status}`);
+  }
+  console.log("🛒 [addToCart] PATCHed increment x", quantity, "on backendId:", backendItemId);
+} else {
+  const payload: any = { productId, quantity, customizations: normalized.length > 0 ? normalized : [] };
           console.log("🛒 [addToCart] POSTing new item:", JSON.stringify(payload).slice(0, 200));
           const res = await authFetch(CART_URL, {
             method: "POST",

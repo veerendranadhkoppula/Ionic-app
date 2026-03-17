@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage } from "@ionic/react";
+import { IonContent, IonHeader, IonPage, IonFooter } from "@ionic/react";
 import useNetworkStatus from "../hooks/useNetworkStatus";
 import OfflineOverlay from "../components/OfflineOverlay/OfflineOverlay";
 import { useState, useEffect } from "react";
@@ -171,10 +171,13 @@ useEffect(() => {
               loading={loadingProducts}
             />
 
-            <StickBar />
+
           </>
         ))}
       </IonContent>
+      <IonFooter>  
+  <StickBar />
+</IonFooter>
        
     </IonPage>
   );

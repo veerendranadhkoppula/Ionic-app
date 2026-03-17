@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { IonPage, IonContent, IonInput } from "@ionic/react";
+import { IonPage, IonContent } from "@ionic/react";
 
 import { useHistory } from "react-router-dom";
 import styles from "./Login.module.css";
@@ -21,8 +21,8 @@ import { postGoogleAuth } from "../../api/apiGoogle";
 
 const Login: React.FC = () => {
   const history = useHistory();
-const ionRouter = useIonRouter();
-const listenerRef = useRef<any>(null);
+  const ionRouter = useIonRouter();
+  const listenerRef = useRef<any>(null);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,68 +62,65 @@ const listenerRef = useRef<any>(null);
       setLoading(false);
     }
   };
-useEffect(() => {
-  const setup = async () => {
-    listenerRef.current = await App.addListener("backButton", () => {
-      if (ionRouter.routeInfo.pathname === "/auth/login" || ionRouter.routeInfo.pathname === "/login") {
-        App.exitApp();
-      }
-    });
-  };
-  setup();
-  return () => {
-    listenerRef.current?.remove();
-  };
-}, [ionRouter]);
-const handleLoginSuccess = async (googleUser: any) => {
-  try {
-    setLoading(true);
-
-   
-    const idToken = googleUser?.idToken;
-    if (!idToken) throw new Error("No Google ID token received");
-
-    const authResult = await postGoogleAuth(idToken);
-
-    await tokenStorage.setToken(authResult.token);
-
-
-    const u = authResult.user;
-    const userToSave = {
-      id        : String(u.id ?? ""),
-      email     : u.email,
-      firstName : u.firstName ?? (u as any).given_name ?? "",
-      lastName  : u.lastName  ?? (u as any).family_name ?? "",
-      name      : `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim(),
-    };
-    saveUser(userToSave as any);
-    setCurrentUser(userToSave as any);
-
-  
-    const hasCompletedProfile =
-      !authResult.isNewUser &&
-      !!u.firstName &&
-      String(u.firstName).trim().length > 0;
-
-    if (!hasCompletedProfile) {
-
-      history.replace("/auth/almost", {
-        email     : u.email,
-        firstName : String(u.firstName ?? (u as any).given_name  ?? "").trim(),
-        lastName  : String(u.lastName  ?? (u as any).family_name ?? "").trim(),
+  useEffect(() => {
+    const setup = async () => {
+      listenerRef.current = await App.addListener("backButton", () => {
+        if (
+          ionRouter.routeInfo.pathname === "/auth/login" ||
+          ionRouter.routeInfo.pathname === "/login"
+        ) {
+          App.exitApp();
+        }
       });
-    } else {
+    };
+    setup();
+    return () => {
+      listenerRef.current?.remove();
+    };
+  }, [ionRouter]);
+  const handleLoginSuccess = async (googleUser: any) => {
+    try {
+      setLoading(true);
 
-      history.replace("/home");
+      const idToken = googleUser?.idToken;
+      if (!idToken) throw new Error("No Google ID token received");
+
+      const authResult = await postGoogleAuth(idToken);
+
+      await tokenStorage.setToken(authResult.token);
+
+      const u = authResult.user;
+      const userToSave = {
+        id: String(u.id ?? ""),
+        email: u.email,
+        firstName: u.firstName ?? (u as any).given_name ?? "",
+        lastName: u.lastName ?? (u as any).family_name ?? "",
+        name: `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim(),
+      };
+      saveUser(userToSave as any);
+      setCurrentUser(userToSave as any);
+
+      const hasCompletedProfile =
+        !authResult.isNewUser &&
+        !!u.firstName &&
+        String(u.firstName).trim().length > 0;
+
+      if (!hasCompletedProfile) {
+        history.replace("/auth/almost", {
+          email: u.email,
+          firstName: String(u.firstName ?? (u as any).given_name ?? "").trim(),
+          lastName: String(u.lastName ?? (u as any).family_name ?? "").trim(),
+        });
+      } else {
+        history.replace("/home");
+      }
+    } catch (error) {
+      console.error("Google login failed:", error);
+      setError("Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-  } catch (error) {
-    console.error("Google login failed:", error);
-    setError("Google sign-in failed. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
   const handleLoginError = (err: any) => {
     console.error("Login failed!", err);
   };
@@ -164,15 +161,15 @@ const handleLoginSuccess = async (googleUser: any) => {
                   </div>
 
                   <div className={styles.Three}>
-                    <IonInput
+                    <input
                       type="email"
                       placeholder="Email Address"
                       className={`${styles.InputBox} ${
                         email.trim() ? styles.hasValue : ""
                       }`}
                       value={email}
-                      onIonInput={(e) => {
-                        const value = e.detail.value ?? "";
+                      onChange={(e) => {
+                        const value = e.target.value; // ← CORRECT for regular input
                         setEmail(value);
                         setIsEmailValid(isValidEmail(value.trim()));
                         if (error) setError(null);

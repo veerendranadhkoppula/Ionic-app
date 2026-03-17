@@ -10,19 +10,36 @@ const Articles = () => {
   const history = useHistory();
   const { articles, loading, error, retry } = useNewsList();
 
-  // image-load tracking — skeleton stays until every img settles
   const [, setImagesReady] = React.useState(0);
   const expectedImages = useRef(0);
   const [imgLoading, setImgLoading] = React.useState(true);
+  const [visibleCount, setVisibleCount] = React.useState(5);
+  const [expandedIds, setExpandedIds] = React.useState<Record<number, boolean>>({});
+  const isLoadingMore = useRef(false); // ← NEW
 
-  // when articles arrive, set expected count; reset counter
   React.useEffect(() => {
+    // If user clicked "View more" — don't show skeleton again!
+    if (isLoadingMore.current) {
+      isLoadingMore.current = false;
+      setImgLoading(false);
+      return;
+    }
     if (loading) { setImgLoading(true); setImagesReady(0); return; }
     if (error || articles.length === 0) { setImgLoading(false); return; }
-    expectedImages.current = articles.length;
+    expectedImages.current = Math.min(articles.length, visibleCount);
     setImagesReady(0);
     setImgLoading(true);
-  }, [loading, error, articles.length]);
+  }, [loading, error, articles.length, visibleCount]);
+
+  // Safety timeout
+  React.useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => {
+        setImgLoading(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   const handleImageSettled = () => {
     setImagesReady((prev) => {
@@ -32,9 +49,13 @@ const Articles = () => {
     });
   };
 
+  // ← NEW: handle view more without triggering skeleton
+  const handleViewMore = () => {
+    isLoadingMore.current = true;
+    setVisibleCount((v) => v + 5);
+  };
+
   const showSkeleton = loading || imgLoading;
-  const [visibleCount, setVisibleCount] = React.useState(5);
-  const [expandedIds, setExpandedIds] = React.useState<Record<number, boolean>>({});
 
   return (
     <div className={styles.main}>
@@ -44,7 +65,6 @@ const Articles = () => {
         </div>
 
         <div className={styles.Bottom}>
-          {/* Skeleton — stays until API done + every image loaded */}
           {showSkeleton && (
             <>
               {Array.from({ length: SKELETON_COUNT }).map((_, n) => (
@@ -90,7 +110,6 @@ const Articles = () => {
             </div>
           )}
 
-          {/* Real cards rendered (hidden) so images start loading immediately */}
           <div style={{ display: showSkeleton ? "none" : "contents" }}>
             {!error && articles.slice(0, visibleCount).map((article) => (
               <div
@@ -114,38 +133,43 @@ const Articles = () => {
                     </div>
 
                     <div className={styles.title}>
-                        {/* Title with truncation/expand behavior when >100 chars */}
-                        {article.title && article.title.length > 100 ? (
-                          <div className={styles.ExpandableTitle}>
-                            <div className={`${styles.titlePreview} ${expandedIds[article.id] ? styles.hidden : ""}`}>
-                              <h3>
-                                {article.title.slice(0, 100)}
-                                <span
-                                  className={styles.ellipsis}
-                                  onClick={() => setExpandedIds((prev) => ({ ...prev, [article.id]: true }))}
-                                  aria-label="Expand title"
-                                >
-                                  ...
-                                </span>
-                              </h3>
-                            </div>
-
-                            <div className={`${styles.fullTitle} ${expandedIds[article.id] ? styles.open : ""}`}>
-                              <h3>{article.title}</h3>
-                              <button
-                                className={styles.collapseButton}
-                                onClick={() => setExpandedIds((prev) => ({ ...prev, [article.id]: false }))}
-                                aria-label="Collapse title"
+                      {article.title && article.title.length > 100 ? (
+                        <div className={styles.ExpandableTitle}>
+                          <div className={`${styles.titlePreview} ${expandedIds[article.id] ? styles.hidden : ""}`}>
+                            <h3>
+                              {article.title.slice(0, 100)}
+                              <span
+                                className={styles.ellipsis}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedIds((prev) => ({ ...prev, [article.id]: true }));
+                                }}
+                                aria-label="Expand title"
                               >
-                                {"\u22EE"}
-                              </button>
-                            </div>
+                                ...
+                              </span>
+                            </h3>
                           </div>
-                        ) : (
-                          <h3>{article.title}</h3>
-                        )}
-                        <p>{article.tagline}</p>
-                      </div>
+
+                          <div className={`${styles.fullTitle} ${expandedIds[article.id] ? styles.open : ""}`}>
+                            <h3>{article.title}</h3>
+                            <button
+                              className={styles.collapseButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setExpandedIds((prev) => ({ ...prev, [article.id]: false }));
+                              }}
+                              aria-label="Collapse title"
+                            >
+                              {"\u22EE"}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <h3>{article.title}</h3>
+                      )}
+                      <p>{article.tagline}</p>
+                    </div>
                   </div>
 
                   <div className={styles.rightContentBottom}>
@@ -155,29 +179,24 @@ const Articles = () => {
 
                     <div className={styles.rightContentBottomRight}>
                       <p>Read Article</p>
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M7 6L11 10L7 14"
-                          stroke="#6C7A5F"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 6L11 10L7 14" stroke="#6C7A5F" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
-            {/* View more for articles */}
+
+            {/* View more — uses handleViewMore now */}
             {!loading && !error && articles.length > visibleCount && (
               <div className={styles.viewMoreContainer}>
-                <p className={styles.viewMore} onClick={() => setVisibleCount((v) => v + 5)}>View more</p>
+                <p
+                  className={styles.viewMore}
+                  onClick={handleViewMore}  // ← CHANGED
+                >
+                  View more
+                </p>
               </div>
             )}
           </div>

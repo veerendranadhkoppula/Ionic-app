@@ -4,7 +4,7 @@
     align-items: center;
     width: 100%;
     background-color: #ffffff;
-    padding: 0px 24px 100px 24px;
+    padding: 0px 24px 50px 24px;
 }
 .MainContainer{
     display: flex;
@@ -51,6 +51,7 @@
     max-width: 200px;
     min-width: 149px;
     max-height: 138px;
+    min-height: 138px;
     object-fit: cover;
     border-radius: 8px;
 }

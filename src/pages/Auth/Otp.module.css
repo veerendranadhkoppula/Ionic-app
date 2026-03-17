@@ -126,45 +126,33 @@
 .OTPInput {
   width: 44px;
   height: 40px;
-
-  --padding-start: 0px;
-  --padding-end: 0px;
-  --padding-top: 0px;
-  --padding-bottom: 0px;
-
-  --background: transparent;
-  --border-width: 0;
-  --highlight-height: 0;
-
+  padding: 0;
   text-align: center;
-
   font-family: var(--lato);
   font-weight: 500;
   font-size: 18px;
-  color: #4b3827;
-
+  color: #4B3827;
+  background: transparent;
   border: none;
   border-bottom: 1px solid #4B382733;
-
-  transition: border-color 0.25s ease;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  caret-color: #4B3827;
 }
 
-.OTPInput input {
-  text-align: center !important;
+.OTPInput::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
 }
 
 .activeOTP {
-  border-bottom-color:#4B3827 !important;
-}
-
-.OTPInput input {
-  text-align: center !important;
+  border-bottom-color: #4B3827 !important;
 }
 
 .OTPInput:focus {
-  border-bottom-color: #6c7a5f;
+  border-bottom-color: #6C7A5F;
 }
-
 .BottomBottom {
   display: flex;
   justify-content: left;

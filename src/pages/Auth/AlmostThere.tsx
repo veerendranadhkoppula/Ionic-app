@@ -1,6 +1,6 @@
 // eslint: keep file lint-clean; avoid disabling rules globally
 import React, { useState } from "react";
-import { IonPage, IonContent, IonText, IonInput } from "@ionic/react";
+import { IonPage, IonContent, IonText } from "@ionic/react";
 import { useLocation } from "react-router-dom";
 import { useIonRouter } from "@ionic/react";
 import styles from "./AlmostThere.module.css";
@@ -321,28 +321,27 @@ const onSubmit = async () => {
                 </div>
 
                 <div className={styles.BottomTopForm}>
-                  <IonInput
-                    type="text"
-                    value={email}
-                    readonly={true}
-                    className={styles.InputBox}
-                  />
+                 <input
+  type="text"
+  value={email ?? ""}
+  readOnly
+  className={styles.InputBox}
+/>
                   <div className={styles.NameRow}>
-                    <IonInput
-                      type="text"
-                      placeholder="First Name *"
-                      className={styles.InputBox}
-                      value={firstName}
-                      onIonInput={(e) => setFirstName(e.detail.value ?? "")}
-                    />
-
-                    <IonInput
-                      type="text"
-                      placeholder="Last Name *"
-                      className={styles.InputBox}
-                      value={lastName}
-                      onIonInput={(e) => setLastName(e.detail.value ?? "")}
-                    />
+                  <input
+  type="text"
+  placeholder="First Name *"
+  className={styles.InputBox}
+  value={firstName}
+  onChange={(e) => setFirstName(e.target.value)}
+/>
+<input
+  type="text"
+  placeholder="Last Name *"
+  className={styles.InputBox}
+  value={lastName}
+  onChange={(e) => setLastName(e.target.value)}
+/>
                   </div>
 
                   <div className={styles.PhoneRow}>
@@ -350,14 +349,13 @@ const onSubmit = async () => {
                       <img src={uaeFlag} alt="UAE" className={styles.Flag} />
                       <span className={styles.Code}>+971</span>
                     </div>
-
-                    <IonInput
-                      type="tel"
-                      placeholder="Mobile Number *"
-                      className={styles.PhoneInput}
-                      value={mobile}
-                      onIonInput={(e) => setMobile(e.detail.value ?? "")}
-                    />
+<input
+  type="tel"
+  placeholder="Mobile Number *"
+  className={styles.PhoneInput}
+  value={mobile}
+  onChange={(e) => setMobile(e.target.value)}
+/>
                   </div>
 
                   <div className={styles.SelectWrapper}>
@@ -398,43 +396,42 @@ const onSubmit = async () => {
                   </div>
 
                     {/* Referral code input — optional, appears like the other inputs */}
-                    <IonInput
-                      type="text"
-                      placeholder="Have a referral code?"
-                      className={styles.ReferralInput}
-                      value={referralCode}
-                      onIonInput={(e) => {
-                        setReferralCode(e.detail.value ?? "");
-                        setReferralMessage(null);
-                        setReferralError(null);
-                      }}
-                        onIonBlur={async () => {
-                          // Immediate validation on blur (user finished typing)
-                          try {
-                            if (!referralCode || referralCode.trim().length === 0) return;
-                            // Cancel any pending debounce timer
-                            if (validateTimerRef.current) {
-                              window.clearTimeout(validateTimerRef.current);
-                              validateTimerRef.current = null;
-                            }
-                            const result = await validateReferralCodeApi(referralCode.trim());
-                            if (result.valid) {
-                              setReferralMessage("Referral code applied successfully!");
-                              setReferralError(null);
-                            } else if (result.unavailable) {
-                              setReferralMessage("Unable to validate referral code right now.");
-                              setReferralError(null);
-                            } else {
-                              setReferralError(result.message || "Invalid referral code.");
-                              setReferralMessage(null);
-                            }
-                          } catch (err) {
-                            console.warn("Referral validation failed", err);
-                            setReferralMessage("Unable to validate referral code right now.");
-                            setReferralError(null);
-                          }
-                        }}
-                    />
+                   <input
+  type="text"
+  placeholder="Have a referral code?"
+  className={styles.ReferralInput}
+  value={referralCode}
+  onChange={(e) => {
+    setReferralCode(e.target.value);
+    setReferralMessage(null);
+    setReferralError(null);
+  }}
+  onBlur={async () => {
+    try {
+      if (!referralCode || referralCode.trim().length === 0) return;
+      if (validateTimerRef.current) {
+        window.clearTimeout(validateTimerRef.current);
+        validateTimerRef.current = null;
+      }
+      const result = await validateReferralCodeApi(referralCode.trim());
+      if (result.valid) {
+        setReferralMessage("Referral code applied successfully!");
+        setReferralError(null);
+      } else if (result.unavailable) {
+        setReferralMessage("Unable to validate referral code right now.");
+        setReferralError(null);
+      } else {
+        setReferralError(result.message || "Invalid referral code.");
+        setReferralMessage(null);
+      }
+    } catch (err) {
+      console.warn("Referral validation failed", err);
+      setReferralMessage("Unable to validate referral code right now.");
+      setReferralError(null);
+    }
+  }}
+/>
+                   
 
                     {referralMessage && (
                       <div className={styles.ReferralMessage}>{referralMessage}</div>

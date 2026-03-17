@@ -18,7 +18,10 @@
   width: 100%;
   flex-direction: row;
 }
-
+.instructionPopup textarea::placeholder {
+  color: #8C8C8C;
+  opacity: 1;
+}
 .Addmorecta {
   display: flex;
   justify-content: left;

@@ -393,6 +393,10 @@
 .AddToCartButton button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  white-space: nowrap;
+    cursor: not-allowed;
+    font-size: 12px;
+    padding: 4px 4px;
 }
 
 .OutOfStock .WishListIcon {

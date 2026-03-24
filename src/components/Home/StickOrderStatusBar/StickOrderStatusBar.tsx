@@ -79,19 +79,25 @@ const StickOrderStatusBar = () => {
 
   useEffect(() => {
     // Read on mount (handles page refresh / first load)
-    const tryLoad = () => {
+  const tryLoad = async () => {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return;
       try {
-        const parsed: ActiveOrder & { persistedAt?: number } = JSON.parse(raw);
-        // If the persisted entry is too old, clear it and don't resurrect the bar.
-        if (parsed.persistedAt && Date.now() - parsed.persistedAt > PERSIST_TTL_MS) {
-          localStorage.removeItem(LS_KEY);
-          return;
-        }
-        orderTypeRef.current = parsed.orderType;
-        setActiveOrder(parsed);
-        setOrderId(parsed.orderId);
+       const parsed: ActiveOrder & { persistedAt?: number; userId?: string } = JSON.parse(raw);
+// If the persisted entry is too old, clear it and don't resurrect the bar.
+if (parsed.persistedAt && Date.now() - parsed.persistedAt > PERSIST_TTL_MS) {
+  localStorage.removeItem(LS_KEY);
+  return;
+}
+// If the order belongs to a different user, clear it.
+const currentUserId = await tokenStorage.getItem("user_id");
+if (parsed.userId && currentUserId && parsed.userId !== currentUserId) {
+  localStorage.removeItem(LS_KEY);
+  return;
+}
+orderTypeRef.current = parsed.orderType;
+setActiveOrder(parsed);
+setOrderId(parsed.orderId);
       } catch { /* ignore malformed */ }
     };
 

@@ -1,18 +1,3 @@
-/**
- * apiCafeNotifications.ts
- *
- * Backend schema (Notifications collection):
- *   - One document per user
- *   - doc.user              → relationship to users
- *   - doc.notificationEnabled → boolean
- *   - doc.notifications[]  → array of notification items
- *       each item: { title, description, origin: "cafe"|"store", notificationType: "general"|"order"|"reward" }
- *   - doc.createdAt / doc.updatedAt via timestamps:true
- *
- * GET  /api/notifications?where[user][equals]=<userId>   → fetch user's notification doc
- * PATCH /api/notifications/:id                           → update doc (e.g. clear notifications)
- * PATCH /api/users/me  { pushToken }                      → register device token (backend field is "pushToken")
- */
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 import tokenStorage from "../utils/tokenStorage";
@@ -33,7 +18,6 @@ export interface AppNotification {
   createdAt   : string;  // parent doc createdAt (best we have per-notification)
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function authHeaders(token: string | null): Record<string, string> {
   const h: Record<string, string> = { "Content-Type": "application/json" };
@@ -48,10 +32,7 @@ function resolveType(raw: string): NotificationType {
   return "general";
 }
 
-/**
- * Unwrap a parent notifications doc into a flat list of AppNotification.
- * Filters by origin so each tab only sees its own notifications.
- */
+
 function unwrapDoc(
   doc: Record<string, unknown>,
   filterOrigin?: "cafe" | "store",
@@ -79,13 +60,7 @@ function unwrapDoc(
     }));
 }
 
-// ─── API calls ────────────────────────────────────────────────────────────────
 
-/**
- * Fetch cafe notifications for the logged-in user.
- * The backend stores ONE doc per user with an inner array.
- * We filter by origin="cafe" and return the flat list.
- */
 export async function getNotifications(token: string | null): Promise<AppNotification[]> {
   console.log("[Notif] getNotifications called, token present:", !!token);
   if (!token) {
@@ -150,10 +125,7 @@ export async function getNotifications(token: string | null): Promise<AppNotific
   return all;
 }
 
-/**
- * Get the raw notification doc id for the current user.
- * Needed to PATCH (clear) notifications.
- */
+
 export async function getNotificationDocId(token: string | null): Promise<string | null> {
   let userId: string | null = null;
   try {
@@ -177,10 +149,7 @@ export async function getNotificationDocId(token: string | null): Promise<string
   return doc ? String(doc.id) : null;
 }
 
-/**
- * Clear all notifications for this user by setting notifications=[] on their doc.
- * (There is no per-notification read/delete — we clear the whole array.)
- */
+
 export async function clearAllNotifications(
   token : string | null,
   docId : string,
@@ -193,11 +162,10 @@ export async function clearAllNotifications(
 }
 
 /**
- * @deprecated — backend stores one array per user doc, no per-item read flag.
- * Kept so existing imports don't break — use clearAllNotifications() instead.
+ * @deprecated  no per-item read flag.
+ * Kept so use clearAllNotifications() instead.
  */
 export async function markNotificationRead(): Promise<void> {
-  // no-op — no per-notification read field in this schema
 }
 
 export async function appendNotifications(
@@ -211,7 +179,7 @@ export async function appendNotifications(
 ): Promise<void> {
   if (!token || items.length === 0) return;
 
-  // Step 1: Resolve userId (same pattern as getNotifications)
+  
   let userId: string | null = null;
   try {
     const meRes = await fetch(`${API_BASE}/users/me`, { method: "GET", headers: authHeaders(token) });
@@ -223,7 +191,6 @@ export async function appendNotifications(
   } catch { /* ignore */ }
   if (!userId) userId = await tokenStorage.getItem("user_id").catch(() => null);
 
-  // Step 2: Fetch existing notifications doc
   const getUrl = userId
     ? `${API_BASE}/notifications?where[user][equals]=${userId}&limit=1&depth=0`
     : `${API_BASE}/notifications?limit=1&depth=0`;
@@ -248,7 +215,7 @@ export async function appendNotifications(
     ? (doc.notifications as Record<string, unknown>[])
     : [];
 
-  // Step 3: PATCH with existing + new items
+ 
   const patchRes = await fetch(`${API_BASE}/notifications/${docId}`, {
     method  : "PATCH",
     headers : authHeaders(token),
@@ -267,7 +234,7 @@ export async function registerFcmToken(
   token     : string | null,
   fcmToken  : string,
 ): Promise<void> {
-  // Resolve the user's document ID, then PATCH that specific user doc.
+ 
   try {
     let userId: string | null = null;
     try {
@@ -312,9 +279,7 @@ export async function registerFcmToken(
   }
 }
 
-/**
- * Unregister the saved FCM token for the current user (set pushToken -> null)
- */
+
 export async function unregisterFcmToken(
   token: string | null,
 ): Promise<void> {

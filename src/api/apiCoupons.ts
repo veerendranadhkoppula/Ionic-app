@@ -1,18 +1,17 @@
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface Coupon {
   id: string;
-  /** e.g. "10% OFF" or "AED 10 OFF" */
+
   discountText: string;
-  /** Human-readable description shown on the card */
+
   description: string;
   code: string;
-  /** Formatted expiry string shown on the card */
+
   expiry: string;
   isActive: boolean;
-  // raw fields for checkout use
+
   discountType: "fixed" | "percentage";
   discountAmount: number;
   minimumAmount: number;
@@ -32,8 +31,6 @@ export interface ValidatedCoupon {
   } | null;
   message?: string;
 }
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function formatExpiry(expiryDate: string | null | undefined): string {
   if (!expiryDate) return "No expiry";
@@ -71,9 +68,7 @@ function formatDescription(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapCouponDoc(d: any): Coupon {
-  // A coupon is only usable if status is "active" AND expiry hasn't passed.
-  // Backend uses "status" in Management coupons and "couponStatus" in Cafe Coupons
-  // — accept either field name.
+
   const statusValue: string = d.couponStatus ?? d.status ?? "";
   const isExpired = d.expiryDate
     ? new Date(d.expiryDate).getTime() < Date.now()
@@ -98,12 +93,7 @@ function mapCouponDoc(d: any): Coupon {
   };
 }
 
-// ── API calls ─────────────────────────────────────────────────────────────────
 
-/**
- * GET /api/shop/:shopId/coupons
- * Returns all coupons for the given shop.
- */
 export async function getCoupons(shopId: number): Promise<Coupon[]> {
   const res = await fetch(`${API_BASE}/shop/${shopId}/coupons`);
   if (!res.ok) throw new Error(`Failed to load coupons: ${res.status}`);
@@ -114,11 +104,7 @@ export async function getCoupons(shopId: number): Promise<Coupon[]> {
   return docs.map(mapCouponDoc);
 }
 
-/**
- * GET /api/shop/:shopId/coupons/:code
- * Validates a coupon code against the backend.
- * Requires JWT auth.
- */
+
 export async function validateCoupon(
   code: string,
   token: string | null,

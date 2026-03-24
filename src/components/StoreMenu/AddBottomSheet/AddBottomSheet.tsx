@@ -20,7 +20,7 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
 
   const [selectedVariant, setSelectedVariant] = useState<StoreVariant | null>(firstVariant);
 
-  // Compute display price based on selection × quantity
+
   const unitPrice: number = product.hasVariantOptions
     ? selectedVariant
       ? (selectedVariant.variantSalePrice > 0 ? selectedVariant.variantSalePrice : selectedVariant.variantRegularPrice)
@@ -29,7 +29,7 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
 
   const displayPrice = unitPrice * quantity;
 
-  // Show Subscribe only if the product has a subscription
+
   const hasSubscription = product.hasVariantOptions
     ? product.variants.some((v) => v.hasVariantSub)
     : product.hasSimpleSub;
@@ -48,7 +48,7 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
         className={`${styles.main} ${isClosing ? styles.close : ""} ${product.hasVariantOptions ? styles.mainWithVariants : styles.mainNoVariants}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── STICKY TOP ── */}
+   
         <div className={styles.stickyTop}>
           {/* Close icon */}
           <div className={styles.WrongIcon} onClick={(e) => { e.stopPropagation(); triggerClose(); }}>
@@ -60,7 +60,7 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
             </svg>
           </div>
 
-          {/* Title + quantity selector */}
+
           <div className={styles.TitleandquntyConatiner}>
             <h3>{product.name}</h3>
             <div className={styles.QntyContainer}>
@@ -70,7 +70,7 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
             </div>
           </div>
 
-          {/* Price — updates with variant selection */}
+
           <div className={styles.PriceContainer}>
             <h4>AED {displayPrice}.00</h4>
           </div>
@@ -78,17 +78,17 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
           <div className={styles.line} />
         </div>
 
-        {/* ── SCROLLABLE MIDDLE — variant options ── */}
+
         <div className={styles.scrollArea}>
           {product.hasVariantOptions && product.variants.length > 0 && (
             <div className={styles.variantSection}>
-              {/* Section header */}
+
               <div className={styles.variantHeader}>
                 <span className={styles.variantLabel}>Quantity</span>
                 <span className={styles.requiredBadge}>Required</span>
               </div>
 
-              {/* Option rows */}
+
               <div className={styles.variantList}>
                 {product.variants.map((variant) => {
                   const isSelected = selectedVariant?.id === variant.id;
@@ -102,10 +102,9 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
                       className={styles.variantRow}
                       onClick={() => setSelectedVariant(variant)}
                     >
-                      <span className={styles.variantName}>{variant.variantName}</span>
+                      <span className={styles.variantName}>{variant.variantName} gm</span>
                       <div className={styles.variantRight}>
                         <span className={styles.variantPrice}>AED {price}</span>
-                        {/* Custom radio */}
                         <div className={`${styles.radio} ${isSelected ? styles.radioSelected : ""}`}>
                           {isSelected && <div className={styles.radioDot} />}
                         </div>
@@ -118,7 +117,6 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
           )}
         </div>
 
-        {/* ── STICKY BOTTOM — CTAs ── */}
         <div className={`${styles.stickyBottom} ${product.hasVariantOptions ? styles.stickyBottomPush : ""}`}>
           <div className={styles.BottomContainer}>
             {hasSubscription && (

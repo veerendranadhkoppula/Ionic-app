@@ -11,12 +11,11 @@ export interface NewsArticle {
   minutesToRead: string;
   date: string;
   image: string;
-  content: string; // plain text extracted from Lexical JSON
+  content: string; 
   isFeatured: boolean;
   slug: string;
 }
 
-/** Extract plain text from PayloadCMS Lexical rich-text JSON */
 function lexicalToPlainText(root: any): string {
   if (!root) return "";
   const walk = (node: any): string => {
@@ -60,10 +59,7 @@ function mapBlogDoc(d: any): NewsArticle {
   };
 }
 
-/**
- * Fetch all published blogs (shown as "News" in the app).
- * Uses scheduledFor filter so future-scheduled posts are excluded.
- */
+
 export async function getBlogs(): Promise<NewsArticle[]> {
   const now = new Date().toISOString();
   const params = new URLSearchParams({
@@ -85,9 +81,7 @@ export async function getBlogs(): Promise<NewsArticle[]> {
   return docs.map(mapBlogDoc);
 }
 
-/**
- * Fetch a single blog by numeric id.
- */
+
 export async function getBlogById(id: number): Promise<NewsArticle> {
   const res = await fetch(`${API_BASE}/blogs/${id}?depth=1`, {
     method: "GET",

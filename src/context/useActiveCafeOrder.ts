@@ -1,20 +1,4 @@
-/**
- * useActiveCafeOrder.ts
- *
- * Polls /api/app-orders every 10 s (only while CafeMenu is mounted) to check
- * whether the logged-in user has a cafe order that is still in progress.
- *
- * An order counts as "in progress" when ALL of these are true:
- *   1. appOrderStatus (take-away) OR appOrderStatusDine (dine-in) is one of:
- *      "pending" | "preparing" | "ready"
- *   2. paymentStatus is NOT "failed"  (failed payments ≠ real in-progress order)
- *
- * "accepted" is intentionally excluded — it lives in the separate
- * `orderAcceptance` field and is NOT an appOrderStatus value.
- *
- * On any network/parse error the hook returns false → user is never blocked
- * unnecessarily.
- */
+
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getItem, getToken } from "../utils/tokenStorage";
@@ -22,10 +6,7 @@ import { getItem, getToken } from "../utils/tokenStorage";
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 const POLL_INTERVAL_MS = 10_000; // 10 seconds
 
-/**
- * Only real kitchen statuses — "accepted" is orderAcceptance, not appOrderStatus.
- * "completed" and "cancelled" mean the order is done → don't block.
- */
+
 const ACTIVE_STATUSES = new Set(["pending", "preparing", "ready"]);
 
 async function fetchHasActiveOrder(): Promise<boolean> {
@@ -59,8 +40,7 @@ async function fetchHasActiveOrder(): Promise<boolean> {
       const orderType = String(doc.orderType ?? "take-away").toLowerCase();
       const isDineIn  = orderType === "dine-in";
 
-      // Some responses include appOrderStatus / appOrderStatusDine while others
-      // include orderStatus. Normalize by checking all possibilities.
+     
       const rawAppStatus = isDineIn
         ? String(doc.appOrderStatusDine ?? doc.appOrderStatus ?? "").toLowerCase()
         : String(doc.appOrderStatus ?? "").toLowerCase();
@@ -68,16 +48,13 @@ async function fetchHasActiveOrder(): Promise<boolean> {
       const rawStatus: string = rawAppStatus || rawOrderStatus || "completed";
       const paymentStatus = String(doc.paymentStatus ?? "").toLowerCase();
 
-      // Only block if paymentStatus is "paid"
+
       if (paymentStatus !== "paid") {
         console.log(`[useActiveCafeOrder] Order #${doc.id} | type=${orderType} | rawStatus="${rawStatus}" | paymentStatus="${paymentStatus}" | NOT blocking (not paid)`);
         continue;
       }
 
-      // Defensive: some cancelled orders may still have paymentStatus 'paid' in the
-      // backend (refunds/administrative cancels). Explicitly treat cancelled/
-      // refunded/voided statuses as non-blocking. Also check a few common
-      // boolean flags that some APIs expose.
+   
       const rawStatusNorm = String(rawStatus ?? "").toLowerCase();
       const possibleCancelled = [
         "cancel",
@@ -108,8 +85,7 @@ async function fetchHasActiveOrder(): Promise<boolean> {
         continue;
       }
 
-      // Finally, only treat the order as active if its app status is one of the
-      // active kitchen statuses.
+   
       if (ACTIVE_STATUSES.has(rawStatus)) {
         console.log(`[useActiveCafeOrder] 🔴 ACTIVE paid order found: #${doc.id} (${rawStatus}) — blocking add.`);
         return true;

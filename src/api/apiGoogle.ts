@@ -1,13 +1,3 @@
-/**
- * apiGoogle.ts
- * Calls the backend Google auth endpoint.
- *
- * Flow:
- *  1. GoogleLoginButton obtains a Google idToken via @capgo/capacitor-social-login
- *  2. We POST that idToken to our backend at /api/app/google-auth
- *  3. Backend verifies it with Google, finds-or-creates the user, and returns our own JWT
- *  4. We store that JWT (not the Google idToken) as the app session token
- */
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 

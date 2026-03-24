@@ -4,7 +4,22 @@ import { useAuth } from "../../../../utils/useAuth";
 import { useCheckout, OrderType, TimeSelection } from "../../../../context/CafeCheckoutContext";
 import tokenStorage from "../../../../utils/tokenStorage";
 import { getUserPreferences, getShopSlots, CafeSlot } from "../../../../api/apiCafe";
-
+function isSlotPast(label: string): boolean {
+  try {
+    const now = new Date();
+    const [time, meridiem] = label.trim().split(" ");
+    const [hoursStr, minutesStr] = time.split(":");
+    let hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+    if (meridiem?.toUpperCase() === "PM" && hours !== 12) hours += 12;
+    if (meridiem?.toUpperCase() === "AM" && hours === 12) hours = 0;
+    const slotDate = new Date();
+    slotDate.setHours(hours, minutes, 0, 0);
+    return now > slotDate;
+  } catch {
+    return false;
+  }
+}
 const OrderMode = () => {
   const {
     orderType,
@@ -127,10 +142,18 @@ const OrderMode = () => {
       setSelectedSlot(null);
     }
   };
+  const handleSelectCustom = () => {
+  setTimeSelection("custom");
+  // Auto-select the first non-past slot by default
+  if (firstAvailableSlot) {
+    setSelectedSlot(firstAvailableSlot.id);
+  } else {
+    setSelectedSlot(null);
+  }
+};
 
-  const customSlots = slots.filter((s) => s.timeSelection === "custom");
-
-
+const customSlots = slots.filter((s) => s.timeSelection === "custom");
+const firstAvailableSlot = customSlots.find((s) => !isSlotPast(s.label));
   return (
     <div className={styles.main}>
       <div className={styles.MainContainer}>
@@ -181,10 +204,7 @@ const OrderMode = () => {
 
             <div
               className={styles.optionRow}
-              onClick={() => {
-                setTimeSelection("custom");
-                setSelectedSlot(null);
-              }}
+             onClick={handleSelectCustom}
               aria-disabled={false}
             >
               <div
@@ -206,17 +226,21 @@ const OrderMode = () => {
                 {!slotsLoading && customSlots.length === 0 && (
                   <p className={styles.slotsLoading}>No slots available right now.</p>
                 )}
-                {!slotsLoading && customSlots.map((slot) => (
-                  <button
-                    key={slot.id}
-                    className={`${styles.slotBtn} ${
-                      selectedSlot === slot.id ? styles.slotSelected : ""
-                    }`}
-                    onClick={() => setSelectedSlot(slot.id)}
-                  >
-                    {slot.label}
-                  </button>
-                ))}
+        {!slotsLoading && customSlots.map((slot) => {
+  const past = isSlotPast(slot.label);
+  return (
+    <button
+      key={slot.id}
+      className={`${styles.slotBtn} ${
+        selectedSlot === slot.id ? styles.slotSelected : ""
+      } ${past ? styles.slotPast : ""}`}
+      onClick={() => { if (!past) setSelectedSlot(slot.id); }}
+      disabled={past}
+    >
+      {slot.label}
+    </button>
+  );
+})}
               </div>
             )}
           </div>

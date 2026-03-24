@@ -1,8 +1,3 @@
-/**
- * apiCafeOrders.ts
- * All API calls related to the user's cafe order history, detail view,
- * ratings submission, and invoice generation.
- */
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 
@@ -19,14 +14,14 @@ export interface CafeOrderItem {
   id             : string;
   productId      : number;
   productName    : string;
-  isVeg          : boolean;      // true → green dot, false → red/brown dot
-  itemType       : CafeItemType; // "beverage" → barista section, "food" → other items
+  isVeg          : boolean;      
+  itemType       : CafeItemType;
   quantity       : number;
   unitPrice      : number;
-  isReward       : boolean;      // true → stamp-reward item (base price is FREE)
-  /** Full backend-format customizations — preserved for display AND reorder */
+  isReward       : boolean;      
+
   customizations : {
-    label            ?: string;   // display label (selectedOptionLabel)
+    label            ?: string;  
     price            ?: number;
     sectionId        ?: string;
     sectionTitle     ?: string;
@@ -51,12 +46,12 @@ export interface CafeOrderFinancials {
   couponCode     : string;
 }
 
-/** Full cafe order returned by the list + detail endpoints */
+
 export interface CafeOrder {
   id              : number;
-  displayId       : string;          // "#WMC-29"
+  displayId       : string;         
   orderType       : OrderType;
-  orderStatus     : AppOrderStatus;  // derived from appOrderStatus / appOrderStatusDine
+  orderStatus     : AppOrderStatus; 
   orderAcceptance : OrderAcceptance;
   paymentStatus   : PaymentStatus;
   placedAt        : string;          // ISO string
@@ -70,7 +65,6 @@ export interface CafeOrder {
   slot            : string | null;   // ISO slot time if take-away custom slot
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function authHeaders(token: string | null): Record<string, string> {
   const h: Record<string, string> = { "Content-Type": "application/json" };
@@ -83,10 +77,7 @@ async function safeParse(res: Response): Promise<Record<string, unknown>> {
   try { return text ? JSON.parse(text) : {}; } catch { return {}; }
 }
 
-/**
- * Derive a simple string label for the order's placed-at date.
- * e.g. "02 Mar 2026"
- */
+
 function formatDate(iso: string): string {
   if (!iso) return "";
   const d = new Date(iso.endsWith("Z") || iso.includes("+") ? iso : iso + "Z");
@@ -95,10 +86,7 @@ function formatDate(iso: string): string {
 }
 
 
-/**
- * In-memory product cache: productId → { name, itemType, isVeg, salePrice, regularPrice }
- * Shared across all mapOrder calls in one session so we don't re-fetch the same product twice.
- */
+
 const _productCache = new Map<number, {
   name: string;
   itemType: CafeItemType;
@@ -107,11 +95,7 @@ const _productCache = new Map<number, {
   regularPrice: number;
 }>();
 
-/**
- * Fetch a single menu item from /api/shop/:shopId/menu-items/:productId.
- * Response shape: { success: true, item: { name, dietaryType, salePrice, regularPrice, category: { title } } }
- * Results are cached for the session.
- */
+
 async function fetchProductDetails(shopId: number, productId: number): Promise<{
   name: string;
   itemType: CafeItemType;
@@ -129,8 +113,7 @@ async function fetchProductDetails(shopId: number, productId: number): Promise<{
 
     const name: string = String(item.name ?? item.title ?? "").trim() || `Item ${productId}`;
 
-    // Category title tells us if this is a beverage or food item
-    // Backend uses: "BEVERAGES" for drinks, "BAKERY" / "FOOD" / "SNACKS" etc for food
+   
     const catTitle: string = String(
       (item.category as Record<string, unknown> | null)?.title ??
       item.categoryTitle ?? item.productType ?? item.type ?? "",
@@ -154,10 +137,7 @@ async function fetchProductDetails(shopId: number, productId: number): Promise<{
   }
 }
 
-/**
- * Fetch barista name from /api/shop/:shopId/barista (needs auth token).
- * Returns null if the barista ID cannot be resolved.
- */
+
 async function fetchBaristaName(
   token: string | null,
   shopId: number,
@@ -184,25 +164,23 @@ async function mapOrder(
 ): Promise<CafeOrder> {
   const isDineIn = (doc.orderType as string) === "dine-in";
 
-  // Derive live status
+
   const rawStatus: string = isDineIn
     ? ((doc.appOrderStatusDine ?? doc.appOrderStatus ?? "pending") as string)
     : ((doc.appOrderStatus ?? "pending") as string);
   const orderStatus: AppOrderStatus = rawStatus as AppOrderStatus;
 
-  // ── Shop ID (needed for product and barista lookups) ──────────────────────
+ 
   const shopId: number =
     typeof doc.shop === "object" && doc.shop
       ? Number((doc.shop as Record<string, unknown>).id ?? 1)
       : Number(doc.shop ?? 1);
 
-  // ── Barista ───────────────────────────────────────────────────────────────
-  // Backend returns barista as a raw numeric ID (not populated even at depth=2).
   let barista: CafeOrderBarista | null = null;
   const baristaRaw = doc.barista ?? doc.assignedBarista ?? doc.baristaId ?? doc.baristaAssigned;
 
   if (typeof baristaRaw === "object" && baristaRaw) {
-    // If somehow already populated (future backend change)
+
     const b = baristaRaw as Record<string, unknown>;
     const bName = String(b.name ?? b.fullName ?? b.firstName ?? "").trim();
     if (bName) barista = { id: Number(b.id), name: bName };
@@ -211,7 +189,6 @@ async function mapOrder(
     if (name) barista = { id: baristaRaw, name };
   }
 
-  // ── Stamp rewards ─────────────────────────────────────────────────────────
   const rawItems: Record<string, unknown>[] = Array.isArray(doc.items)
     ? (doc.items as Record<string, unknown>[])
     : [];
@@ -387,17 +364,7 @@ async function mapOrder(
   };
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
 
-/**
- * GET /api/app-orders?where[user][equals]=<userId>&depth=2&sort=-createdAt
- * Returns all cafe orders for the current user, newest first.
- * depth=2 ensures products + barista are fully populated inline —
-/**
- * GET /api/app-orders?where[user][equals]=<userId>&depth=2&sort=-createdAt
- * Returns all cafe orders for the current user, newest first.
- * mapOrder is async — it fetches product names + barista names via the menu API.
- */
 export async function getUserCafeOrders(
   token: string | null,
 ): Promise<CafeOrder[]> {
@@ -430,11 +397,7 @@ export async function getUserCafeOrders(
   return Promise.all(docs.map((doc) => mapOrder(doc, token)));
 }
 
-/**
- * GET /api/app-orders/:id?depth=2
- * Returns a single order with full detail. Used for live-polling in the
- * detail screen so statuses stay up to date.
- */
+
 export async function getCafeOrderById(
   token: string | null,
   orderId: number | string,
@@ -454,10 +417,7 @@ export async function getCafeOrderById(
   return mapOrder(doc, token);
 }
 
-/**
- * Try to extract a Stripe invoice URL from an app-order (cafe order) document.
- * Returns null when no invoice URL is available.
- */
+
 export async function getCafeOrderInvoiceUrl(
   token: string | null,
   orderId: number | string,
@@ -479,11 +439,7 @@ export async function getCafeOrderInvoiceUrl(
   }
 }
 
-/**
- * PATCH /api/app-orders/:id
- * Submits order + barista star ratings.
- * Ratings are 1-5 integers. Pass null to skip updating that field.
- */
+
 export async function submitCafeOrderRatings(
   token: string | null,
   orderId: number | string,
@@ -508,10 +464,7 @@ export async function submitCafeOrderRatings(
   }
 }
 
-/**
- * Derive whether an order is "ongoing" (not yet completed/cancelled).
- * Used to mute the Reorder CTA.
- */
+
 export function isOrderOngoing(order: CafeOrder): boolean {
   return (
     order.orderStatus !== "completed" &&
@@ -519,19 +472,14 @@ export function isOrderOngoing(order: CafeOrder): boolean {
   );
 }
 
-/**
- * Derive a human-readable status label for display.
- */
+
 export function getOrderStatusLabel(order: CafeOrder): "Ongoing" | "Completed" | "Cancelled" {
   if (order.orderStatus === "cancelled") return "Cancelled";
   if (order.orderStatus === "completed") return "Completed";
   return "Ongoing";
 }
 
-/**
- * Generate and trigger download of a text-based invoice for a cafe order.
- * Uses the browser's Blob API — no external dependency needed.
- */
+
 export function downloadCafeInvoice(order: CafeOrder): void {
   const lines: string[] = [];
 

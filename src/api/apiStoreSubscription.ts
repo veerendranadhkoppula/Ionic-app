@@ -1,8 +1,6 @@
 const BASE_URL = "https://endpoint.whitemantis.ae/";
 
-// ────────────────────────────────────────────────────────────────────────────
-// Address type that the subscription checkout endpoint expects
-// ────────────────────────────────────────────────────────────────────────────
+
 export interface SubscriptionAddress {
   addressFirstName: string;
   addressLastName: string;
@@ -13,9 +11,7 @@ export interface SubscriptionAddress {
   phoneNumber: string;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// Payload sent to POST /api/checkout/subscription
-// ────────────────────────────────────────────────────────────────────────────
+
 export interface SubscriptionCheckoutPayload {
   deliveryOption: "delivery" | "pickup";
   shippingAddress?: SubscriptionAddress | null;
@@ -31,9 +27,7 @@ export interface SubscriptionCheckoutPayload {
   useWTCoins: boolean;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// Response from POST /api/checkout/subscription
-// ────────────────────────────────────────────────────────────────────────────
+
 export interface SubscriptionCheckoutResponse {
   success             ?: boolean;
   subscriptionId      ?: string;
@@ -54,10 +48,7 @@ export interface SubscriptionCheckoutResponse {
   [key: string]: unknown;
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// Helper: map the StoreCheckoutAddress shape (street / apartment) to what
-// the subscription endpoint expects (addressLine1 / addressLine2)
-// ────────────────────────────────────────────────────────────────────────────
+
 export function mapToSubscriptionAddress(
   addr: {
     addressFirstName: string;
@@ -82,9 +73,7 @@ export function mapToSubscriptionAddress(
   };
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// Main API call
-// ────────────────────────────────────────────────────────────────────────────
+
 export async function subscriptionCheckout(
   token: string,
   payload: SubscriptionCheckoutPayload

@@ -1,8 +1,4 @@
-/**
- * apiStoreNotifications.ts
- *
- * Same behaviour as apiCafeNotifications but filters origin === 'store'
- */
+
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 import tokenStorage from "../utils/tokenStorage";
 

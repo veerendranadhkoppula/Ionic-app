@@ -1,25 +1,12 @@
-// ── User WT Coins ─────────────────────────────────────────────────────────────
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 
-/**
- * Fetch the WT Coins global configuration.
- * GET /api/globals/wt-coins
- *
- * Key fields:
- *   pointsEarn  — % of order value awarded as beans  (e.g. 10 = 10% of AED spent)
- *   pointsToAed — beans-to-AED conversion rate       (e.g. 10 means 10 beans = 1 AED,
- *                                                      i.e. each bean is worth 0.10 AED)
- *
- * So with pointsToAed = 10:
- *   beansDiscount (AED) = coinBalance / pointsToAed
- *   e.g. 146 beans → 146 / 10 = AED 14.60
- */
+
 export interface WtCoinsConfig {
-  pointsEarn         : number;   // % of order value earned per order
-  pointsToAed        : number;   // coins per 1 AED  (divide balance by this to get AED value)
-  maxPointsPerOrder  : number;   // 0 = no limit
-  minPointsPerOrder  : number;   // 0 = no minimum
+  pointsEarn         : number;   
+  pointsToAed        : number;  
+  maxPointsPerOrder  : number;  
+  minPointsPerOrder  : number;   
 }
 
 export async function getWtCoinsConfig(): Promise<WtCoinsConfig> {

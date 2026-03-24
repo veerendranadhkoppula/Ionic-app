@@ -49,11 +49,7 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   return { "Content-Type": "application/json" };
 }
 
-/**
- * GET Store Wishlist
- * GET /api/wishlist  →  returns { success, wishlist: { items: [...] } }
- * Each item has: { product: { value: { id, name, ... } }, origin: "store" }
- */
+
 export async function getStoreWishlist(): Promise<any[]> {
   const headers = await getAuthHeaders();
   const res = await authFetch(`${API_BASE}/wishlist`, {
@@ -79,10 +75,7 @@ export async function getStoreWishlist(): Promise<any[]> {
   return storeItems;
 }
 
-/**
- * ADD item to Store Wishlist
- * POST /api/wishlist  body: { origin: "store", productId: "1" }
- */
+
 export async function addToStoreWishlist(productId: number): Promise<any> {
   const headers = await getAuthHeaders();
   const res = await authFetch(`${API_BASE}/wishlist`, {

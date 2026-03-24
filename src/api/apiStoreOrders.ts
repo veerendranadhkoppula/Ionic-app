@@ -1,18 +1,6 @@
-/**
- * apiStoreOrders.ts
- * All API calls related to the user's store (web-orders) order history,
- * detail view, and order cancellation.
- *
- * Backend collection: web-orders
- * Endpoints:
- *   GET  /api/web-orders?where[user][equals]=<userId>&depth=2&sort=-createdAt
- *   GET  /api/web-orders/:id?depth=2
- *   GET  /api/web-orders/:id/cancel   (triggers refund handler)
- */
+
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type WebOrderDeliveryStatus =
   | "placed"
@@ -81,7 +69,6 @@ export interface WebOrder {
   couponCode      : string | null;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function authHeaders(token: string | null): Record<string, string> {
   const h: Record<string, string> = {};
@@ -226,18 +213,13 @@ function mapOrder(doc: Record<string, unknown>): WebOrder {
   };
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
 
-/**
- * GET /api/web-orders?where[user][equals]=<userId>&depth=2&sort=-createdAt
- * Returns all store orders for the current user, newest first.
- */
 export async function getUserWebOrders(
   token: string | null,
 ): Promise<WebOrder[]> {
   const headers = authHeaders(token);
 
-  // Get the current user's id — same pattern as getUserCafeOrders
+ 
   const userId = await import("../utils/tokenStorage")
     .then((m) => m.getItem("user_id"));
 
@@ -263,10 +245,7 @@ export async function getUserWebOrders(
   return docs.map(mapOrder);
 }
 
-/**
- * GET /api/web-orders/:id?depth=2
- * Returns a single store order with full detail.
- */
+
 export async function getWebOrderById(
   token  : string | null,
   orderId: number | string,
@@ -286,10 +265,7 @@ export async function getWebOrderById(
   return mapOrder(doc);
 }
 
-/**
- * Try to extract a Stripe invoice URL from a web-order document.
- * Returns null when no invoice URL is available.
- */
+
 export async function getWebOrderInvoiceUrl(
   token: string | null,
   orderId: number | string,
@@ -311,11 +287,7 @@ export async function getWebOrderInvoiceUrl(
   }
 }
 
-/**
- * GET /api/web-orders/:id/cancel
- * Cancels a store order and triggers the refund handler.
- * Only allowed when deliveryStatus === "placed".
- */
+
 export async function cancelWebOrder(
   token  : string | null,
   orderId: number | string,

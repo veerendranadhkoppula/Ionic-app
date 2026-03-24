@@ -95,8 +95,5 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Note: the actual `useWishlist` hook is provided from a separate file
-// to keep this file exporting only the provider/component which avoids
-// fast-refresh issues in certain dev setups.
 
 export default WishlistContext;

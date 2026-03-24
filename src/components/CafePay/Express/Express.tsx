@@ -126,11 +126,13 @@ const Express: React.FC<ExpressProps> = ({ toPay, orderId, orderType, onPaymentS
       // Persist active order so StickOrderStatusBar can track it on Home
       if (orderId) {
         // Persist the active order with a timestamp so the UI can TTL stale entries.
-        localStorage.setItem("active_cafe_order", JSON.stringify({
-          orderId,
-          orderType: orderType ?? "take-away",
-          persistedAt: Date.now(),
-        }));
+       const currentUserId = await tokenStorage.getItem("user_id");
+localStorage.setItem("active_cafe_order", JSON.stringify({
+  orderId,
+  orderType: orderType ?? "take-away",
+  persistedAt: Date.now(),
+  userId: currentUserId ?? undefined,
+}));
         // Fire a same-tab event so StickOrderStatusBar picks it up immediately
         // (the native "storage" event only fires in OTHER browser tabs/windows)
         window.dispatchEvent(new Event("cafe_order_placed"));

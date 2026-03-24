@@ -12,18 +12,12 @@ import {
 import tokenStorage from "../utils/tokenStorage";
 import { getStoreProductById } from "../api/apiStoreMenu";
 
-// ─── Context shape ────────────────────────────────────────────────────────────
 
 export interface StoreCartContextShape {
-  /** Current store cart state — null if empty or not yet loaded */
   storeCart: StoreCartShape | null;
-  /** Total number of items (sum of all quantities) */
   storeCartCount: number;
-  /** True while any async cart operation is in flight */
   loading: boolean;
-  /** Fetch / re-fetch the store cart from the server */
   refreshStoreCart: () => Promise<StoreCartShape | null>;
-  /** Add a product to the store cart */
   addToStoreCart: (
     productId: number,
     quantity: number,
@@ -31,22 +25,16 @@ export interface StoreCartContextShape {
     variantName?: string,
     unitPrice?: number,
   ) => Promise<StoreCartShape | null>;
-  /** +1 on an existing item */
   incrementStoreItem: (itemId: string) => Promise<StoreCartShape | null>;
-  /** -1 on an existing item (removes it when qty hits 0) */
   decrementStoreItem: (itemId: string) => Promise<StoreCartShape | null>;
-  /** Remove a single item completely */
   removeStoreItem: (itemId: string) => Promise<StoreCartShape | null>;
-  /** Wipe the entire store cart */
   clearStoreCartAll: () => Promise<void>;
 }
 
-// ─── Context ──────────────────────────────────────────────────────────────────
 
 const StoreCartContext = React.createContext<StoreCartContextShape | null>(null);
 export default StoreCartContext;
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
 
 export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [storeCart, setStoreCart] = React.useState<StoreCartShape | null>(null);
@@ -77,7 +65,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     } catch { /* ignore */ }
   }, []);
 
-  // Mutex — serialise mutations so concurrent calls never race
+
   const mutexRef = React.useRef<Promise<unknown>>(Promise.resolve());
   const enqueue = React.useCallback(<T,>(fn: () => Promise<T>): Promise<T> => {
     const next = mutexRef.current.then(fn, fn);
@@ -85,17 +73,15 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return next;
   }, []);
 
-  // ── Derived count ──────────────────────────────────────────────────────────
   const storeCartCount = React.useMemo(
     () => (storeCart?.items ?? []).reduce((sum, it) => sum + it.quantity, 0),
     [storeCart],
   );
 
-  // ── refreshStoreCart ───────────────────────────────────────────────────────
+ 
   const refreshStoreCart = React.useCallback(async (): Promise<StoreCartShape | null> => {
     setLoading(true);
     try {
-      // If user is not logged in, load local store cart instead of calling server
       const token = await tokenStorage.getToken();
       if (!token) {
         const local = loadLocalCart();
@@ -130,9 +116,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         return local;
       }
       const cart = await fetchStoreCart();
-      // CRITICAL: /api/app/cart is shared between cafe and store.
-      // If the backend cart has origin "cafe" it means only cafe items exist.
-      // We must NOT load cafe items into the store cart context — treat it as empty.
+     
       if (cart && cart.origin === "cafe") {
         setStoreCart(null);
         return null;
@@ -147,7 +131,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, [loadLocalCart, saveLocalCart]);
 
-  // ── addToStoreCart ─────────────────────────────────────────────────────────
+
   const addToStoreCart = React.useCallback(
     (
       productId: number,
@@ -222,7 +206,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [enqueue, loadLocalCart, saveLocalCart],
   );
 
-  // ── incrementStoreItem ─────────────────────────────────────────────────────
+ 
   const incrementStoreItem = React.useCallback(
     (itemId: string): Promise<StoreCartShape | null> =>
       enqueue(async () => {
@@ -252,7 +236,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [enqueue, loadLocalCart, saveLocalCart],
   );
 
-  // ── decrementStoreItem ─────────────────────────────────────────────────────
+ 
   const decrementStoreItem = React.useCallback(
     (itemId: string): Promise<StoreCartShape | null> =>
       enqueue(async () => {
@@ -282,7 +266,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [enqueue, loadLocalCart, saveLocalCart],
   );
 
-  // ── removeStoreItem ────────────────────────────────────────────────────────
+  
   const removeStoreItem = React.useCallback(
     (itemId: string): Promise<StoreCartShape | null> =>
       enqueue(async () => {
@@ -311,13 +295,12 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [enqueue, loadLocalCart, saveLocalCart],
   );
 
-  // ── clearStoreCartAll ──────────────────────────────────────────────────────
+
   const clearStoreCartAll = React.useCallback((): Promise<void> =>
     enqueue(async () => {
       setLoading(true);
       try {
-        // If there's no auth token, do not call server APIs (they would trigger
-        // the global 401 -> /auth redirect). For guests, clear local state only.
+       
         const token = await tokenStorage.getToken();
         if (!token) {
           setStoreCart(null);
@@ -337,12 +320,11 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [enqueue, saveLocalCart],
   );
 
-  // ── Hydrate on mount (only if a token exists) ──────────────────────────────
+  
   React.useEffect(() => {
     (async () => {
       try {
-        // Always refresh store cart on mount. For guests this will load the
-        // local persisted cart (refreshStoreCart handles token/no-token paths).
+    
         await refreshStoreCart();
       } catch (err) {
         console.error("StoreCartContext: hydration failed", err);
@@ -351,7 +333,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // -- Merge guest local store cart into server cart after login --
+  
   React.useEffect(() => {
     const handler = async () => {
       try {
@@ -370,17 +352,17 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           }
 
           await enqueue(async () => {
-            // For each local item, call the server add function to merge into server cart
+      
             for (const it of local.items) {
               try {
-                // Use the same API used by logged-in flow
+         
                 await addStoreCartItem(it.productId, it.quantity, it.variantId, it.variantName, it.unitPrice);
               } catch (err) {
                 console.warn('StoreCartContext: guest merge POST failed for item', it, err);
               }
             }
 
-            // Clear local persisted cart so UI will reflect server state
+         
             try { saveLocalCart(null); } catch { /* ignore */ }
             localCartRef.current = null;
             setStoreCart(null);
@@ -391,14 +373,21 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             try { localStorage.setItem('guest_store_cart_last_sync_token', token); } catch { /* ignore */ }
           });
         } else {
-          // Logout detected: clear guest-local persisted store cart and in-memory state
-          try { localStorage.removeItem('guest_store_cart_last_sync_token'); } catch { /* ignore */ }
-          try {
-            localCartRef.current = null;
-          } catch { /* ignore */ }
-          try { saveLocalCart(null); } catch { /* ignore */ }
-          try { setStoreCart(null); } catch { /* ignore */ }
-        }
+  const isGuest = localStorage.getItem("auth_mode") === "guest";
+
+  // ✅ keep cart if guest
+  if (isGuest) return;
+
+  try { localStorage.removeItem('guest_store_cart_last_sync_token'); } catch {/* ignore */ }
+
+  try {
+    localCartRef.current = null;
+  } catch {/* ignore */ }
+
+  try { saveLocalCart(null); } catch {/* ignore */ }
+
+  try { setStoreCart(null); } catch {/* ignore */}
+}
       } catch (err) {
         console.error('StoreCartContext: merge-on-login handler failed', err);
       }

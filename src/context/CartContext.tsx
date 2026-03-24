@@ -25,9 +25,7 @@ export type CartItem = {
   quantity?: number;
   product?: { value?: Product } | Product | unknown;
   customizations?: any[];
-  /** Deterministic key: sorted customizations JSON - used for row identity */
   customizationKey?: string;
-  /** Raw selection key: built from the user's raw selectedOptions input - stable key for row matching */
   rawSelectionKey?: string;
 };
 
@@ -104,26 +102,10 @@ async function parseJsonSafe(res: Response) {
   catch (err) { console.warn("CartContext: failed to parse JSON", { status: res.status, text, err }); return null; }
 }
 
-// --- Deterministic customization key helpers imported from ../utils/cartUtils ---
 
-// Build a stable identity key from ONLY the selectedOptions part of the user's selection.
-// Strips bagAmount / size / quantity — those are not part of customization identity.
-//
-// Accepts THREE input shapes:
-//   Shape A — Customization UI confirm payload:
-//     { selectedOptions: { [sectionId]: { [groupId]: [{id, label, price}] } } }
-//   Shape B — plain nested object (same, without wrapper):
-//     { [sectionId]: { [groupId]: [{id, label, price}] } }
-//   Shape C — normalized/backend flat array (re-adding from RepeatCustomization):
-//     [{ sectionId, groupId, selectedOptionId, ... }]
-//
-// All three produce the same deterministic JSON so the same selection always maps
-// to the same variant key, regardless of which code path called addToCart.
 const buildRawSelectionKey = (raw: any): string => {
   if (raw == null || raw === "") return "[]";
   try {
-    // Shape C: flat array like [{sectionId, groupId, selectedOptionId}]
-    // This is what cart.items[].customizations looks like after normalization.
     if (Array.isArray(raw)) {
       if (raw.length === 0) return "[]";
       // Confirm it looks like normalized backend shape (has sectionId + selectedOptionId)
@@ -204,11 +186,7 @@ const canonicalizeCustomizations = async (
     return sa < sb ? -1 : sa > sb ? 1 : 0;
   });
 
-  // Key is always derived from the RAW user selection — never from the
-  // network-dependent mapFn output. This guarantees that:
-  //   same selection  → same key  (merge/increment)
-  //   diff selection  → diff key  (new row)
-  // regardless of whether mapCustomizations succeeds or fails.
+
   const key = buildRawSelectionKey(raw);
 
   return { normalized, key };
@@ -239,9 +217,7 @@ const normalizeCart = (rawCart: any): CartShape => {
   const rawItems = Array.isArray(rawCart.items)
     ? rawCart.items.map((ci: any) => normalizeCartItem(ci)).filter(Boolean)
     : [];
-  // Keep every backend row as-is (no client-side merging).
-  // Each row retains its unique `id` so clearCart/removeItem can target it.
-  // Display-level aggregation (CafeMenu, CafeFavorites) is done in those components.
+
   return { ...rawCart, items: rawItems };
 };
 
@@ -288,12 +264,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch { /* ignore */ }
   }, []);
 
-  // ----------------------------------------------------------------
-  // expandCartItems: takes the backend array (1 row per productId)
-  // and expands each row into N virtual rows — one per variant.
-  // If no variants are stored for a productId, the backend row is
-  // returned as-is (qty=backend qty, no rawSelectionKey).
-  // ----------------------------------------------------------------
+
   const expandCartItems = React.useCallback((backendItems: CartItem[]): CartItem[] => {
     const result: CartItem[] = [];
     for (const item of backendItems) {
@@ -301,9 +272,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const variants = pid ? variantStoreRef.current.get(pid) : undefined;
 
       if (variants && variants.size > 0) {
-        // Verify the stored variant qtys still sum to the backend qty.
-        // If there's a drift (e.g. another device changed the cart) we
-        // redistribute proportionally so the display total stays correct.
+       
         const storedTotal = Array.from(variants.values()).reduce((s, v) => s + v.qty, 0);
         const backendQty = Number(item.quantity ?? 1);
         const scale = storedTotal > 0 && storedTotal !== backendQty
@@ -358,8 +327,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return stored ? Number(stored) : null;
     } catch { return null; }
   });
-  // shopIdRef is always current — use this inside async callbacks to avoid stale closures.
-  // Initialised from localStorage so it's populated even before setShopId is called.
+ 
   const _storedShopId = (() => {
     try { const s = localStorage.getItem("cart_shop_id"); return s ? Number(s) : null; } catch { return null; }
   })();
@@ -376,7 +344,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const origin: "cafe" | "store" = "cafe";
   const [loading, setLoading] = React.useState(false);
 
-  // -- refreshCart: SINGLE SOURCE OF TRUTH --
+
   const refreshCart = React.useCallback(async (maybeShopId?: number | null): Promise<CartShape | null> => {
     setLoading(true);
     try {
@@ -387,8 +355,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await parseJsonSafe(res);
       if (!res.ok) throw new Error(`Cart fetch failed: ${res.status}`);
       const newCartRaw = data?.cart ?? data;
-      // If the server-side cart belongs to a different origin (e.g. "store"),
-      // treat it as empty for THIS context so stale items don't bleed through.
       if (newCartRaw?.origin && newCartRaw.origin !== origin) {
         setCartAndRef(null);
         if (maybeShopId) setShopId(maybeShopId);
@@ -470,22 +436,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // ----------------------------------------------------------------
-  // addToCart — client-side variant ledger + backend qty sync
-  //
-  // Algorithm:
-  //  1. buildRawSelectionKey → incomingRawKey  (stable, network-free)
-  //  2. mapCustomizations → normalized          (for display + orders)
-  //  3. Look up variantStoreRef[pid][incomingRawKey]:
-  //       EXISTS   → variant.qty++  (same customization, just more)
-  //       NOT EXISTS → new variant entry with qty=1
-  //  4. Compute newBackendQty = sum of all variant qtys for this pid
-  //  5. Find existing backend row for this productId:
-  //       EXISTS  → PATCH increment (adds 1 to backend, matching our +1)
-  //       NOT EXISTS → POST { productId, qty:1, customizations:[] }
-  //                    then record new backendId in variantStoreRef
-  //  6. saveVariantStore(); refreshCart()
-  // ----------------------------------------------------------------
+
  const addToCart = React.useCallback(async (productId: number, customizations?: any, quantity: number = 1): Promise<CartShape | null> => {
     return enqueue(async () => {
       setLoading(true);
@@ -974,20 +925,26 @@ if (backendItemId) {
             try { localStorage.setItem('guest_cart_last_sync_token', token); } catch { /* ignore */ }
           });
         } else {
-          // Logout detected: clear guest-local variant ledger + persisted keys and UI state.
-          try {
-            variantStoreRef.current.clear();
-          } catch { /* ignore */ }
-          try {
-            localStorage.removeItem('cart_variants_v1');
-            localStorage.removeItem('cart_customizations_v2');
-            localStorage.removeItem('cart_rawkeys_v3');
-            localStorage.removeItem('guest_cart_last_sync_token');
-          } catch { /* ignore */ }
-          try {
-            setCartAndRef(null);
-          } catch { /* ignore */ }
-        }
+  const isGuest = localStorage.getItem("auth_mode") === "guest";
+
+  // ✅ do not clear cart if guest
+  if (isGuest) return;
+
+  try {
+    variantStoreRef.current.clear();
+  } catch {/* ignore */ }
+
+  try {
+    localStorage.removeItem('cart_variants_v1');
+    localStorage.removeItem('cart_customizations_v2');
+    localStorage.removeItem('cart_rawkeys_v3');
+    localStorage.removeItem('guest_cart_last_sync_token');
+  } catch {/* ignore */ }
+
+  try {
+    setCartAndRef(null);
+  } catch {/* ignore */}
+}
       } catch (err) {
         console.error('CartContext: merge-on-login handler failed', err);
       }

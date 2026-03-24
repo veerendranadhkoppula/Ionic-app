@@ -2,14 +2,12 @@
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 
-// ── Workshops ─────────────────────────────────────────────────────────────────
-
 export interface Workshop {
   id: number;
   title: string;
   image: string;
-  startDate: string;   // formatted e.g. "13 Mar, 2026"
-  startTime: string;   // formatted e.g. "9:30 PM"
+  startDate: string;   
+  startTime: string;   
   calendlyLink: string;
   slug: string;
 }
@@ -52,9 +50,7 @@ function mapWorkshopDoc(d: any): Workshop {
   };
 }
 
-/**
- * Fetch all upcoming workshops (eventDate >= now).
- */
+
 export async function getWorkshops(): Promise<Workshop[]> {
   const now = new Date().toISOString();
   const params = new URLSearchParams({

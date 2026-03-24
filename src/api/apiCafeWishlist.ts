@@ -33,16 +33,13 @@ async function authFetch(input: RequestInfo, init?: RequestInit): Promise<Respon
 }
 
 async function getAuthHeaders(): Promise<HeadersInit> {
-  // Headers common to wishlist requests; Authorization is injected
-  // automatically by fetchWithAuth to avoid duplicates.
+
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
   return headers;
 }
-/**
- * GET Cafe Wishlist
- */
+
 export async function getCafeWishlist() {
   const headers = await getAuthHeaders();
   const res = await authFetch(`${API_BASE}/wishlist`, {
@@ -72,9 +69,7 @@ export async function getCafeWishlist() {
   return cafeItems;
 }
 
-/**
- * ADD item to Cafe Wishlist
- */
+
 export async function addToCafeWishlist(productId: number) {
   const headers = await getAuthHeaders();
   const res = await authFetch(`${API_BASE}/wishlist`, {

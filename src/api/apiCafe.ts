@@ -2,12 +2,7 @@
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 
-// ── Best Sellers ──────────────────────────────────────────────────────────────
 
-/**
- * Fetch the best-seller product IDs for a shop.
- * Returns a Set of product IDs for O(1) lookup.
- */
 export async function getBestSellerIds(shopId: number): Promise<Set<number>> {
   const res = await fetch(`${API_BASE}/shop/${shopId}/best-seller`, {
     method: "GET",
@@ -23,24 +18,19 @@ export async function getBestSellerIds(shopId: number): Promise<Set<number>> {
   return new Set(ids);
 }
 
-// ── Barista ───────────────────────────────────────────────────────────────────
 
 export interface Barista {
   id: number;
   name: string;
-  /** Short one-line description shown in the card */
+
   shortDesc: string;
-  /** Full bio shown after "View more" */
+
   fullDesc: string;
   profileImage: string | null;
   speciality: string | null;
 }
 
-/**
- * Fetch baristas for a shop via GET /api/shop/:shopId/barista.
- * Requires a valid JWT — the caller (useBaristaList) reads the token from
- * storage and passes it here as an Authorization header.
- */
+
 export async function getBaristas(token: string | null, shopId: number): Promise<Barista[]> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -85,10 +75,7 @@ export async function getBaristas(token: string | null, shopId: number): Promise
 export type PayloadShop = {
   id: number;
   name: string;
-  /**
-   * Manual admin toggle — if false the shop is immediately closed regardless of time.
-   * This is a Payload checkbox field, NOT auto-computed by the backend.
-   */
+
   isShopOpen?: boolean;
   operationalSettings?: {
     /** ISO datetime string — only the time portion (HH:mm UTC) is used for daily check */
@@ -107,20 +94,9 @@ export type PayloadShop = {
   };
 };
 
-/**
- * Returns true if the shop is currently open.
- *
- * Three-layer check:
- *  1. Manual toggle  — if `isShopOpen === false`, always closed.
- *  2. Operating day  — if today's weekday is not enabled, closed.
- *  3. Time window    — if current UTC time is outside [openingTime, closingTime), closed.
- *
- * The backend stores openingTime/closingTime as full ISO strings but the admin
- * uses a "time only" picker, so only the HH:mm portion is meaningful for the
- * daily window check.
- */
+
 export function isShopOpen(shop: PayloadShop): boolean {
-  // ── Layer 1: manual admin toggle ──────────────────────────────────────────
+ 
   if (shop.isShopOpen === false) {
     console.log("🕐 [isShopOpen] closed — manual toggle is OFF");
     return false;
@@ -128,7 +104,7 @@ export function isShopOpen(shop: PayloadShop): boolean {
 
   const ops = shop.operationalSettings;
 
-  // ── Layer 2: operating days ───────────────────────────────────────────────
+ 
   const days = ops?.operatingDays;
   if (days) {
     const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] as const;
@@ -139,7 +115,7 @@ export function isShopOpen(shop: PayloadShop): boolean {
     }
   }
 
-  // ── Layer 3: time window ──────────────────────────────────────────────────
+ 
   const openingIso  = ops?.openingTime;
   const closingIso  = ops?.closingTime;
 
@@ -153,8 +129,8 @@ export function isShopOpen(shop: PayloadShop): boolean {
     const closeMins = closeDate.getUTCHours() * 60 + closeDate.getUTCMinutes();
 
     const inWindow = openMins < closeMins
-      ? nowMins >= openMins && nowMins < closeMins           // normal window e.g. 09:00–21:00
-      : nowMins >= openMins || nowMins < closeMins;          // overnight window e.g. 22:00–06:00
+      ? nowMins >= openMins && nowMins < closeMins          
+      : nowMins >= openMins || nowMins < closeMins;          
 
     if (!inWindow) {
       console.log(
@@ -200,7 +176,6 @@ export type RawMenuItem = {
 
   customizations?: any;
 
-  /** Loyalty Program — synced from Menu collection */
   isStampEligible?    : boolean;   // earn 1 stamp when this item is purchased
   isStampFreeProduct? : boolean;   // can be redeemed as a free reward
 };
@@ -1052,8 +1027,6 @@ export interface CafePayResponse {
 
 /**
  * @deprecated  Payment is now sent in a single cafe-checkout call.
- * This function is kept temporarily so nothing breaks during transition.
- * Remove once Express.tsx is fully rewired.
  */
 export async function cafePay(
   token  : string | null,
@@ -1311,10 +1284,6 @@ export async function patchOrderCustomizations(
     };
   });
 
-  // Ensure any stamped reward products are present in the patched items array.
-  // Some backend flows persist the stampRewards relationship but may not
-  // add a corresponding item row. To keep the client display consistent
-  // (and mirror previous behaviour), append missing reward items here.
   if (stampRewardIds && stampRewardIds.length > 0) {
     const existingPids = new Set(patchedItems.map((it: any) => String(typeof it.product === 'number' ? it.product : (it.product?.id ?? it.product))));
     for (const rid of stampRewardIds) {
@@ -1332,7 +1301,7 @@ export async function patchOrderCustomizations(
     }
   }
 
-  // --- Step 3: Recalculate financials ---
+
   const currentSubtotal   = Number(fin.subtotal ?? 0);
   const currentTotal      = Number(fin.total    ?? 0);
   const newSubtotal       = parseFloat((currentSubtotal + custSubtotalExtra).toFixed(2));
@@ -1346,7 +1315,6 @@ export async function patchOrderCustomizations(
     "patchedItems:", patchedItems.map((it: any) => ({ product: it.product, qty: it.quantity, custLen: (it.customizations || []).length })),
   );
 
-  // --- Step 4: PATCH the order ---
   const patchBody: Record<string, unknown> = {
     items: patchedItems,
     financials: {

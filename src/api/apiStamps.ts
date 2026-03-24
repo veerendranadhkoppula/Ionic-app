@@ -84,15 +84,13 @@ const orderId       = entry.offlineReferenceId ? `Ref #${entry.offlineReferenceI
   });
 }
 
-/** Parse stampsRedemptionHistory entries into EarningTransaction (always negative). */
+
 function parseRedemptionTransactions(history: any[]): EarningTransaction[] {
   console.log("parseRedemptionTransactions: raw array length=", history.length, JSON.stringify(history));
   return history.map((entry: any, idx: number) => {
     console.log(`parseRedemptionTransactions[${idx}]:`, JSON.stringify(entry));
 
-    // Real backend fields (confirmed from live log):
-    //   redeemedStamps     — number of stamps/rewards redeemed
-    //   associatedOrder    — { relationTo: "app-orders", value: { id, createdAt, ... } }
+  
       const rewardsRedeemed: number =
         typeof entry.redeemedStamps    === "number" ? entry.redeemedStamps    :
         typeof entry.stampsUsed        === "number" ? entry.stampsUsed        :
@@ -102,10 +100,7 @@ function parseRedemptionTransactions(history: any[]): EarningTransaction[] {
         typeof entry.count             === "number" ? entry.count             :
         1;
 
-      // Determine whether this redemption entry represents stamp(s) or reward(s).
-      // Backend fields are inconsistent across environments; prefer an explicit
-      // reward-detection when any reward-like field is present. Otherwise treat
-      // it as a stamp redemption when stamps fields are present.
+    
       const stampsCount =
         typeof entry.redeemedStamps === 'number' ? entry.redeemedStamps :
         typeof entry.stampsUsed     === 'number' ? entry.stampsUsed     :
@@ -121,7 +116,7 @@ function parseRedemptionTransactions(history: any[]): EarningTransaction[] {
       // associatedOrder is the real field name; fall back to linkedOrder / order
       const assocRaw = entry.associatedOrder ?? entry.linkedOrder ?? entry.order ?? null;
 
-    // Payload relationship shape: { relationTo, value: <populated doc or id> }
+
     const assocDoc =
       assocRaw?.value && typeof assocRaw.value === "object"
         ? assocRaw.value
@@ -129,12 +124,7 @@ function parseRedemptionTransactions(history: any[]): EarningTransaction[] {
           ? assocRaw
           : null;
 
-      // Heuristic: backend shapes are inconsistent. Prefer classifying an entry
-      // as a reward redemption when any explicit reward field is present OR
-      // when textual hints on the entry mention "reward". Additionally, in
-      // our backend, reward redemptions commonly include an associatedOrder
-      // link and often show a redeemedStamps value of 1 — treat that case as
-      // a reward redemption as well.
+   
       const textFields = [entry.title, entry.type, entry.description, entry.note, entry.reason]
         .filter(Boolean)
         .map((v: any) => String(v).toLowerCase());
@@ -155,7 +145,7 @@ const rawOrderId =
       `${2000 + idx}`;
     const orderId = entry.offlineReferenceId ? `Ref #${entry.offlineReferenceId}` : `#${rawOrderId}`;
 
-    // Date — try entry-level fields first, then fall back to the associated order's createdAt
+   
     const rawDate =
       entry.redeemedAt  ??
       entry.createdAt   ??
@@ -236,7 +226,7 @@ async function fetchWtStampDoc(token: string | null): Promise<WtStampData> {
   };
 }
 
-/** Returns the total stamp count for the user. */
+
 export async function getUserWtStamps(token: string | null): Promise<number> {
   try {
     const { stampCount } = await fetchWtStampDoc(token);
@@ -247,7 +237,7 @@ export async function getUserWtStamps(token: string | null): Promise<number> {
   }
 }
 
-/** Returns both stampCount, stampReward and transactions from the backend. */
+
 export async function getUserWtStampData(token: string | null): Promise<WtStampData> {
   try {
     return await fetchWtStampDoc(token);
@@ -397,13 +387,7 @@ export interface StampRewardProduct {
   dietaryType: "veg" | "non-veg" | "egg" | "vegan";
 }
 
-/**
- * Fetch the admin-configured stamp reward products.
- * GET /api/globals/stamp-reward-products  — no auth required (read: () => true).
- *
- * Payload populates the relationship, so each item in stampProducts
- * is a full shop-menu document: { id, name, description/tagline, image: { url } }
- */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function normalizeDietaryType(value?: string): StampRewardProduct["dietaryType"] {
   if (!value) return "veg";
@@ -414,9 +398,7 @@ function normalizeDietaryType(value?: string): StampRewardProduct["dietaryType"]
   return "veg";
 }
 
-/**
- * Map a raw menu-item object (from individual endpoint) to StampRewardProduct.
- */
+
 function mapToStampRewardProduct(item: any): StampRewardProduct {
   const imageObj = item.image;
   let imageUrl = "";
@@ -438,17 +420,7 @@ function mapToStampRewardProduct(item: any): StampRewardProduct {
   };
 }
 
-/**
- * Fetch admin-configured stamp-free (reward) products for a shop.
- *
- * The LIST endpoint (/api/shop/:id/menu-items) does NOT return isStampFreeProduct.
- * Only the SINGLE endpoint (/api/shop/:id/menu-items/:pid) returns it.
- *
- * Strategy:
- *   1. Fetch list → extract all IDs
- *   2. Fetch every item individually in parallel
- *   3. Keep only items where isStampFreeProduct === true
- */
+
 export async function getStampRewardProducts(shopId: number = 1): Promise<StampRewardProduct[]> {
   try {
     // Step 1 — get all IDs from the list endpoint

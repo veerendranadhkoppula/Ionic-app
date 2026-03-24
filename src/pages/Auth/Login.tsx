@@ -124,12 +124,15 @@ const Login: React.FC = () => {
   const handleLoginError = (err: any) => {
     console.error("Login failed!", err);
   };
+const onSkip = () => {
+  setGuest();
 
-  const onSkip = () => {
-    setGuest();
-    history.replace("/home");
-  };
+  localStorage.setItem("auth_mode", "guest");
 
+  window.dispatchEvent(new Event("auth-changed"));
+
+  history.replace("/home");
+};
   return (
     <IonPage>
       <IonContent fullscreen>

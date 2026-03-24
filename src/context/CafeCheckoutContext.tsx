@@ -1,37 +1,12 @@
-/**
- * CafeCheckoutContext
- *
- * Single source of truth for all data that must be sent in the
- * cafe-checkout payload.  Lives in Cart.tsx via <CafeCheckoutProvider>
- * so every child (OrderMode, CuponsCoins, PayContainer, …) can
- * read / write without prop-drilling.
- *
- * NOTE: Store checkout is a separate flow with its own context
- *       (StoreCheckoutContext) — to be implemented when store APIs are ready.
- *
- * Checkout payload reference  (POST /api/checkout/cafe-checkout):
- * {
- *   shopId             : number
- *   orderType          : "take-away" | "dine-in"
- *   timeSelection      : "now" | "custom"
- *   selectedSlot       : number | null      (null when dine-in; ID of "now" slot or custom slot)
- *   usedWTCoins        : boolean
- *   specialInstructions: string
- *   appliedCouponCode  : string | null
- *   selectedBarista    : number | null
- *   stampRewards       : unknown[]
- * }
- */
 
 import React, { createContext, useContext, useState, useCallback } from "react";
 import type { StampRewardProduct } from "../api/apiStamps";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type OrderType    = "take-away" | "dine-in";
 export type TimeSelection = "now" | "custom";
 
-/** Shape stored when a coupon is successfully applied. */
+
 export interface AppliedCoupon {
   code           : string;
   discountType   : "percentage" | "flat" | string;
@@ -39,7 +14,7 @@ export interface AppliedCoupon {
   discountText   : string;
   description    : string;
   minimumAmount  ?: number;
-  // allow extra fields returned by the coupon API (id, applicability, expiry, etc.)
+ 
   [key: string]  : unknown;
 }
 
@@ -49,15 +24,10 @@ export interface CheckoutState {
   /** Numeric slot ID from backend.  null when timeSelection === "immediate". */
   selectedSlot        : number | null;
   specialInstructions : string;
-  /** Coupon the user has applied (null = none). */
   appliedCoupon       : AppliedCoupon | null;
-  /** Whether the user chose to redeem their Mantis coins. */
   useCoins            : boolean;
-  /** Sum of (price × qty) for every enriched cart item.  Set by Cart.tsx. */
   itemsTotal          : number;
-  /** Barista ID selected by the user (null = no preference / optional). */
   selectedBaristaId   : number | null;
-  /** Stamp reward product chosen by the user (null = none selected). */
   selectedReward      : StampRewardProduct | null;
 }
 
@@ -71,11 +41,10 @@ export interface CheckoutContextValue extends CheckoutState {
   setItemsTotal          : (v: number)                   => void;
   setSelectedBaristaId   : (v: number | null)            => void;
   setSelectedReward      : (v: StampRewardProduct | null) => void;
-  /** Reset to defaults (called when cart is cleared). */
+
   reset                  : () => void;
 }
 
-// ─── Defaults ─────────────────────────────────────────────────────────────────
 
 const DEFAULT_STATE: CheckoutState = {
   orderType           : "take-away",
@@ -89,11 +58,8 @@ const DEFAULT_STATE: CheckoutState = {
   selectedReward      : null,
 };
 
-// ─── Context ──────────────────────────────────────────────────────────────────
 
 const CheckoutContext = createContext<CheckoutContextValue | null>(null);
-
-// ─── Provider ─────────────────────────────────────────────────────────────────
 
 export const CheckoutProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<CheckoutState>(DEFAULT_STATE);
@@ -136,7 +102,7 @@ export const CheckoutProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+
 // eslint-disable-next-line react-refresh/only-export-components
 export function useCheckout(): CheckoutContextValue {
   const ctx = useContext(CheckoutContext);

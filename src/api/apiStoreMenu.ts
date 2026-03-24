@@ -236,6 +236,7 @@ function mapDocToProduct(doc: Record<string, unknown>): StoreProduct {
   const variants: StoreVariant[] = (d.variants ?? []).map((v: Record<string, unknown>) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const variant = v as any;
+     console.log("RAW variant from API:", JSON.stringify(variant));
     return {
       id: String(variant.id ?? ""),
       variantName: String(variant.variantName ?? ""),

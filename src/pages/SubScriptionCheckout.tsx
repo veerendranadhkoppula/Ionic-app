@@ -86,7 +86,9 @@ const SubScriptionCheckout: React.FC<Props> = ({
     setCoinBalance(balance);
   }, []);
 
-  const unitPrice = state?.unitPrice ?? 0;
+const unitPrice = state?.unitPrice ?? 0;
+console.log("STATE:", state);
+console.log("unitPrice:", unitPrice);
   const quantity = state?.quantity ?? 1;
   const itemTotal = unitPrice * quantity;
 

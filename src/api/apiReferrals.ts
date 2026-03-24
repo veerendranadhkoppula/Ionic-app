@@ -8,10 +8,7 @@ export type ValidateReferralResult = {
   message?: string;
 };
 
-/**
- * Validate a referral code without modifying the user record.
- * Calls POST /users/validate-referral and returns a normalized result.
- */
+
 export async function validateReferralCode(code: string): Promise<ValidateReferralResult> {
   if (!code || code.trim().length === 0) {
     return { valid: false, message: "No code provided" };

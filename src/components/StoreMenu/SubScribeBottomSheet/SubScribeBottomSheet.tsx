@@ -30,17 +30,12 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
   const history = useHistory();
   const [isClosing, setIsClosing] = useState(false);
 
-  // ── Determine subscription source ───────────────────────────────────────────
   const isVariant = product.hasVariantOptions && product.variants.length > 0;
 
-  // Subscribable variants only
   const subVariants: StoreVariant[] = isVariant
     ? product.variants.filter((v) => v.hasVariantSub)
     : [];
 
-  // Pick the initial variant:
-  // 1. The variant the user had selected in AddBottomSheet (if it has a sub)
-  // 2. Otherwise the first subscribable variant
   const resolveInitialVariant = (): StoreVariant | null => {
     if (!isVariant || subVariants.length === 0) return null;
     if (initialVariantId) {
@@ -54,9 +49,7 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
     resolveInitialVariant
   );
 
-  // ── Frequencies — filtered by the currently selected variant ────────────────
-  // For simple (non-variant) products, use the top-level subFreq.
-  // For variant products, use only the selected variant's subFreq.
+
   const freqOptions: SubFreq[] = isVariant
     ? selectedVariant?.subFreq ?? []
     : product.subFreq;
@@ -65,9 +58,7 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
     freqOptions[0]?.id ?? ""
   );
 
-  // When the user picks a different size, update the frequency list.
-  // If the previously selected frequency exists in the new list, keep it;
-  // otherwise auto-select the first available one.
+
   useEffect(() => {
     if (!isVariant) return;
     const newFreqs = selectedVariant?.subFreq ?? [];
@@ -84,14 +75,16 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
   };
 
   const handleStartSubscription = async () => {
+      console.log("variant full data:", JSON.stringify(selectedVariant));
+  console.log("product full data:", JSON.stringify({ salePrice: product.salePrice, regularPrice: product.regularPrice }));
     const selectedFreq = freqOptions.find((f) => f.id === selectedFreqId);
     if (!selectedFreq) return;
 
     const freqLabel = formatFreq(selectedFreq);
-    const unitPrice = isVariant && selectedVariant
-      ? (selectedVariant.variantSalePrice ?? selectedVariant.variantRegularPrice ?? 0)
-      : (product.salePrice ?? product.regularPrice ?? 0);
-
+const unitPrice = isVariant && selectedVariant
+  ? (selectedVariant.variantSalePrice > 0 ? selectedVariant.variantSalePrice : selectedVariant.variantRegularPrice) ?? 0
+  : (product.salePrice && product.salePrice > 0 ? product.salePrice : product.regularPrice) ?? 0;
+console.log("selectedVariant full:", JSON.stringify(selectedVariant));
     let userEmail = "";
     try {
       const storedEmail = await tokenStorage.getItem("user_email");
@@ -127,7 +120,7 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
       >
         <div className={styles.MainContainer}>
 
-          {/* ── TOP ── */}
+
           <div className={styles.Top}>
             <div className={styles.subscrihead}>
               <div className={styles.subscripheadtext}>
@@ -151,10 +144,9 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
             <div className={styles.line} />
           </div>
 
-          {/* ── MIDDLE (scrollable) ── */}
+
           <div className={styles.Middle}>
 
-            {/* Frequency / "Bag Amount" section — always shown */}
             {freqOptions.length > 0 && (
               <div className={styles.BagContainer}>
                 <div className={styles.BagTitle}>
@@ -182,7 +174,6 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
               </div>
             )}
 
-            {/* Size / variant section — only for variant products */}
             {isVariant && subVariants.length > 0 && (
               <div className={styles.SizeContainer}>
                 <div className={styles.SizeTitle}>
@@ -196,7 +187,7 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
                       className={styles.Sizeqntyselectbtn}
                       onClick={() => setSelectedVariant(variant)}
                     >
-                      <h3>{variant.variantName}</h3>
+                      <h3>{variant.variantName} gm</h3>
                       <input
                         type="radio"
                         name="subSize"
@@ -212,7 +203,7 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
 
           </div>
 
-          {/* ── BOTTOM ── */}
+
           <div className={styles.Bottom}>
             <button className={styles.stsubscribe} onClick={handleStartSubscription}>Start Subscription</button>
           </div>

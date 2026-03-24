@@ -1,7 +1,6 @@
 
 const API_BASE = "https://endpoint.whitemantis.ae/api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type SubStatus = "active" | "cancelled";
 
@@ -24,22 +23,22 @@ export interface SubPaymentRecord {
 }
 
 export interface UserSubscription {
-  /** web-subscription document id */
+
   id               : number;
-  displayId        : string;        // "#WMS-30"
+  displayId        : string;       
   status           : SubStatus;
-  productName      : string;        // "Coffee Drip Bags"
-  itemName         : string;        // "Indonesia Meriah Anaerobic Natural, 1kg"
-  deliveryFrequency: string;        // "Delivers Every 2 weeks"
+  productName      : string;        
+  itemName         : string;       
+  deliveryFrequency: string;        
   quantity         : number;
   unitPrice        : number;
   shippingCharge   : number;
   taxAmount        : number;
   total            : number;
   coinsDiscount    : number;
-  nextDelivery     : string | null; // "31 Dec 2025" — from nextPaymentDate field
+  nextDelivery     : string | null; 
   cancelledOn      : string | null;
-  placedAtLabel    : string;        // "07 Mar 2026"
+  placedAtLabel    : string;      
   shippingAddress  : SubAddress | null;
   billingAddress   : SubAddress | null;
   paymentHistory   : SubPaymentRecord[];
@@ -48,7 +47,6 @@ export interface UserSubscription {
   stripeSubId      : string;        // Stripe sub_… id (stripeSubscriptionID field)
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function authHeaders(token: string | null): Record<string, string> {
   const h: Record<string, string> = {};
@@ -83,11 +81,7 @@ function mapAddr(raw: Record<string, unknown> | null | undefined): SubAddress | 
   };
 }
 
-/**
- * Build "Delivers Every 2 weeks" from the matched subFreq entry.
- * Matches items[0].subFreqID against product.subFreq[].id.
- * Falls back to reading duration/interval directly from the item if product isn't populated.
- */
+
 function buildFreqLabel(
   product       : Record<string, unknown> | null | undefined,
   subFreqID     : string,
@@ -233,29 +227,23 @@ function mapDoc(
   const deliveryFrequency = buildFreqLabel(product, subFreqID, firstItem, docSubFreq, doc, variantSubFreq);
   console.log(`[sub #${doc.id}] deliveryFrequency="${deliveryFrequency}"`);
 
-  // ── Financials ────────────────────────────────────────────────────────────
+ 
   const fin          = (doc.financials as Record<string, unknown>) ?? {};
   const shippingCharge = Number(fin.shippingCharge   ?? 0);
   const taxAmount      = Number(fin.taxAmount        ?? 0);
   const total          = Number(fin.total            ?? 0);
   const coinsDiscount  = Number(fin.wtCoinsDiscount  ?? 0);
 
-  // ── Dates ─────────────────────────────────────────────────────────────────
-  // nextPaymentDate is updated by Stripe webhook after every invoice.paid
-  // updatedAt is set by Payload whenever the doc changes — used as cancellation date
+
   const updatedAt       = doc.updatedAt as string | undefined;
   const nextPaymentDate = doc.nextPaymentDate as string | null | undefined;
   const nextDelivery    = !isCancelled ? (fmt(nextPaymentDate) ?? "—") : null;
-  // Use updatedAt as the cancel date (Payload sets it when subsStatus → "cancelled")
-  // Fall back to cancelledAt if backend ever adds that dedicated field
+ 
   const cancelDateRaw   = (doc.cancelledAt ?? doc.canceledAt ?? updatedAt) as string | undefined;
   const cancelledOn     = isCancelled  ? (fmt(cancelDateRaw) ?? "—") : null;
   const placedAtLabel   = fmt(createdAt) ?? "—";
 
-  // ── Stripe / card info ────────────────────────────────────────────────────
-  // stripeData is a JSON field stored on the web-subscription doc.
-  // stripeData.subscriptionId = the Stripe sub_… ID (set by handleInvoicePaid webhook)
-  // stripeSubscriptionID (text field) = also the Stripe sub ID, set at checkout
+  
   const stripeData  = (doc.stripeData as Record<string, unknown>) ?? {};
   // Prefer stripeData.subscriptionId (used by refundHandler), fall back to top-level text field
   const stripeSubId = String(stripeData.subscriptionId ?? doc.stripeSubscriptionID ?? "");
@@ -288,14 +276,7 @@ function mapDoc(
   };
 }
 
-// ─── Payment history fetcher ─────────────────────────────────────────────────
 
-/**
- * Fetches all web-orders that were created by a subscription renewal
- * (origin=subscription, stripeSubscriptionID matches the Stripe sub ID).
- * Each order = one payment cycle entry.
- * Exported so SubscriptionDetail can re-fetch live.
- */
 export async function fetchPaymentHistory(
   token        : string | null,
   stripeSubId  : string,
@@ -330,12 +311,7 @@ export async function fetchPaymentHistory(
   }
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
 
-/**
- * Returns all the current user's subscriptions from the web-subscription collection,
- * newest first. Also fetches payment history per subscription from web-orders.
- */
 export async function getUserSubscriptions(
   token: string | null,
 ): Promise<UserSubscription[]> {
@@ -378,14 +354,7 @@ export async function getUserSubscriptions(
   return results;
 }
 
-/**
- * Cancel a subscription.
- * Backend endpoint: GET /api/web-subscription/:id/cancel  (method: 'get' in Payload config)
- * The refundHandler checks order.stripeData.subscriptionId to cancel the Stripe subscription.
- *
- * If stripeData.subscriptionId is missing on the doc (webhook hasn't run yet), we first
- * PATCH the doc to copy stripeSubscriptionID → stripeData.subscriptionId, then retry cancel.
- */
+
 export async function cancelSubscriptionOrder(
   token    : string | null,
   orderId  : number,

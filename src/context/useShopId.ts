@@ -30,28 +30,22 @@ export function clearShopIdCache(): void {
   _fetchPromise = null;
 }
 
-/**
- * Hook — returns the current shop ID.
- * Returns `null` while it's being fetched.
- */
+
 export function useShopId(): number | null {
-  // Prefer the CartContext value — CafeMenu sets it via setShopId(shop.id)
-  // and it's persisted in localStorage, so it's usually available immediately.
   const { shopId: cartShopId, setShopId } = useCart();
 
   const [fetchedShopId, setFetchedShopId] = React.useState<number | null>(
-    () => _cachedShopId  // use cached value synchronously if available
+    () => _cachedShopId  
   );
 
   React.useEffect(() => {
-    // If CartContext already has it, populate the module cache and we're done.
     if (cartShopId !== null) {
       _cachedShopId = cartShopId;
       setFetchedShopId(cartShopId);
       return;
     }
 
-    // CartContext doesn't have it yet — fetch from API.
+
     if (_cachedShopId !== null) {
       setFetchedShopId(_cachedShopId);
       return;
@@ -62,7 +56,7 @@ export function useShopId(): number | null {
       .then((id) => {
         if (!cancelled) {
           setFetchedShopId(id);
-          setShopId(id); // also push into CartContext so PayContainer etc. get it
+          setShopId(id); 
         }
       })
       .catch(() => { /* error already logged in fetchShopIdOnce */ });

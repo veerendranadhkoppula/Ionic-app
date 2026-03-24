@@ -142,19 +142,31 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
 
   const filterSchema = React.useMemo(() => {
     const schema: Record<string, { values: string[]; label: string }> = {};
+subCategories.forEach((group) => {
+  if (!group.level2 || group.level2.length === 0) return;
+  // Use id as key since API returns no slug
+  const groupKey = `subcategory_${group.id}`;
 
-    // ── Inject sub-categories from the API as filter groups ──────────────────
-    // Each level1 group (e.g. "Brew Method") becomes a filter group.
-    // Its level2 children (e.g. "Filter", "Espresso") are the selectable values.
-    // We use the level2 slug as the stored value (matches product.subCategories[].slug).
-    subCategories.forEach((group) => {
-      if (!group.level2 || group.level2.length === 0) return;
-      const key = `subcategory_${group.slug}`;
-      schema[key] = {
-        label: group.name,
-        values: group.level2.map((l2) => l2.slug),
+  group.level2.forEach((l2) => {
+    if (l2.level3 && l2.level3.length > 0) {
+      // e.g. Tasting Profile → Acidity → [Bright, Low]
+      // Create a sub-group per l2, values are l3 ids
+      const subKey = `subcategory_${group.id}_${l2.id}`;
+      schema[subKey] = {
+        label: `${group.name} - ${l2.name}`,
+        values: l2.level3.map((l3) => l3.id),
       };
-    });
+    } else {
+      // e.g. Brew Method → [Filter, Espresso] — leaf l2, use l2.id as value
+      if (!schema[groupKey]) {
+        schema[groupKey] = { label: group.name, values: [] };
+      }
+      if (!schema[groupKey].values.includes(l2.id)) {
+        schema[groupKey].values.push(l2.id);
+      }
+    }
+  });
+});
 
     // ── Legacy: also read any dummy .filters object on products (no-ops for API data) ──
     const items = categoryProducts;
@@ -297,11 +309,20 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
   ): string[] | undefined => {
     // Sub-category filter keys are prefixed with "subcategory_"
     // Values are level2 slugs stored in product.subCategories[].slug
-    if (path.startsWith("subcategory_")) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const subCats: { slug?: string }[] = (product.subCategories as any[]) ?? [];
-      return subCats.map((sc) => String(sc?.slug ?? "")).filter(Boolean);
-    }
+if (path.startsWith("subcategory_")) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const subCats: { slug?: string; level1Id?: string; level2Id?: string; level3Id?: string }[] = (product.subCategories as any[]) ?? [];
+  const values: string[] = [];
+  subCats.forEach((sc) => {
+    // Match by level2Id (for leaf filters like Brew Method → Filter)
+    if (sc?.level2Id) values.push(String(sc.level2Id));
+    // Match by level3Id (for nested filters like Tasting Profile → Acidity → Bright)
+    if (sc?.level3Id) values.push(String(sc.level3Id));
+    // Also keep slug as fallback
+    if (sc?.slug) values.push(String(sc.slug).toLowerCase());
+  });
+  return values.filter(Boolean);
+}
 
     const parts = path.split(".");
     // StoreProduct has no legacy filters object — use subCategories slugs for filtering
@@ -338,20 +359,7 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
     });
   });
 
-  // When products finish loading, if there are few items we auto-scroll the
-  // page so the last product is visible and approximately centered in the
-  // viewport. This mirrors the cafe behavior for small result sets.
-  React.useEffect(() => {
-    if (loading) return;
-    try {
-      const prods = document.querySelectorAll('[id^="product-"]');
-      if (!prods || prods.length === 0) return;
-      const last = prods[prods.length - 1] as HTMLElement;
-      last.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch (err) {
-      console.warn('[StoreMain] auto-scroll failed', err);
-    }
-  }, [loading, products.length, actualActiveCategory]);
+
 
   return (
     <>
@@ -552,10 +560,21 @@ const StoreMain = ({ activeCategory, subCategories = [], products, loading = fal
                             className={styles.FilterSubRow}
                             onClick={() => handleFilterClick(type, value)}
                           >
-                            <span>
-                              {value}{" "}
-                              {optionCount > 0 ? `(${optionCount})` : ""}
-                            </span>
+                          <span>
+  {(() => {
+    // Resolve human-readable name from id
+    for (const group of subCategories) {
+      for (const l2 of group.level2 ?? []) {
+        if (l2.id === value) return l2.name;
+        for (const l3 of l2.level3 ?? []) {
+          if (l3.id === value) return l3.name;
+        }
+      }
+    }
+    return value;
+  })()}{" "}
+  {optionCount > 0 ? `(${optionCount})` : ""}
+</span>
                           </div>
                         );
                       })}

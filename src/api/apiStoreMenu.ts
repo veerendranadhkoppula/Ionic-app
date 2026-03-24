@@ -50,18 +50,23 @@ export interface WebCategory {
   createdAt: string;
 }
 
-/** level2 / level3 node inside a sub-category level1 */
+export interface SubCatLevel3 {
+  id: string;
+  name: string;
+  slug?: string;
+}
+
 export interface SubCatLevel2 {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
+  level3?: SubCatLevel3[];
 }
 
-/** Top-level group inside a web-sub-categories doc (level1 row) */
 export interface SubCatLevel1 {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   level2: SubCatLevel2[];
 }
 
@@ -202,7 +207,7 @@ export async function getStoreCategories(): Promise<WebCategory[]> {
  * Returns the level1 array (groups) from the first matching doc.
  */
 export async function getStoreSubCategories(categorySlug: string): Promise<SubCatLevel1[]> {
-  const url = `${API_BASE}/web-sub-categories?where[parentCategory.slug][equals]=${encodeURIComponent(categorySlug)}&depth=1&select[level1]=true&select[parentCategory]=true`;
+const url = `${API_BASE}/web-sub-categories?where[parentCategory.slug][equals]=${encodeURIComponent(categorySlug)}&depth=3`;
   console.log("[apiStoreMenu] getStoreSubCategories → fetching:", url);
 
   const res = await fetch(url);
@@ -218,11 +223,10 @@ export async function getStoreSubCategories(categorySlug: string): Promise<SubCa
   if (docs.length === 0) return [];
 
   // There's one doc per category — take its level1 array
-  const level1 = docs[0].level1 ?? [];
-  console.log("[apiStoreMenu] getStoreSubCategories → level1 groups:", level1.map((l) => l.name));
-  return level1;
+const level1 = docs[0].level1 ?? [];
+console.log("[apiStoreMenu] getStoreSubCategories → level1 groups:", JSON.stringify(level1, null, 2));
+return level1;
 }
-
 // ─── Internal mapper ──────────────────────────────────────────────────────────
 
 function mapDocToProduct(doc: Record<string, unknown>): StoreProduct {

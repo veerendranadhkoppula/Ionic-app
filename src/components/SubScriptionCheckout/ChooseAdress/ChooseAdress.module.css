@@ -28,6 +28,18 @@
 }
 .overlayClose {
   animation: fadeOut 0.3s ease forwards;
+}.overlayFooter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 2147483647;
+  animation: fadeIn 0.3s ease forwards;
 }
 .MainContainer{
     display: flex;

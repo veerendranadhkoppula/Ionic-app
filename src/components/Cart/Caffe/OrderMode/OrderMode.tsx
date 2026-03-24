@@ -198,8 +198,6 @@ const OrderMode = () => {
               </div>
             </div>
 
-            <div className={styles.line}></div>
-
             {timeSelection === "custom" && (
               <div className={styles.slotGrid}>
                 {slotsLoading && (

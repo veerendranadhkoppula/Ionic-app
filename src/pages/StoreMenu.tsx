@@ -36,7 +36,23 @@ const [products, setProducts] = useState<StoreProduct[]>([]);
 const [categories, setCategories] = useState<WebCategory[]>([]);
 const [subCategories, setSubCategories] = useState<SubCatLevel1[]>([]);
 const [loadingProducts, setLoadingProducts] = useState(true);
+// Re-apply URL category param whenever location changes (handles Ionic page cache)
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const urlCategory = params.get("category");
+  if (!urlCategory) return;
+  if (categories.length === 0) return; // categories not loaded yet, handled in fetch effect
 
+  const decoded = decodeURIComponent(urlCategory).toLowerCase();
+  const matched = categories.find(
+    (c) => c.title.toLowerCase() === decoded
+  ) ?? categories.find(
+    (c) => c.title.toLowerCase().includes(decoded) || decoded.includes(c.title.toLowerCase())
+  );
+  if (matched) {
+    setActiveCategory(matched.title);
+  }
+}, [location.search, categories]);
   // Preload product images and resolve when all loaded or timeout
   const preloadProductImages = async (items: StoreProduct[], timeoutMs = 5000) => {
     const urls = Array.from(new Set(items.map((p) => p.productImage?.url).filter(Boolean) as string[]));
@@ -87,13 +103,31 @@ useEffect(() => {
   console.log("[StoreMenu] fetching categories...");
   getStoreCategories()
     .then((cats) => {
-      // Sort oldest-first so Coffee Beans (created first) appears at the start
       const sorted = [...cats].sort(
         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
       console.log("[StoreMenu] categories loaded:", sorted.map((c) => c.title));
       setCategories(sorted);
-      if (!activeCategory && sorted.length > 0) {
+
+      // Re-read URL param here (not from stale closure) so navigation from
+      // ShopCategories always wins over the default first-category fallback.
+      const params = new URLSearchParams(window.location.search);
+      const urlCategory = params.get("category");
+      if (urlCategory) {
+        // Find exact match (case-insensitive) in loaded categories
+const decoded = decodeURIComponent(urlCategory).toLowerCase();
+const decodedNoSpace = decoded.replace(/\s+/g, "");
+const matched = sorted.find(
+  (c) => c.title.toLowerCase() === decoded
+) ?? sorted.find(
+  (c) => c.title.toLowerCase().replace(/\s+/g, "") === decodedNoSpace
+) ?? sorted.find(
+  (c) => c.title.toLowerCase().includes(decoded) || decoded.includes(c.title.toLowerCase())
+) ?? sorted.find(
+  (c) => c.title.toLowerCase().replace(/\s+/g, "").includes(decodedNoSpace) || decodedNoSpace.includes(c.title.toLowerCase().replace(/\s+/g, ""))
+);
+setActiveCategory(matched ? matched.title : decodeURIComponent(urlCategory));
+      } else if (!activeCategory && sorted.length > 0) {
         setActiveCategory(sorted[0].title);
       }
     })

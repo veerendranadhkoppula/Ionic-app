@@ -21,7 +21,7 @@ const CafeShopCat = () => {
           </div>
           <div className={styles.right} onClick={() => history.push("/StoreMenu")} style={{ cursor: "pointer" }}>
             <div className={styles.text}>
-              <h3>Shop</h3>
+              <h3>Store</h3>
               <p>Fresh Beans and Merch</p>
             </div>
             <div className={styles.image}>

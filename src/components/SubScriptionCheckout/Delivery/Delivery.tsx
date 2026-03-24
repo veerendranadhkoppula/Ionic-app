@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ChooseAdress from "../ChooseAdress/ChooseAdress";
 import styles from "./Delivery.module.css";
+import { createPortal } from "react-dom";
 
 export interface DeliveryAddress {
   id?: string;
@@ -319,13 +320,20 @@ const Delivery: React.FC<Props> = ({ onDeliveryChange }) => {
         </div>
       </div>
 
-      {openAddressSheet && (
-        <ChooseAdress
-          type={sheetType}
-          onClose={() => setOpenAddressSheet(false)}
-          onSelect={handleAddressSelect}
-        />
-      )}
+    {openAddressSheet && (() => {
+        const sheet = (
+          <ChooseAdress
+            type={sheetType}
+            onClose={() => setOpenAddressSheet(false)}
+            onSelect={handleAddressSelect}
+          />
+        );
+        if (typeof document !== "undefined") {
+          const container = document.getElementById("subscription-checkout-footer-overlays");
+          if (container) return createPortal(sheet, container);
+        }
+        return sheet;
+      })()}
     </>
   );
 };

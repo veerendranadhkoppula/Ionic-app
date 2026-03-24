@@ -96,33 +96,42 @@
 .prodLeft {
   display: flex;
   gap: 10px;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 }
 .prodImage {
   display: flex;
   justify-content: left;
-  height: 100%;
+  flex-shrink: 0;
+  width: 75px;
+  align-self: stretch;
 }
 .prodLeft img {
-  /* fixed image size: 75x75 */
   width: 75px;
-  height: 75px;
+  height: 100%;
+  min-height: 75px;
   border-radius: 12px;
   object-fit: cover;
+  display: block;
 }
 
 .prodDetails {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
-
 .prodTitleRow {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
+}
+
+.prodTitleRow svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .prodTitleRow h4 {
@@ -132,6 +141,10 @@
   color: #4b3827;
   text-transform: capitalize;
   margin: 0;
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .prodDetails p {

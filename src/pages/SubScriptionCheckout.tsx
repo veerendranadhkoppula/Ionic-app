@@ -203,8 +203,7 @@ const SubScriptionCheckout: React.FC<Props> = ({
 
       <IonFooter>
           {/* Transient login toast removed — guests are redirected directly to /auth when they tap Pay */}
-
-        <PayContainer
+ <PayContainer
           total={total}
           onPay={handlePay}
           disabled={
@@ -215,6 +214,8 @@ const SubScriptionCheckout: React.FC<Props> = ({
               : false)
           }
         />
+        <div id="subscription-checkout-footer-overlays" style={{ position: "relative", width: "100%", height: 0 }} />
+        
       </IonFooter>
     </IonPage>
   );

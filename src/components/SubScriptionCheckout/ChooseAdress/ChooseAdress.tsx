@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddNewAddress from "../../Adresses/AddNewAddress/AddNewAddress";
 import tokenStorage from "../../../utils/tokenStorage";
 import * as api from "../../../utils/apiAuth";
+import { createPortal } from "react-dom";
 
 const authFetch = async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
   const url = typeof input === "string" ? input : (input as Request).url;
@@ -100,90 +101,71 @@ const handleAddAddress = async (newAddress: Address) => {
 
   onSelect(newAddress);
 };
-  return (
+const portalTarget = typeof document !== "undefined"
+    ? (document.getElementById("subscription-checkout-footer-overlays") ?? document.getElementById("store-checkout-footer-overlays"))
+    : null;
+
+  const content = (
     <>
-   <div
-  className={`${styles.overlay} ${isClosing ? styles.overlayClose : ""}`}
-  onClick={() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 300);
-  }}
->
-   <div
-  className={`${styles.main} ${isClosing ? styles.close : ""}`}
-  onClick={(e) => e.stopPropagation()}
->
-        <div className={styles.MainContainer}>
-          <div className={styles.Top}>
-           <h3>
-  {type === "shipping"
-    ? "Choose Shipping Address"
-    : "Choose Billing Address"}
-</h3>
-          </div>
-          <div className={styles.Botttom}>
-            <div
-              className={styles.AddAdressCoantainer}
-              onClick={() => {
-                setSelectedAddress(null);
-                setOpenSheet(true);
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11.5 12.5H6V11.5H11.5V6H12.5V11.5H18V12.5H12.5V18H11.5V12.5Z"
-                  fill="#6C7A5F"
-                />
-              </svg>
-
-              <p>Add New Address</p>
+      <div
+        className={`${portalTarget ? styles.overlayFooter : styles.overlay} ${isClosing ? styles.overlayClose : ""}`}
+        onClick={() => {
+          setIsClosing(true);
+          setTimeout(() => { onClose(); }, 300);
+        }}
+      >
+        <div
+          className={`${styles.main} ${isClosing ? styles.close : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={styles.MainContainer}>
+            <div className={styles.Top}>
+              <h3>{type === "shipping" ? "Choose Shipping Address" : "Choose Billing Address"}</h3>
             </div>
-            <div className={styles.AdressesContainers}>
-              {addresses.length === 0 && !loading && <p>No addresses found.</p>}
-
-              {addresses.map((item) => (
-               <div
-  key={item.id || item.label + item.street}
-  className={styles.AdressCard}
-  onClick={() => {
-    onSelect(item);
-  }}
-  style={{ cursor: "pointer" }}
->
-                  <h3>{item.label}</h3>
-                  <h4>{item.addressFirstName + " " + item.addressLastName}</h4>
-                  <p>
-                    {`${item.street}, ${item.apartment}, ${item.city}, ${item.emirates}, UAE`}
-                  </p>
-                  <h5>Phone number : {item.phoneNumber}</h5>
-                </div>
-              ))}
+            <div className={styles.Botttom}>
+              <div
+                className={styles.AddAdressCoantainer}
+                onClick={() => { setSelectedAddress(null); setOpenSheet(true); }}
+                style={{ cursor: "pointer" }}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.5 12.5H6V11.5H11.5V6H12.5V11.5H18V12.5H12.5V18H11.5V12.5Z" fill="#6C7A5F" />
+                </svg>
+                <p>Add New Address</p>
+              </div>
+              <div className={styles.AdressesContainers}>
+                {addresses.length === 0 && !loading && <p>No addresses found.</p>}
+                {addresses.map((item) => (
+                  <div
+                    key={item.id || item.label + item.street}
+                    className={styles.AdressCard}
+                    onClick={() => { onSelect(item); }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <h3>{item.label}</h3>
+                    <h4>{item.addressFirstName + " " + item.addressLastName}</h4>
+                    <p>{`${item.street}, ${item.apartment}, ${item.city}, ${item.emirates}, UAE`}</p>
+                    <h5>Phone number : {item.phoneNumber}</h5>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      </div>
-      {openSheet && (
+   {openSheet && createPortal(
         <AddNewAddress
-          onClose={() => {
-            setOpenSheet(false);
-            setSelectedAddress(null);
-          }}
+          onClose={() => { setOpenSheet(false); setSelectedAddress(null); }}
           onAdd={handleAddAddress}
           editData={selectedAddress}
-        />
+        />,
+        document.body
       )}
     </>
   );
+
+  if (portalTarget) return createPortal(content, portalTarget);
+  return content;
 };
 
 export default ChooseAdress;

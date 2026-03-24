@@ -94,6 +94,7 @@
   border: 1.5px solid #6c7a5f12;
   background-color: #f9f9f9;
   padding: 16px;
+  border-radius: 12px;
   box-sizing: border-box;
 }
 .Bottom {
@@ -186,6 +187,8 @@
   color: #4b3827;
   font-family: var(--lato);
   margin: 0;
+  min-width: 100px;
+  flex-shrink: 0;
 }
 .proddetailItem p {
   font-size: 12px;
@@ -193,4 +196,5 @@
   color: #8c8c8c;
   font-family: var(--lato);
   margin: 0;
+  flex: 1;
 }

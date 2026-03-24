@@ -13,6 +13,8 @@ const BlogsSection = () => {
     ...articles.filter((a) => !a.isFeatured),
   ].slice(0, 3);
 
+if (loading || sorted.length === 0) return null;
+
   return (
     <div className={styles.main}>
       <div className={styles.MainContainer}>
@@ -22,11 +24,7 @@ const BlogsSection = () => {
         </div>
 
         <div className={styles.Bottom}>
-          {loading && (
-            <div style={{ textAlign: "center", padding: "24px 0", color: "#6C7A5F" }}>
-              Loading…
-            </div>
-          )}
+        
 
           {!loading && sorted.map((blog) => (
             <div className={styles.BlogCard} key={blog.id}>

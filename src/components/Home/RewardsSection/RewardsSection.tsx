@@ -35,6 +35,10 @@ const RewardsSection = () => {
     fetchData();
   });
 
+useEffect(() => {
+  const timer = setInterval(fetchData, 2_000); // every 10 seconds
+  return () => clearInterval(timer);
+}, [fetchData]);
   const rewards = stampReward;
   return (
     <>

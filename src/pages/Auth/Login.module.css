@@ -4,6 +4,9 @@
   height: 100svh;
   width: 100%;
 }
+.BottomBottom {
+  display: none;
+}
 .MainConatiner{
     display: flex;
     align-items: center;
@@ -206,12 +209,12 @@
 .continueActive {
     background-color: #6C7A5F;
 }
-.BottomBottom{
+/* .BottomBottom{
     display: flex;
     justify-content: left;
     flex-direction: column;
     gap: 32px;
-}
+} */
 .BottomBottomOne{
     display: flex;
     flex-direction: row;

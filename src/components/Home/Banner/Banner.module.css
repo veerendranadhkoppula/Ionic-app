@@ -88,7 +88,7 @@
 }
 @media (max-width: 600px) {
   .BannerImage {
-    height: 160px;
-    object-fit: cover;
+    max-height: 140px;
+  
   }
 }

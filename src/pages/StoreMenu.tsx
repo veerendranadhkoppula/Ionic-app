@@ -190,7 +190,7 @@ useEffect(() => {
           </div>
         ) : (
           <>
-            <Banner />
+            <Banner currentPage="Store"/>
 
             <CatagoriesBar
               activeCategory={activeCategory}

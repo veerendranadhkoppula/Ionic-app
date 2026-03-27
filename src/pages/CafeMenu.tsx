@@ -22,7 +22,7 @@ import OfflineOverlay from "../components/OfflineOverlay/OfflineOverlay";
 import StickBar from "../components/Home/StickBar/StickBar.tsx";
 import { getCurrentUser } from "../utils/authStorage.ts";
 import useAuth from "../utils/useAuth";
-
+import Banner from "../components/CafeMenu/Banner/Banner";
 import placeholderimage from "./nostatesimg.png";
 import Customization from "../components/Home/Customization/Customization.tsx";
 import RepeatCustomization from "../components/CafeMenu/RepeatCustomization/RepeatCustomization";
@@ -772,6 +772,7 @@ useEffect(() => {
                   </button>
                 ))}
               </div> */}
+  <Banner currentPage="Cafe" />
 
                   <div className={styles.MiddleBottom}>
                     {TAB_ORDER.filter((t) =>

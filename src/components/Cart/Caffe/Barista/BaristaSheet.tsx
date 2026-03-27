@@ -25,12 +25,20 @@ const BaristaSheet: React.FC<Props> = ({ isOpen, onClose, onConfirm, currentBari
   const history = useHistory();
 
   // Sync internal selection with parent's current barista whenever sheet opens
-  React.useEffect(() => {
+React.useEffect(() => {
     if (isOpen) {
       setSelectedId(currentBaristaId ?? null);
-    }
-  }, [isOpen, currentBaristaId]);
 
+
+      if (error === "AUTH_REQUIRED") {
+        import("../../../../utils/tokenStorage").then(({ default: tokenStorage }) => {
+          tokenStorage.getToken().then((token) => {
+            if (token) retry();
+          });
+        });
+      }
+    }
+  }, [isOpen, currentBaristaId, error, retry]);
   const handleSelect = (id: number) => setSelectedId(prev => prev === id ? null : id);
 
   const handleExpand = (id: number) =>
@@ -98,7 +106,7 @@ const BaristaSheet: React.FC<Props> = ({ isOpen, onClose, onConfirm, currentBari
                         </p>
                         <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
                           <button
-                            onClick={() => history.push("/auth")}
+                         onClick={() => { onClose(); history.push("/auth"); }}
                             style={{
                               background: "#6C7A5F",
                               color: "#fff",

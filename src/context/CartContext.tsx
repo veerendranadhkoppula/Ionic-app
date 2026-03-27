@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { getSingleMenuItem } from "../api/apiCafe";
@@ -915,19 +916,26 @@ if (backendItemId) {
               }
             }
 
-            // Clear local variant ledger and persisted copy so UI will reflect server state
-            variantStoreRef.current.clear();
-            try { localStorage.removeItem('cart_variants_v1'); } catch { /* ignore */ }
+      // Refresh cart from server (now includes merged items)
+try { await refreshCart(); } catch { /* ignore */ }
 
-            // Refresh cart from server (now includes merged items)
-            try { await refreshCart(); } catch { /* ignore */ }
+// Rebuild variant store from merged variants so customization labels survive post-login.
+// We do this AFTER refreshCart so cartRef.current has the latest backend item IDs.
+const rebuiltStore = new Map<string, Map<string, VariantEntry>>();
+for (const [pid, map] of Array.from(variantStoreRef.current.entries())) {
+  if (map.size > 0) {
+    rebuiltStore.set(pid, new Map(map));
+  }
+}
+variantStoreRef.current = rebuiltStore;
+saveVariantStore();
 
             try { localStorage.setItem('guest_cart_last_sync_token', token); } catch { /* ignore */ }
           });
         } else {
   const isGuest = localStorage.getItem("auth_mode") === "guest";
 
-  // ✅ do not clear cart if guest
+
   if (isGuest) return;
 
   try {

@@ -95,7 +95,7 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen className="home-content">
   {shopClosed && <CafeClose openingTime={openingTime} />}
-        <Banner />
+        <Banner currentPage="Home"/>
   {/* <DevNote /> */}
   {!user?.isGuest && <RewardsSection />}
         <CafeShopCat />

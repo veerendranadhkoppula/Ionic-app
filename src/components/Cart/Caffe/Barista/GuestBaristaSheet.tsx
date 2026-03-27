@@ -75,7 +75,7 @@ const GuestBaristaSheet: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
 
         <div className={styles.ctaWrap}>
-          <button className={styles.cta} onClick={() => history.push("/auth")}>
+          <button className={styles.cta}onClick={() => { onClose(); history.push("/auth"); }}>
             Login / Sign up
           </button>
         </div>

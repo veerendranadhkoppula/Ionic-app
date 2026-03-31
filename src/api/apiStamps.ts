@@ -37,12 +37,9 @@ function parseTransactions(history: any[]): EarningTransaction[] {
     const rewardEarned  = typeof entry.rewardEarned  === "number" ? entry.rewardEarned  : 0;
     const isPositive    = stampsEarned > 0 || rewardEarned > 0;
 
-    // Linked order — can be { relationTo, value: {...} } or a direct object
-    const linkedOrder   = entry.linkedOrder?.value ?? entry.linkedOrder ?? null;
-const rawOrderId    = entry.offlineReferenceId ?? linkedOrder?.id ?? entry.orderId ?? entry.order ?? entry.id ?? `${1000 + idx}`;
+const linkedOrder   = entry.linkedOrder?.value ?? entry.linkedOrder ?? null;
+const rawOrderId    = entry.offlineReferenceId ?? entry.linkedOrder?.value?.id ?? linkedOrder?.id ?? entry.orderId ?? entry.order ?? entry.id ?? `${1000 + idx}`;
 const orderId       = entry.offlineReferenceId ? `Ref #${entry.offlineReferenceId}` : `#${rawOrderId}`;
-
-    // Date — earnedAt is the real field
     const rawDate = entry.earnedAt ?? entry.date ?? entry.createdAt ?? entry.timestamp ?? "";
     const date = rawDate
       ? new Date(rawDate).toLocaleString("en-GB", {
@@ -137,6 +134,7 @@ function parseRedemptionTransactions(history: any[]): EarningTransaction[] {
 
 const rawOrderId =
       entry.offlineReferenceId ??
+      entry.associatedOrder?.value?.id ??
       assocDoc?.id ??
       (typeof assocRaw?.value === "number" ? assocRaw.value : null) ??
       (typeof assocRaw        === "number" ? assocRaw        : null) ??
@@ -488,8 +486,8 @@ function parseCoinEarningTransactions(history: any[]): EarningTransaction[] {
     const amountNum = typeof entry.amount === 'number' ? entry.amount : (typeof entry.coins === 'number' ? entry.coins : (entry.points || 0));
     const isPositive = amountNum > 0;
 
-    const linkedOrder = entry.linkedOrder?.value ?? entry.linkedOrder ?? null;
-const rawOrderId = entry.offlineReferenceId ?? linkedOrder?.id ?? entry.orderId ?? entry.order ?? entry.id ?? `${1000 + idx}`;
+const linkedOrder = entry.linkedOrder?.value ?? entry.linkedOrder ?? null;
+const rawOrderId = entry.offlineReferenceId ?? entry.linkedOrder?.value?.id ?? linkedOrder?.id ?? entry.orderId ?? entry.order ?? entry.id ?? `${1000 + idx}`;
 const orderId = entry.offlineReferenceId ? `Ref #${entry.offlineReferenceId}` : `#${rawOrderId}`;
     const rawDate = entry.earnedAt ?? entry.createdAt ?? entry.date ?? entry.timestamp ?? '';
     const date = rawDate
@@ -548,7 +546,7 @@ function parseCoinRedemptionTransactions(history: any[]): EarningTransaction[] {
 
     const linkedOrder = entry.associatedOrder?.value ?? entry.linkedOrder?.value ?? entry.linkedOrder ?? entry.order ?? null;
 
-const rawOrderId = entry.offlineReferenceId ?? linkedOrder?.id ?? entry.orderId ?? entry.id ?? `c-r-${2000 + idx}`;
+const rawOrderId = entry.offlineReferenceId ?? entry.associatedOrder?.value?.id ?? entry.linkedOrder?.value?.id ?? linkedOrder?.id ?? entry.orderId ?? entry.id ?? `c-r-${2000 + idx}`;
     const orderId = entry.offlineReferenceId ? `Ref #${entry.offlineReferenceId}` : `#${rawOrderId}`;
 
     // Timestamp fallback helper: use several fields, then try to derive from a mongo-like hex id

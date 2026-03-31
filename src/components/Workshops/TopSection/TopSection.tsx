@@ -29,7 +29,7 @@ const TopSection: React.FC = () => {
             </svg>
           </div>
           <div className={styles.RightContainer}>
-            <h4>Workshops</h4>
+            <h4>Academy</h4>
           </div>
         </div>
       </div>

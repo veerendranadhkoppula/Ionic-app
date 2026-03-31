@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "308400054397",
-    "project_id": "white-mantis-76517",
-    "storage_bucket": "white-mantis-76517.firebasestorage.app"
+    "project_number": "34853283240",
+    "project_id": "white-mantis-3bbd8",
+    "storage_bucket": "white-mantis-3bbd8.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:308400054397:android:60c33998086c54dc8c1114",
+        "mobilesdk_app_id": "1:34853283240:android:1057ff5dfcaa08131a299d",
         "android_client_info": {
           "package_name": "com.whitemantis.app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA6thsdgY36UjRMksT0kRbMfqmMTg90img"
+          "current_key": "AIzaSyBsHtHdeNdKCRTPaAjF9PujwHSG19KitGE"
         }
       ],
       "services": {

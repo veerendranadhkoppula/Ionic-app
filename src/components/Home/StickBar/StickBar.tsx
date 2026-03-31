@@ -217,7 +217,7 @@ const StickBar: React.FC = () => {
     { key: "home", label: "Home", path: "/home" },
     { key: "store", label: "Store", path: "/StoreMenu" },
     { key: "cafe", label: "Cafe", path: "/CafeMenu" },
-    { key: "workshop", label: "Workshop", path: "/workshops" },
+    { key: "workshop", label: "Academy", path: "/workshops" },
     { key: "news", label: "News", path: "/News" },
   ];
 

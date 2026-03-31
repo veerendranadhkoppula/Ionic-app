@@ -56,7 +56,7 @@ const WorkshopsSection = () => {
         <div className={styles.MainContainer}>
           {(showSkeleton || error || workshops.length > 0) && (
             <div className={styles.title}>
-              <h3>Upcoming Workshops</h3>
+              <h3>Upcoming Academy Sessions</h3>
             </div>
           )}
 
@@ -125,8 +125,8 @@ const WorkshopsSection = () => {
               }}
             >
               <NoState
-                title={"No upcoming workshops right now."}
-                subtitle={"Check back later for new workshops."}
+                title={"No upcoming programs right now."}
+                subtitle={"Check back later for new programs."}
               />
             </div>
           )}

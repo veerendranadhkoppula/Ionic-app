@@ -188,8 +188,8 @@ const CuponsCoins: React.FC = () => {
   const coinsLabel = coinsLoading
     ? "Loading..."
     : coinBalance === 0
-    ? "No active coins"
-    : `Total Active Coins : ${coinBalance} Coins`;
+    ? "No active beans"
+    : `Total Active Beans : ${coinBalance} Beans`;
 
   return (
     <>
@@ -238,7 +238,7 @@ const CuponsCoins: React.FC = () => {
             </div>
             <div className={styles.CoinsContainer} style={{ opacity: hasCoins ? 1 : 0.45 }}>
               <div className={styles.CoinsContainerLeft}>
-                <h4>Mantis Coins</h4>
+                <h4>Mantis Beans</h4>
                 <p>{coinsLabel}</p>
               </div>
               <div className={styles.CoinsContainerRight}>

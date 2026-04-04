@@ -6,7 +6,7 @@ import { getCurrentUser } from "../../../utils/authStorage";
 const Landing: React.FC = () => {
   const history = useHistory();
   const [user, setUser] = React.useState(getCurrentUser());
-
+  const [shaking, setShaking] = React.useState(false);
   React.useEffect(() => {
     const handler = () => {
       setUser(getCurrentUser());
@@ -49,8 +49,15 @@ const Landing: React.FC = () => {
             <div
               className={styles.RewardsContainer}
               onClick={() => {
-                if (user?.isGuest) history.push("/auth");
-                else history.push("/rewards");
+                setShaking(true);
+                setTimeout(() => {
+                  setShaking(false);
+                  if (user?.isGuest) {
+                    history.push("/auth");
+                  } else {
+                    history.push("/rewards");
+                  }
+                }, 500);
               }}
               role="button"
               tabIndex={0}
@@ -64,6 +71,7 @@ const Landing: React.FC = () => {
               <svg
                 width="35"
                 height="35"
+                className={shaking ? styles.shake : ""}
                 viewBox="0 0 35 35"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

@@ -82,10 +82,6 @@ const CafeOrders: React.FC = () => {
     return () => { cancelled = true; };
   }, []);
 
-  // ── Live-poll ongoing orders ───────────────────────────────────────────────
-  // Instead of re-fetching the full order list on every tick, we only refresh
-  // the individual orders that are still ongoing. This means 1 small request
-  // per ongoing order instead of 1 heavy list request for all orders.
   React.useEffect(() => {
     const ongoingOrders = orders.filter(isOrderOngoing);
     if (ongoingOrders.length === 0) return;
@@ -111,7 +107,6 @@ const CafeOrders: React.FC = () => {
     return () => clearInterval(timer);
   }, [orders]);
 
-  // ── Rating handlers ───────────────────────────────────────────────────────
   const handleOrderRating = (id: string, value: number) => {
     setOrderRatings((prev) => ({ ...prev, [id]: value }));
     scheduleSave(id, value, baristaRatings[id] ?? null);
@@ -138,15 +133,7 @@ const CafeOrders: React.FC = () => {
     }, 800);
   };
 
-  // ── Reorder logic ─────────────────────────────────────────────────────────
 
-  /**
-   * Actually performs the reorder:
-   * 1. Reads the shopId from localStorage (set by CartContext on last cafe visit)
-   * 2. Clears any existing cafe cart (avoids duplicates)
-   * 3. Adds each item from the order into the cafe cart sequentially
-   * 4. Navigates to the Cart screen
-   */
   const executeReorder = React.useCallback(async (order: CafeOrder) => {
     setReorderLoadingFor(String(order.id));
     try {
@@ -158,13 +145,10 @@ const CafeOrders: React.FC = () => {
       // Clear existing cafe cart first so we start fresh
       await clearCart();
 
-      // Add each item from the order into the cafe cart sequentially
-      // Items from CafeOrder have productId and customizations already
       for (const item of order.items) {
         // Add the item once; if quantity > 1, repeat addToCart for that count
         for (let qty = 0; qty < item.quantity; qty++) {
-          // customizations from the order are already in backend-normalized format
-          // addToCart accepts them directly
+
           await addToCart(item.productId, item.customizations ?? []);
         }
       }
@@ -178,13 +162,7 @@ const CafeOrders: React.FC = () => {
     }
   }, [addToCart, clearCart, setShopId, history]);
 
-  /**
-   * Called when user taps "Reorder" on a completed/cancelled order.
-   * Priority:
-   *   1. Store cart has items  → show "store vs cafe" conflict modal
-   *   2. Cafe cart has items   → show "cafe vs cafe" conflict modal
-   *   3. No conflict           → proceed immediately
-   */
+
   const handleReorder = React.useCallback((e: React.MouseEvent, order: CafeOrder) => {
     e.stopPropagation();
 
@@ -217,21 +195,17 @@ const CafeOrders: React.FC = () => {
     if (!order) return;
 
     if (conflictType === "store") {
-      // Store cart is active — must use StoreCartContext to clear it
-      // (CartContext.clearCart has no knowledge of store cart items)
       await clearStoreCartAll();
     }
     // For cafe-vs-cafe, executeReorder already calls clearCart() before adding items
     await executeReorder(order);
   }, [conflictType, clearStoreCartAll, executeReorder]);
 
-  /** User tapped "No" in the conflict modal */
   const handleConflictCancel = React.useCallback(() => {
     setConflictVisible(false);
     pendingReorderRef.current = null;
   }, []);
 
-  // ── Shared helpers ────────────────────────────────────────────────────────
   const renderStars = (
     currentValue: number,
     onClick: (value: number) => void,
@@ -264,11 +238,7 @@ const CafeOrders: React.FC = () => {
     ));
   };
 
-  // ── Derived lists ─────────────────────────────────────────────────────────
-  // All orders in the API-returned sequence (already sorted by placedAt desc).
-  // No separate buckets — cancelled/completed/ongoing all interleave by recency.
-  // Show orders that are paid OR have been cancelled/rejected so users can
-  // see cancellation history. This includes refunds and admin rejections.
+
   const allOrders = orders.filter((o) => {
     const paid = o.paymentStatus === "paid";
     const refunded = o.paymentStatus === "refund-initiated" || o.paymentStatus === "refunded";
@@ -277,19 +247,7 @@ const CafeOrders: React.FC = () => {
     return paid || refunded || rejected || cancelled;
   });
 
-  /**
-   * The "main item" for a card is the first BEVERAGE in the order
-   * (itemType === "beverage"). Beverages are shown in the barista row.
-   * If there are no beverages, fall back to the very first item.
-   */
-  // NOTE: main item rendering is now handled inline per-card to avoid
-  // showing food items in the Barista block when there are no beverages.
 
-  /**
-   * "Other items" are FOOD items only (itemType === "food").
-   * Returns an empty array when there are no food items →
-   * the caller hides the entire "Other items" section in that case.
-   */
   const getOtherItems = (o: CafeOrder): string[] =>
     o.items
       .filter((it) => it.itemType === "food")
@@ -298,7 +256,7 @@ const CafeOrders: React.FC = () => {
   const navigateTo = (o: CafeOrder) =>
     history.push("/orderdetailsCafe", { orderId: o.id });
 
-  // ── Skeleton ──────────────────────────────────────────────────────────────
+
   if (loading) {
     return (
       <div className={styles.main}>
@@ -344,7 +302,7 @@ const CafeOrders: React.FC = () => {
     );
   }
 
-  // ── Empty state (no visible orders) ───────────────────────────────────────
+
   if (allOrders.length === 0) {
     return (
       <div className={styles.main}>
@@ -381,7 +339,7 @@ const CafeOrders: React.FC = () => {
         const effectiveStatus = (order.orderAcceptance === 'rejected') ? 'cancelled' : order.orderStatus;
         const ongoing  = (order.orderAcceptance !== 'rejected') && isOrderOngoing(order);
 
-                // ── ONGOING card ──────────────────────────────────────────
+
                 if (ongoing) {
                   return (
                   <div className={styles.OngoingCards} key={id}>

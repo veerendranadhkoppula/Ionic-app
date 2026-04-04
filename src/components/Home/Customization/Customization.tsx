@@ -101,6 +101,7 @@ const Customization: React.FC<CustomizationProps> = ({
   
 }) => {
   const [isClosing, setIsClosing] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<{
     [sectionId: string]: {
       [groupId: string]: CustomizationOption[];
@@ -120,10 +121,7 @@ const Customization: React.FC<CustomizationProps> = ({
       let updatedGroup;
 
       if (section.selectionType === "single") {
-        // For single-selection sections we treat the entire section as one choice
-        // (only one option across all groups). If the clicked option is already
-        // selected, clear the whole section. Otherwise replace the section
-        // selection with the newly chosen option in its group.
+
         const alreadySelected =
           Object.values(sectionData).some((arr) => arr.length === 1 && arr[0].id === option.id);
         if (alreadySelected) {
@@ -160,14 +158,16 @@ const Customization: React.FC<CustomizationProps> = ({
     });
   };
   useEffect(() => {
+  if (isOpen) {
+    setIsAdded(false);
+  }
+}, [isOpen]);
+  useEffect(() => {
     if (isOpen) {
       // If editing an existing cart item, pre-fill with its saved selections
       if (initialSelections) {
         setSelectedOptions(initialSelections ?? {});
       } else {
-        // No initial selections: for any single-selection sections ("Required" ones)
-        // pre-select one option per section (not one per group). We pick the
-        // first available option from the first group that has options.
         const defaults: {
           [sectionId: string]: {
             [groupId: string]: CustomizationOption[];
@@ -395,14 +395,22 @@ const Customization: React.FC<CustomizationProps> = ({
 </div>
 
 
-            <button
-              className={styles.AddItemButton}
-              onClick={canConfirm ? handleConfirm : undefined}
-              disabled={!canConfirm}
-              aria-disabled={!canConfirm}
-            >
-              Add Item | AED {totalPrice}
-            </button>
+           <button
+  className={`${styles.AddItemButton} ${isAdded ? styles.added : ""}`}
+  onClick={() => {
+    if (!canConfirm || isAdded) return;
+
+    setIsAdded(true);
+
+    setTimeout(() => {
+      handleConfirm();
+    }, 500);
+  }}
+  disabled={!canConfirm}
+  aria-disabled={!canConfirm}
+>
+  {isAdded ? "✓ Added" : `Add Item | AED ${totalPrice}`}
+</button>
           </div>
         </div>
       </div>

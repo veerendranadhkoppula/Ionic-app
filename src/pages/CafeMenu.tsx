@@ -151,7 +151,7 @@ const CafeMenu: React.FC = () => {
   const [menuLoaded, setMenuLoaded] = useState(false);
   const [menuImagesPreloaded, setMenuImagesPreloaded] = useState(false);
   const [shopClosed, setShopClosed] = useState(false);
-
+const [rewardShaking, setRewardShaking] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [shopId, setShopId] = useState<number | null>(null);
   const beveragesRef = useRef<HTMLDivElement | null>(null);
@@ -159,7 +159,9 @@ const CafeMenu: React.FC = () => {
   const productObserver = useRef<IntersectionObserver | null>(null);
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const isProgrammaticScrollRef = useRef(false);
-const programmaticScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const programmaticScrollTimerRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   const {
     wishlistItems,
@@ -607,13 +609,14 @@ const programmaticScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tab = params.get("tab");
-  if (tab === "BEVERAGES" || tab === "BAKERY") {
-  setActiveTab(tab);
-  isProgrammaticScrollRef.current = true;                          // ADD
-  if (programmaticScrollTimerRef.current)                          // ADD
-    clearTimeout(programmaticScrollTimerRef.current);              // ADD
+    if (tab === "BEVERAGES" || tab === "BAKERY") {
+      setActiveTab(tab);
+      isProgrammaticScrollRef.current = true; // ADD
+      if (programmaticScrollTimerRef.current)
+        // ADD
+        clearTimeout(programmaticScrollTimerRef.current); // ADD
 
-  const tryScroll = (attempt = 0) => {
+      const tryScroll = (attempt = 0) => {
         const el = document.querySelector(
           `[data-tab="${tab}"]`,
         ) as HTMLElement | null;
@@ -646,36 +649,37 @@ const programmaticScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
         }
       };
 
-    setTimeout(() => tryScroll(0), 120);
+      setTimeout(() => tryScroll(0), 120);
 
-  programmaticScrollTimerRef.current = setTimeout(() => {         // ADD
-    isProgrammaticScrollRef.current = false;                      // ADD
-  }, 1200);                                                       // ADD (longer since scroll starts later)
-}
+      programmaticScrollTimerRef.current = setTimeout(() => {
+        // ADD
+        isProgrammaticScrollRef.current = false; // ADD
+      }, 1200); // ADD (longer since scroll starts later)
+    }
   }, [location, menuLoaded]);
-useEffect(() => {
-  if (!menuLoaded || !menuScrollRef.current) return;
+  useEffect(() => {
+    if (!menuLoaded || !menuScrollRef.current) return;
 
-  productObserver.current?.disconnect();
+    productObserver.current?.disconnect();
 
-  productObserver.current = new IntersectionObserver(
-    (entries) => {
-      if (isProgrammaticScrollRef.current) return;
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const tab = entry.target.getAttribute("data-tab");
-        if (tab) setActiveTab(tab as keyof MenuShape);
-      });
-    },
-    {
-      root: menuScrollRef.current,
-      threshold: 0,
-      rootMargin: "0px 0px -80% 0px",
-    },
-  );
+    productObserver.current = new IntersectionObserver(
+      (entries) => {
+        if (isProgrammaticScrollRef.current) return;
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const tab = entry.target.getAttribute("data-tab");
+          if (tab) setActiveTab(tab as keyof MenuShape);
+        });
+      },
+      {
+        root: menuScrollRef.current,
+        threshold: 0,
+        rootMargin: "0px 0px -80% 0px",
+      },
+    );
 
-  return () => productObserver.current?.disconnect();
-}, [menuLoaded]);
+    return () => productObserver.current?.disconnect();
+  }, [menuLoaded]);
 
   const flattenCategories = (categories?: MenuCategory[]) => {
     if (!categories) return [];
@@ -687,9 +691,7 @@ useEffect(() => {
       <IonContent fullscreen className="home-content">
         {!online ? (
           <OfflineOverlay />
-        ) : !menuLoaded ||
-          !cartPreloaded ||
-          !menuImagesPreloaded ? (
+        ) : !menuLoaded || !cartPreloaded || !menuImagesPreloaded ? (
           <div className={styles.loaderWrapper}>
             <img src="/12.gif" alt="Loading" />
             {/* <p>Loading menu...</p> */}
@@ -707,10 +709,14 @@ useEffect(() => {
                   <div className={styles.TopRight}>
                     <div
                       className={styles.Rewards}
-                      onClick={() => {
-                        if (user?.isGuest) history.push("/auth");
-                        else history.push("/rewards");
-                      }}
+                     onClick={() => {
+  setRewardShaking(true);
+  setTimeout(() => {
+    setRewardShaking(false);
+    if (user?.isGuest) history.push("/auth");
+    else history.push("/rewards");
+  }, 500);
+}}
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
@@ -721,6 +727,7 @@ useEffect(() => {
                       }}
                     >
                       <svg
+                      className={rewardShaking ? styles.shakeReward : ""}
                         width="35"
                         height="35"
                         viewBox="0 0 35 35"
@@ -772,7 +779,7 @@ useEffect(() => {
                   </button>
                 ))}
               </div> */}
-  <Banner currentPage="Cafe" />
+                  <Banner currentPage="Cafe" />
 
                   <div className={styles.MiddleBottom}>
                     {TAB_ORDER.filter((t) =>
@@ -783,34 +790,39 @@ useEffect(() => {
                         className={`${styles[tab]} ${
                           activeTab === tab ? styles.activeTab : ""
                         }`}
-                       onClick={() => {
-  setActiveTab(tab);
-  const el = document.querySelector(
-    `[data-tab="${tab}"]`,
-  ) as HTMLElement | null;
-  if (!el || !menuScrollRef.current) return;
+                        onClick={() => {
+                          setActiveTab(tab);
+                          const el = document.querySelector(
+                            `[data-tab="${tab}"]`,
+                          ) as HTMLElement | null;
+                          if (!el || !menuScrollRef.current) return;
 
-  isProgrammaticScrollRef.current = true;                         // ADD
-  if (programmaticScrollTimerRef.current)                         // ADD
-    clearTimeout(programmaticScrollTimerRef.current);             // ADD
+                          isProgrammaticScrollRef.current = true; // ADD
+                          if (programmaticScrollTimerRef.current)
+                            // ADD
+                            clearTimeout(programmaticScrollTimerRef.current); // ADD
 
-  const container = menuScrollRef.current;
-  const containerRect =
-    container.getBoundingClientRect();
-  const elRect = el.getBoundingClientRect();
-  const relativeTop =
-    elRect.top -
-    containerRect.top +
-    container.scrollTop;
-  container.scrollTo({
-    top: Math.max(0, relativeTop),
-    behavior: "smooth",
-  });
+                          const container = menuScrollRef.current;
+                          const containerRect =
+                            container.getBoundingClientRect();
+                          const elRect = el.getBoundingClientRect();
+                          const relativeTop =
+                            elRect.top -
+                            containerRect.top +
+                            container.scrollTop;
+                          container.scrollTo({
+                            top: Math.max(0, relativeTop),
+                            behavior: "smooth",
+                          });
 
-  programmaticScrollTimerRef.current = setTimeout(() => {        // ADD
-    isProgrammaticScrollRef.current = false;                     // ADD
-  }, 800);                                                       // ADD
-}}
+                          programmaticScrollTimerRef.current = setTimeout(
+                            () => {
+                              // ADD
+                              isProgrammaticScrollRef.current = false; // ADD
+                            },
+                            800,
+                          ); // ADD
+                        }}
                       >
                         {tab}
                       </button>
@@ -850,16 +862,16 @@ useEffect(() => {
 
                       return (
                         <div key={`bev-${catIndex}`} className={CatClass}>
-                         <div
-  className={styles.TopHeading}
-  data-tab="BEVERAGES"
-  ref={(el) => {
-    categoryRefs.current[cat.title] = el;
-    if (el && productObserver.current) {
-      productObserver.current.observe(el);
-    }
-  }}
->
+                          <div
+                            className={styles.TopHeading}
+                            data-tab="BEVERAGES"
+                            ref={(el) => {
+                              categoryRefs.current[cat.title] = el;
+                              if (el && productObserver.current) {
+                                productObserver.current.observe(el);
+                              }
+                            }}
+                          >
                             <h3>{cat.title}</h3>
                           </div>
 
@@ -954,6 +966,13 @@ useEffect(() => {
                                               );
 
                                               toggleWishlist(Number(item.id));
+                                              const el = e.currentTarget;
+                                        const isNowWishlisted = !wishlistItems.includes(item.id);
+if (isNowWishlisted) {
+  el.classList.remove(styles.animateHearts);
+  void el.offsetWidth;
+  el.classList.add(styles.animateHearts);
+}
                                             }}
                                           >
                                             <svg
@@ -983,6 +1002,14 @@ useEffect(() => {
                                                 strokeWidth="1.5"
                                               />
                                             </svg>
+                                            <div className={styles.heartsBurst}>
+                                              {[...Array(5)].map((_, i) => (
+                                                <span
+                                                  key={i}
+                                                  className={styles.heart}
+                                                ></span>
+                                              ))}
+                                            </div>
                                           </div>
                                         )}
                                       </div>
@@ -1163,16 +1190,16 @@ useEffect(() => {
                             }
                           }}
                         >
-                        <div
-  className={styles.TopHeading}
-  data-tab="BAKERY"
-  ref={(el) => {
-    categoryRefs.current[cat.title] = el;
-    if (el && productObserver.current) {
-      productObserver.current.observe(el);
-    }
-  }}
->
+                          <div
+                            className={styles.TopHeading}
+                            data-tab="BAKERY"
+                            ref={(el) => {
+                              categoryRefs.current[cat.title] = el;
+                              if (el && productObserver.current) {
+                                productObserver.current.observe(el);
+                              }
+                            }}
+                          >
                             <h3>{cat.title}</h3>
                           </div>
 
@@ -1267,6 +1294,13 @@ useEffect(() => {
                                               );
 
                                               toggleWishlist(Number(item.id));
+                                              const el = e.currentTarget;
+                                             const isNowWishlisted = !wishlistItems.includes(item.id);
+if (isNowWishlisted) {
+  el.classList.remove(styles.animateHearts);
+  void el.offsetWidth;
+  el.classList.add(styles.animateHearts);
+}
                                             }}
                                           >
                                             <svg
@@ -1296,6 +1330,14 @@ useEffect(() => {
                                                 strokeWidth="1.5"
                                               />
                                             </svg>
+                                            <div className={styles.heartsBurst}>
+                                              {[...Array(5)].map((_, i) => (
+                                                <span
+                                                  key={i}
+                                                  className={styles.heart}
+                                                ></span>
+                                              ))}
+                                            </div>
                                           </div>
                                         )}
                                       </div>
@@ -1560,7 +1602,7 @@ useEffect(() => {
               payload,
             });
             const qty = payload.quantity ?? 1;
-            await addToCart(productId, payload, qty);
+await addToCart(productId, payload.selectedOptions ?? {}, qty);
           } catch (err) {
             console.error("Failed addToCart:", err);
           }

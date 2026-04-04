@@ -384,3 +384,34 @@
   color: #8c8c8c;
   font-family: var(--lato);
 }
+
+
+
+.added {
+  background-color: #6C7A5F !important;
+  border-color: #6C7A5F !important;
+  transform: scale(0.96);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.added::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: rgba(108, 122, 95, 0.2);
+  animation: successFlash 0.4s ease;
+}
+
+@keyframes successFlash {
+  from {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}

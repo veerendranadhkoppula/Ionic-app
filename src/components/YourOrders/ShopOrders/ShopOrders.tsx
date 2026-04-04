@@ -125,8 +125,7 @@ const ShopOrders: React.FC = () => {
 
   const handleReorder = React.useCallback(async (e: React.MouseEvent, order: WebOrder) => {
     e.stopPropagation();
-    // If this order originated from a subscription, route the user directly to
-    // the subscription checkout flow instead of adding items to the store cart.
+
     if (order.origin === "subscription") {
       try {
         const token = await tokenStorage.getToken();
@@ -138,8 +137,6 @@ const ShopOrders: React.FC = () => {
           matched = subs.find((s) => Math.abs((s.total ?? 0) - (order.financials.total ?? 0)) < 0.01 && s.productName === firstItemName);
         }
 
-        // If we found a matching subscription, fetch the raw web-subscription doc to
-        // extract the frequency id/subFreq (needed for checkout) and product/variant ids.
         if (matched) {
           try {
             const API_BASE = "https://endpoint.whitemantis.ae/api";
@@ -204,9 +201,7 @@ const ShopOrders: React.FC = () => {
           }
         }
 
-        // If we couldn't construct a subscription checkout state, fall back to
-        // opening the subscription detail (preserves prior behavior) so the
-        // user can manage or re-subscribe from there.
+
         navigateToOrder(order);
         return;
       } catch (err) {
@@ -429,10 +424,6 @@ const ShopOrders: React.FC = () => {
     <div className={styles.main}>
       <div className={styles.MainConatiner}>
         <div className={styles.Bottom}>
-      {/* Show orders that have completed payment OR were cancelled so users
-        can see cancellation history. This prevents unpaid/pending
-        subscription attempts from appearing, while still showing
-        cancelled orders for auditing. */}
       {orders
         .filter((o) => o.paymentStatus === "completed" || o.deliveryStatus === "cancelled")
         .slice(0, visibleCount)
@@ -630,9 +621,7 @@ const ShopOrders: React.FC = () => {
                         : styles.OngoingCardBottomBottom
                     }
                   >
-                    {/* Cancel only when placed — NOT when shipped/delivered/cancelled
-                        For pickup orders, show the Cancel CTA muted and disabled
-                        because pickup orders cannot be cancelled by the user. */}
+
                     {status === "placed" ? (
                       (() => {
                         const isPickup = order.deliveryOption === "pickup";
@@ -645,8 +634,7 @@ const ShopOrders: React.FC = () => {
                               e.stopPropagation();
                               if (isPickup) return; // no-op for pickup orders
 
-                              // If this is a subscription-origin order, show the
-                              // subscription-style cancel modal (match SubscriptionDetail).
+
                               if (order.origin === "subscription") {
                                 try {
                                   const token = await tokenStorage.getToken();

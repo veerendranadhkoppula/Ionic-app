@@ -5,8 +5,9 @@ import styles from "./OrderDetailsShop.module.css";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import tokenStorage from "../utils/tokenStorage";
-import { getWebOrderInvoiceUrl } from "../api/apiStoreOrders";
 import { useCart } from "../context/useCart";
+import { generateShopInvoice } from "../utils/generateInvoicePdf";
+import { downloadPdf } from "../utils/downloadPdf";
 import { useStoreCart } from "../context/useStoreCart";
 import CartConflictModal from "../components/StoreMenu/CartConflictModal/CartConflictModal";
 import {
@@ -42,30 +43,9 @@ const OrderDetailsShop: React.FC = () => {
   const [conflictVisible, setConflictVisible] = React.useState(false);
   const [conflictType, setConflictType] = React.useState<"store" | "cafe">("store");
   const pendingReorderRef = React.useRef<WebOrder | null>(null);
-  const [invoiceUrl, setInvoiceUrl] = React.useState<string | null>(null);
-  const [invoiceLoading, setInvoiceLoading] = React.useState(false);
+  const [invoiceGenerating, setInvoiceGenerating] = React.useState(false);
 
-  // Prefetch invoice URL so the CTA can be a plain <a> (matches SubscriptionDetail behavior)
-  React.useEffect(() => {
-    // don't attempt to prefetch until we have an order id
-    // (hook must remain unconditional; effect body will gate the real work)
-    let cancelled = false;
-    const load = async () => {
-      if (!location?.state?.order) return;
-      setInvoiceLoading(true);
-      try {
-        const token = await tokenStorage.getToken();
-        const url = await getWebOrderInvoiceUrl(token, (location.state.order as WebOrder).id);
-        if (!cancelled) setInvoiceUrl(url);
-      } catch (err) {
-        console.error("[OrderDetailsShop] invoice prefetch error", err);
-      } finally {
-        if (!cancelled) setInvoiceLoading(false);
-      }
-    };
-    load();
-    return () => { cancelled = true; };
-  }, [location]);
+
 
   const executeReorder = React.useCallback(async (o: WebOrder) => {
     setReorderLoading(true);
@@ -144,7 +124,19 @@ const OrderDetailsShop: React.FC = () => {
     if (status === "refunded")          return "Refunded";
     return "Ongoing";
   };
-
+const handleDownloadInvoice = async () => {
+  setInvoiceGenerating(true);
+  try {
+    const userEmail = await tokenStorage.getItem("user_email") ?? "";
+    const base64    = await generateShopInvoice(order, userEmail);
+    await downloadPdf(base64, `invoice-${order.displayId.replace("#", "")}.pdf`);
+  } catch (err) {
+    console.error("[OrderDetailsShop] invoice error", err);
+    alert("Could not generate invoice. Please try again.");
+  } finally {
+    setInvoiceGenerating(false);
+  }
+};
   const handleCancel = async () => {
     setCancelling(true);
     try {
@@ -382,49 +374,21 @@ const OrderDetailsShop: React.FC = () => {
               <p>Reorder</p>
             </button>
           )}
-          {invoiceUrl ? (
-            <a href={invoiceUrl} target="_blank" rel="noreferrer" className={styles.InvoiceButton}>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.9974 14.1667V2.5M9.9974 14.1667L4.9974 9.16667M9.9974 14.1667L14.9974 9.16667M15.8307 17.5H4.16406"
-                  stroke="#6C7A5F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p>Invoice</p>
-            </a>
-          ) : (
-            <button
-              className={styles.InvoiceButton}
-              onClick={() => alert("Invoice not available for this order.")}
-              disabled={invoiceLoading}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.9974 14.1667V2.5M9.9974 14.1667L4.9974 9.16667M9.9974 14.1667L14.9974 9.16667M15.8307 17.5H4.16406"
-                  stroke="#6C7A5F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p>{invoiceLoading ? "Checking…" : "Invoice"}</p>
-            </button>
-          )}
+         <button
+  className={styles.InvoiceButton}
+  onClick={handleDownloadInvoice}
+  disabled={invoiceGenerating}
+>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M9.9974 14.1667V2.5M9.9974 14.1667L4.9974 9.16667M9.9974 14.1667L14.9974 9.16667M15.8307 17.5H4.16406"
+      stroke="#6C7A5F" strokeWidth="1.5"
+      strokeLinecap="round" strokeLinejoin="round"
+    />
+  </svg>
+  <p>{invoiceGenerating ? "Generating…" : "Invoice"}</p>
+</button>
         </div>
       </IonFooter>
 

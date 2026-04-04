@@ -30,13 +30,13 @@ const Banner: React.FC<Props> = ({ currentPage }) => {
   const [banners, setBanners] = useState<BannerItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const MIN_SWIPE_DISTANCE = 40;
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
- 
   useEffect(() => {
     let mounted = true;
     const fetchBanners = async () => {
@@ -71,9 +71,8 @@ const Banner: React.FC<Props> = ({ currentPage }) => {
     };
     fetchBanners();
     return () => { mounted = false; };
-  }, []); // fetch once — banners are the same on all screens
+  }, []);
 
- 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
@@ -90,20 +89,17 @@ const Banner: React.FC<Props> = ({ currentPage }) => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [banners.length, startTimer]);
 
-  // ── Banner tap → redirect to that banner's page (unless already there) ──────
   const handleBannerClick = () => {
     if (banners.length === 0) return;
     const banner = banners[activeIndex];
-    if (banner.page === currentPage) return; // already on this page, do nothing
+    if (banner.page === currentPage) return;
     history.push(PAGE_ROUTES[banner.page]);
   };
-
 
   const handleDotClick = (idx: number) => {
     setActiveIndex(idx);
     resetTimer();
   };
-
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.changedTouches[0].clientX;
@@ -127,7 +123,6 @@ const Banner: React.FC<Props> = ({ currentPage }) => {
     touchStartX.current = null;
     touchEndX.current = null;
   };
-
 
   const mouseStartX = useRef<number | null>(null);
   const isDragging = useRef(false);
@@ -161,58 +156,72 @@ const Banner: React.FC<Props> = ({ currentPage }) => {
     isDragging.current = false;
   };
 
-
 if (loading) {
-  return (
-    <div className={styles.main}>
-      <div className={styles.MainContainer}>
-        <div className={styles.skeleton} />
+    return (
+      <div className={styles.main}>
+        <div className={styles.MainContainer}>
+          <div className={styles.skeleton} />
+          <div className={styles.BottomContainer} style={{ visibility: "hidden" }}>
+            <div className={styles.activeDot} />
+          </div>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
   if (banners.length === 0) return null;
 
   const isTappable = banners[activeIndex]?.page !== currentPage;
 
   return (
     <div className={styles.main}>
-      <div className={styles.MainContainer}>
-        <div
-          className={styles.TopConatiner}
-          style={{ cursor: isTappable ? "pointer" : "default" }}
-          onClick={handleClick}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div className={styles.sliderTrack}>
-            {banners.map((banner, idx) => (
-              <img
-                key={banner.id}
-                src={banner.imageUrl}
-                alt={`Banner ${idx + 1}`}
-                className={`${styles.BannerImage} ${idx === activeIndex ? styles.active : styles.hidden}`}
-                draggable={false}
-              />
-            ))}
+  {!imageLoaded && (
+        <div className={styles.MainContainer}>
+          <div className={styles.skeleton} />
+          <div className={styles.BottomContainer} style={{ visibility: "hidden" }}>
+            <div className={styles.activeDot} />
           </div>
         </div>
-
-        {banners.length > 1 && (
-          <div className={styles.BottomContainer}>
-            {banners.map((_, idx) => (
-              <div
-                key={idx}
-                className={`${styles.dot} ${idx === activeIndex ? styles.activeDot : ""}`}
-                onClick={() => handleDotClick(idx)}
-              />
-            ))}
+      )}
+      <div style={{ display: imageLoaded ? undefined : "none" }}>
+        <div className={styles.MainContainer}>
+          <div
+            className={styles.TopConatiner}
+            style={{ cursor: isTappable ? "pointer" : "default" }}
+            onClick={handleClick}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className={styles.sliderTrack}>
+              {banners.map((banner, idx) => (
+                <img
+                  key={banner.id}
+                  src={banner.imageUrl}
+                  alt={`Banner ${idx + 1}`}
+                  className={`${styles.BannerImage} ${idx === activeIndex ? styles.active : styles.hidden}`}
+                  draggable={false}
+                  onLoad={idx === 0 ? () => setImageLoaded(true) : undefined}
+                />
+              ))}
+            </div>
           </div>
-        )}
+
+          {banners.length > 1 && (
+            <div className={styles.BottomContainer}>
+              {banners.map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`${styles.dot} ${idx === activeIndex ? styles.activeDot : ""}`}
+                  onClick={() => handleDotClick(idx)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

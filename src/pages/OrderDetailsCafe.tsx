@@ -6,13 +6,13 @@ import { useHistory } from "react-router-dom";
 import tokenStorage from "../utils/tokenStorage";
 import {
   getCafeOrderById,
-  downloadCafeInvoice,
   isOrderOngoing,
-  getCafeOrderInvoiceUrl,
   type CafeOrder,
 } from "../api/apiCafeOrders";
 import { useCart } from "../context/useCart";
 import { useStoreCart } from "../context/useStoreCart";
+import { generateCafeTakeawayInvoice, generateCafeDineInInvoice } from "../utils/generateInvoicePdf";
+import { downloadPdf } from "../utils/downloadPdf";
 import CartConflictModal from "../components/StoreMenu/CartConflictModal/CartConflictModal";
 
 const POLL_MS = 2500;
@@ -64,18 +64,32 @@ const OrderDetailsCafe: React.FC = () => {
   const { cart: cafeCart, addToCart, clearCart, setShopId } = useCart();
   const { storeCart, clearStoreCartAll } = useStoreCart();
 
-  // ── Reorder state ─────────────────────────────────────────────────────────
-  // Use an id-based loading flag so the UI can show the loader on the
-  // specific Reorder CTA (keeps behavior consistent with ShopOrders)
+
   const [reorderLoadingFor, setReorderLoadingFor] = React.useState<string | null>(null);
   const [conflictVisible, setConflictVisible] = React.useState(false);
   const [conflictType, setConflictType] = React.useState<"store" | "cafe">(
     "store",
   );
   const pendingReorderRef = React.useRef<CafeOrder | null>(null);
-  const [invoiceUrl, setInvoiceUrl] = React.useState<string | null>(null);
-  const [invoiceLoading, setInvoiceLoading] = React.useState(false);
 
+  const [invoiceGenerating, setInvoiceGenerating] = React.useState(false);
+const handleDownloadInvoice = React.useCallback(async () => {
+  if (!order) return;
+  setInvoiceGenerating(true);
+  try {
+const userEmail = await tokenStorage.getItem("user_email") ?? "";
+const userPhone = await tokenStorage.getItem("user_mobile") ?? "";
+const base64 = order.orderType === "dine-in"
+  ? await generateCafeDineInInvoice(order, userEmail, userPhone)
+  : await generateCafeTakeawayInvoice(order, userEmail, userPhone);
+    await downloadPdf(base64, `invoice-${order.displayId.replace("#", "")}.pdf`);
+  } catch (err) {
+    console.error("[OrderDetailsCafe] invoice error", err);
+    alert("Could not generate invoice. Please try again.");
+  } finally {
+    setInvoiceGenerating(false);
+  }
+}, [order]);
   React.useEffect(() => {
     if (!orderId) {
       history.goBack();
@@ -196,26 +210,6 @@ const OrderDetailsCafe: React.FC = () => {
   }, []);
 
   // Prefetch invoice URL so the invoice CTA can directly link to Stripe (like SubscriptionDetail)
-  React.useEffect(() => {
-    if (!orderId) return;
-    let cancelled = false;
-    const load = async () => {
-      setInvoiceLoading(true);
-      try {
-        const token = await tokenStorage.getToken();
-        const url = await getCafeOrderInvoiceUrl(token, orderId!);
-        if (!cancelled) setInvoiceUrl(url);
-      } catch (err) {
-        console.error("[OrderDetailsCafe] invoice prefetch error", err);
-      } finally {
-        if (!cancelled) setInvoiceLoading(false);
-      }
-    };
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [orderId]);
 
   if (loading || !order) {
     return (
@@ -577,61 +571,25 @@ const OrderDetailsCafe: React.FC = () => {
             </svg>
             <p>{reorderLoadingFor === String(order.id) ? "Adding…" : "Reorder"}</p>
           </button>
-          {invoiceUrl ? (
-            <a
-              href={invoiceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.InvoiceButton}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.9974 14.1667V2.5M9.9974 14.1667L4.9974 9.16667M9.9974 14.1667L14.9974 9.16667M15.8307 17.5H4.16406"
-                  stroke="#6C7A5F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p>Invoice</p>
-            </a>
-          ) : (
-            <button
-              className={styles.InvoiceButton}
-              onClick={() => downloadCafeInvoice(order)}
-              disabled={invoiceLoading}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.9974 14.1667V2.5M9.9974 14.1667L4.9974 9.16667M9.9974 14.1667L14.9974 9.16667M15.8307 17.5H4.16406"
-                  stroke="#6C7A5F"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p>{invoiceLoading ? "Checking…" : "Invoice"}</p>
-            </button>
-          )}
+         <button
+  className={styles.InvoiceButton}
+  onClick={handleDownloadInvoice}
+  disabled={invoiceGenerating}
+>
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M9.9974 14.1667V2.5M9.9974 14.1667L4.9974 9.16667M9.9974 14.1667L14.9974 9.16667M15.8307 17.5H4.16406"
+      stroke="#6C7A5F" strokeWidth="1.5"
+      strokeLinecap="round" strokeLinejoin="round"
+    />
+  </svg>
+  <p>{invoiceGenerating ? "Generating…" : "Invoice"}</p>
+</button>
         </div>
       </IonFooter>
 
-      {/* Reorder no longer uses a page-wide overlay — the Reorder CTA shows
-          its own 'Adding…' state. */}
 
-      {/* Cart conflict modal */}
       {conflictVisible && (
         <CartConflictModal
           existingOrigin={conflictType === "store" ? "store" : "cafe"}

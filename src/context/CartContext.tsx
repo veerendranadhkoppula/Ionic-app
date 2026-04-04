@@ -510,7 +510,7 @@ if (backendItemId) {
   }
   console.log("🛒 [addToCart] PATCHed increment x", quantity, "on backendId:", backendItemId);
         } else {
-          const payload: any = { productId, quantity: 1, customizations: normalized.length > 0 ? normalized : [] };
+const payload: any = { productId, quantity: quantity, customizations: normalized.length > 0 ? normalized : [] };
           console.log("🛒 [addToCart] POSTing new item:", JSON.stringify(payload).slice(0, 200));
           const res = await authFetch(CART_URL, {
             method: "POST",
@@ -863,9 +863,7 @@ if (backendItemId) {
       if (token) {
         refreshCart(restoredShopId).catch((err: unknown) => console.error("CartContext: refreshCart failed on mount", err));
       } else {
-        // Guest: build a synthetic local cart from the persisted variant ledger so
-        // UI (ViewCart) can show sticky cart immediately without requiring a user
-        // interaction or manual refresh.
+
         try {
           const items: CartItem[] = [];
           for (const [p, map] of variantStoreRef.current.entries()) {
@@ -876,7 +874,7 @@ if (backendItemId) {
   } catch { /* ignore */ }
       }
     } catch (err) { console.error("CartContext: error checking token on mount", err); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   // -- Merge guest local variants into server cart after login --

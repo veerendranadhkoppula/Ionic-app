@@ -5,9 +5,12 @@ import styles from "./StickBar.module.css";
 const StickBar: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
-
+const [bouncingTab, setBouncingTab] = React.useState<string | null>(null);
   const pathname = location.pathname;
-
+  const [visualActive, setVisualActive] = React.useState<string | null>(null);
+React.useEffect(() => {
+  setVisualActive(null);
+}, [pathname]);
   const getActiveTab = () => {
     if (pathname.startsWith("/home")) return "home";
     if (pathname.startsWith("/StoreMenu")) return "store";
@@ -17,7 +20,7 @@ const StickBar: React.FC = () => {
     return "home";
   };
 
-  const active = getActiveTab();
+const active = visualActive !== null ? visualActive : getActiveTab();
 
   const renderIcon = (tab: string) => {
     const isActive = active === tab;
@@ -228,17 +231,43 @@ const StickBar: React.FC = () => {
           const isActive = active === tab.key;
 
           return (
-            <button
-              key={tab.key}
-              className={`${styles.item} ${isActive ? styles.active : ""}`}
-              onClick={() => history.push(tab.path)}
-            >
-              {isActive && <div className={styles.activeIndicator} />}
+          <button
+  key={tab.key}
+  className={`${styles.item} ${isActive ? styles.active : ""}`}
+  onClick={() => {
+    // start bounce immediately
+    setBouncingTab(tab.key);
 
-              <div className={styles.iconWrapper}>{renderIcon(tab.key)}</div>
+    // delay active (pill + color)
+    setTimeout(() => {
+      setVisualActive(tab.key);
+      history.replace(tab.path);
+    }, 220);
 
-              <span>{tab.label}</span>
-            </button>
+    // stop bounce
+    setTimeout(() => {
+      setBouncingTab(null);
+    }, 400);
+  }}
+>
+
+
+  <div className={styles.iconWrapper}>
+    <span
+      key={bouncingTab === tab.key ? `bounce-${tab.key}` : tab.key}
+      className={bouncingTab === tab.key ? styles.iconBounce : ""}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {renderIcon(tab.key)}
+    </span>
+  </div>
+
+  <span>{tab.label}</span>
+</button>
           );
         })}
       </div>

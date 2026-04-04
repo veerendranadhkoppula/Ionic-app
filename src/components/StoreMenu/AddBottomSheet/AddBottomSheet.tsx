@@ -12,7 +12,7 @@ interface Props {
 const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) => {
   const [quantity, setQuantity] = useState(1);
   const [isClosing, setIsClosing] = useState(false);
-
+const [isAdded, setIsAdded] = useState(false);
   // For variant products, default-select the first in-stock variant (or first overall)
   const firstVariant = product.hasVariantOptions && product.variants.length > 0
     ? (product.variants.find((v) => v.variantInStock) ?? product.variants[0])
@@ -127,15 +127,21 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
                 Subscribe
               </button>
             )}
-            <button
-                className={styles.addtocart}
-                onClick={() => {
-                  triggerClose();
-                  onAddToCart(product.id, quantity, selectedVariant, unitPrice);
-                }}
-              >
-                Add to Cart
-              </button>
+           <button
+  className={`${styles.addtocart} ${isAdded ? styles.added : ""}`}
+  onClick={() => {
+    if (isAdded) return;
+
+    setIsAdded(true);
+
+    setTimeout(() => {
+      onAddToCart(product.id, quantity, selectedVariant, unitPrice);
+      triggerClose();
+    }, 500); 
+  }}
+>
+  {isAdded ? "✓ Added" : "Add to Cart"}
+</button>
           </div>
         </div>
       </div>

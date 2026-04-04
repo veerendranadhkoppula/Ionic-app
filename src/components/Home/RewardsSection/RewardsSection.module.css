@@ -80,3 +80,13 @@
 .arrow svg{
     cursor: pointer;
 }
+@keyframes pulseValue {
+  0%   { transform: scale(1);    color: #4B3827; }
+  50%  { transform: scale(1.15); color: #D8A05A; }
+  100% { transform: scale(1);    color: #4B3827; }
+}
+
+.pulse {
+  display: inline-block;
+  animation: pulseValue 350ms ease-out forwards;
+}

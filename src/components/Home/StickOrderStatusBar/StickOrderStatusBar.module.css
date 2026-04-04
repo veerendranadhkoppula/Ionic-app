@@ -5,6 +5,11 @@
     width: 100%;
     z-index: 9;
     padding: 0 16px 6px;
+      overflow: visible;
+    pointer-events: none;
+}
+.main > * {
+    pointer-events: auto;
 }
 .MainContainer{
     display: flex;

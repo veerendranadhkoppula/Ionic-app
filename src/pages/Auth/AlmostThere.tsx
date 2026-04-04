@@ -372,7 +372,6 @@ const onSubmit = async () => {
                       <option value="">Gender (optional)</option>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
-                      <option value="other">Other</option>
                     </select>
 
                     <span

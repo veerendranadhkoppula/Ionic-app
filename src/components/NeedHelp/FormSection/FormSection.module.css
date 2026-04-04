@@ -40,28 +40,18 @@
   border-bottom: 1px solid #d9d1c7;
 }
 
-.IonInput {
-  --padding-start: 16px;
-  --padding-end: 0px;
-  --padding-top: 0px;
-  --padding-bottom: 8px;
-  --min-height: 0;
-
+.Input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 13px 4px 13px 16px;
   font-size: 14px;
   font-family: var(--lato);
   color: #4b3827;
+  background: transparent;
 }
 
-.IonInput::part(native) {
-  padding-top: 0;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  min-height: 0;
-  line-height: 1.4;
-}
-
-.IonInput::part(native)::placeholder {
+.Input::placeholder {
   color: #8c8c8c;
   font-size: 12px;
   font-family: var(--lato);

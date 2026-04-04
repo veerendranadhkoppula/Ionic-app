@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import tokenStorage from "../utils/tokenStorage";
 import { cancelSubscriptionOrder, fetchPaymentHistory, type UserSubscription, type SubPaymentRecord } from "../api/apiSubscriptions";
+import { generateSubscriptionInvoice } from "../utils/generateInvoicePdf";
+import { downloadPdf } from "../utils/downloadPdf";
 
 const CardSVG = () => (
   <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,6 +16,7 @@ const CardSVG = () => (
 const SubscriptionDetail: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [cancelling, setCancelling]       = useState(false);
+  const [invoiceLoading, setInvoiceLoading] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [paymentHistory, setPaymentHistory]   = useState<SubPaymentRecord[]>([]);
   const [historyLoading, setHistoryLoading]   = useState(false);
@@ -65,7 +68,19 @@ const SubscriptionDetail: React.FC = () => {
   const cardLabel = subscription.cardLast4
     ? `${subscription.cardBrand} ${subscription.cardLast4.slice(-4).padStart(10, "x")}`
     : "—";
-
+const handleDownloadInvoice = async () => {
+  setInvoiceLoading(true);
+  try {
+    const userEmail = await tokenStorage.getItem("user_email") ?? "";
+const base64    = await generateSubscriptionInvoice(subscription, userEmail);
+await downloadPdf(base64, `invoice-${subscription.displayId.replace("#", "")}.pdf`);
+  } catch (err) {
+    console.error("[SubscriptionDetail] invoice error", err);
+    alert("Could not generate invoice. Please try again.");
+  } finally {
+    setInvoiceLoading(false);
+  }
+};
   const handleCancelSubscription = async () => {
     setCancelling(true);
     try {
@@ -179,6 +194,7 @@ const SubscriptionDetail: React.FC = () => {
                     </div>
                   </div>
                 )}
+
                 <div className={styles.Viewpaymenthistory}>
                   <div
                     className={styles.Viewpaymenthistorytab}
@@ -226,13 +242,12 @@ const SubscriptionDetail: React.FC = () => {
                           </div>
                           <div className={styles.ViewpaymenthistorycardRight}>
                             <h4>AED {rec.amount.toFixed(0)}</h4>
-                            {rec.invoiceUrl ? (
-                              <a href={rec.invoiceUrl} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-                                <p>View Invoice</p>
-                              </a>
-                            ) : (
-                              <p>View Invoice</p>
-                            )}
+                          <p
+  style={{ cursor: "pointer", color: "#6C7A5F", textDecoration: "underline", margin: 0 }}
+  onClick={handleDownloadInvoice}
+>
+  {invoiceLoading ? "Generating…" : "View Invoice"}
+</p>
                           </div>
                         </div>
                       ))}
@@ -265,7 +280,6 @@ const SubscriptionDetail: React.FC = () => {
         </IonFooter>
       )}
 
-      {/* ── Cancel Subscription Modal ── */}
       {showCancelModal && (
         <div className={styles.ModalOverlay} onClick={() => setShowCancelModal(false)}>
           <div className={styles.CancelModal} onClick={(e) => e.stopPropagation()}>

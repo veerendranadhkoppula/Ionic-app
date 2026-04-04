@@ -4,11 +4,6 @@ import styles from "./StickOrderStatusBar.module.css";
 import { cancelCafeOrder } from "../../../api/apiCafe";
 import tokenStorage from "../../../utils/tokenStorage";
 
-// Takeaway : field appOrderStatus
-//   pending -> preparing -> pickup -> pickedup -> cancelled
-// Dine-in  : field appOrderStatusDine
-//   pending -> preparing -> readyToServe -> orderServed -> cancelled
-
 type AppOrderStatus = string;
 type OrderAcceptance = "accepted" | "pending" | string;
 type OrderType = "take-away" | "dine-in";
@@ -18,30 +13,23 @@ interface ActiveOrder {
   orderType: OrderType;
 }
 
-// 3 dots on track, 6 visual positions:
-//   0 ->  0% (dot 1)             Order Placed
-//   1 -> 25% (between dot 1-2)   Order Accepted
-//   2 -> 50% (dot 2)             Preparation Started
-//   3 -> 75% (between dot 2-3)   Ready for Pickup / Ready to Serve
-//   4 -> 100% (dot 3)            Order Completed / Order Served
 function resolveStep(
   status: AppOrderStatus,
   acceptance: OrderAcceptance,
   orderType: OrderType
 ): number {
   if (orderType === "dine-in") {
-    if (status === "completed") return 4;  // Order Served
-    if (status === "ready")     return 3;  // Ready to Serve
-    if (status === "preparing") return 2;  // Preparation Started
-    if (acceptance === "accepted") return 1; // Order Accepted
-    return 0;                              // Order Placed
+    if (status === "completed") return 4;
+    if (status === "ready")     return 3;
+    if (status === "preparing") return 2;
+    if (acceptance === "accepted") return 1;
+    return 0;
   }
-  // take-away � same values as dine-in
-  if (status === "completed") return 4;   // Order Completed
-  if (status === "ready")     return 3;   // Ready for Pickup
-  if (status === "preparing") return 2;   // Preparation Started
-  if (acceptance === "accepted") return 1; // Order Accepted
-  return 0;                               // Order Placed
+  if (status === "completed") return 4;
+  if (status === "ready")     return 3;
+  if (status === "preparing") return 2;
+  if (acceptance === "accepted") return 1;
+  return 0;
 }
 
 function resolveLabel(step: number, orderType: OrderType, status: AppOrderStatus): string {
@@ -54,10 +42,125 @@ function resolveLabel(step: number, orderType: OrderType, status: AppOrderStatus
 
 const POLL_INTERVAL_MS = 2_000;
 const LS_KEY = "active_cafe_order";
-// Keep persisted active order for a reasonable time. If the app is backgrounded
-// or the backend was down, we should not show a stale active order forever.
-// Choose 24 hours as a conservative production TTL.
-const PERSIST_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const PERSIST_TTL_MS = 24 * 60 * 60 * 1000;
+
+
+
+const BRAND_COLORS = ["#6C7A5F", "#D8A05A", "#4B3827", "#A8B89A", "#E8C27A", "#8B6347"];
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rotation: number;
+  rotationSpeed: number;
+  width: number;
+  height: number;
+  color: string;
+  opacity: number;
+  gravity: number;
+}
+
+function createParticles(canvasW: number, canvasH: number): Particle[] {
+  const particles: Particle[] = [];
+  const count = 80;
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.random() * Math.PI) + Math.PI;
+    const speed = 3 + Math.random() * 6;
+    particles.push({
+      x: canvasW / 2 + (Math.random() - 0.5) * canvasW * 0.6,
+      y: canvasH,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 2,
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 8,
+      width: 6 + Math.random() * 6,
+      height: 3 + Math.random() * 4,
+      color: BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)],
+      opacity: 1,
+      gravity: 0.12 + Math.random() * 0.08,
+    });
+  }
+  return particles;
+}
+
+const ConfettiCanvas: React.FC<{ onDone: () => void }> = ({ onDone }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const W = canvas.offsetWidth;
+    const H = canvas.offsetHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    let particles = createParticles(W, H);
+    const totalDuration = 2200;
+    const start = performance.now();
+
+    const draw = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / totalDuration, 1);
+
+      ctx.clearRect(0, 0, W, H);
+
+      particles = particles.map((p) => ({
+        ...p,
+        x: p.x + p.vx,
+        y: p.y + p.vy,
+        vy: p.vy + p.gravity,
+        vx: p.vx * 0.99,
+        rotation: p.rotation + p.rotationSpeed,
+        opacity: progress > 0.6 ? 1 - ((progress - 0.6) / 0.4) : 1,
+      }));
+
+      for (const p of particles) {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+        ctx.restore();
+      }
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, W, H);
+        onDone();
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(draw);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [onDone]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        height: "340px",
+        pointerEvents: "none",
+        zIndex: 10,
+      }}
+    />
+  );
+};
+
+
 
 const StickOrderStatusBar = () => {
   const history = useHistory();
@@ -70,45 +173,48 @@ const StickOrderStatusBar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [showSlightDelay, setShowSlightDelay] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  // KEY FIX: store orderType in a ref so fetchStatus never reads a stale closure.
-  // React setState is async � reading activeOrder?.orderType inside a useCallback
-  // with deps=[orderId] always sees the initial null value. A ref is always current.
   const orderTypeRef = useRef<OrderType>("take-away");
+  const confettiShownRef = useRef(false);
+
+  // Check and trigger confetti — only once per order
+  const maybeShowConfetti = useCallback((currentOrderId: string | number) => {
+    const key = `confetti_shown_${currentOrderId}`;
+    const alreadyShown = sessionStorage.getItem(key);
+    if (!alreadyShown && !confettiShownRef.current) {
+      confettiShownRef.current = true;
+      sessionStorage.setItem(key, "1");
+      setShowConfetti(true);
+    }
+  }, []);
 
   useEffect(() => {
-    // Read on mount (handles page refresh / first load)
-  const tryLoad = async () => {
+    const tryLoad = async () => {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return;
       try {
-       const parsed: ActiveOrder & { persistedAt?: number; userId?: string } = JSON.parse(raw);
-// If the persisted entry is too old, clear it and don't resurrect the bar.
-if (parsed.persistedAt && Date.now() - parsed.persistedAt > PERSIST_TTL_MS) {
-  localStorage.removeItem(LS_KEY);
-  return;
-}
-// If the order belongs to a different user, clear it.
-const currentUserId = await tokenStorage.getItem("user_id");
-if (parsed.userId && currentUserId && parsed.userId !== currentUserId) {
-  localStorage.removeItem(LS_KEY);
-  return;
-}
-orderTypeRef.current = parsed.orderType;
-setActiveOrder(parsed);
-setOrderId(parsed.orderId);
+        const parsed: ActiveOrder & { persistedAt?: number; userId?: string } = JSON.parse(raw);
+        if (parsed.persistedAt && Date.now() - parsed.persistedAt > PERSIST_TTL_MS) {
+          localStorage.removeItem(LS_KEY);
+          return;
+        }
+        const currentUserId = await tokenStorage.getItem("user_id");
+        if (parsed.userId && currentUserId && parsed.userId !== currentUserId) {
+          localStorage.removeItem(LS_KEY);
+          return;
+        }
+        orderTypeRef.current = parsed.orderType;
+        setActiveOrder(parsed);
+        setOrderId(parsed.orderId);
       } catch { /* ignore malformed */ }
     };
 
     tryLoad();
 
-    // Listen for the custom same-tab event fired by Express.tsx right after
-    // writing to localStorage (the native "storage" event only fires in OTHER tabs).
     const handleOrderPlaced = () => tryLoad();
     window.addEventListener("cafe_order_placed", handleOrderPlaced);
 
-    // Also listen for the native storage event (other tabs / future proofing)
     const handleStorage = (e: StorageEvent) => {
       if (e.key === LS_KEY) tryLoad();
     };
@@ -132,51 +238,35 @@ setOrderId(parsed.orderId);
         { method: "GET", headers }
       );
 
-      // If the resource is not found or explicitly removed, clear the persisted
-      // active order. Treat 404/410 as terminal (order removed) and other 5xx
-      // as transient (backend issue) so the bar can keep retrying.
       if (!res.ok) {
         if (res.status === 404 || res.status === 410) {
-          console.info("[StickBar] order not found (clearing persisted active order)", res.status);
           localStorage.removeItem(LS_KEY);
           setActiveOrder(null);
           setOrderId(null);
           return;
         }
-        // For other non-ok statuses (e.g., 500), don't clear; let the next poll retry.
-        console.warn("[StickBar] non-ok response while polling order status:", res.status);
         return;
       }
 
       const data = await res.json().catch(() => ({}));
       const doc = data?.doc ?? data?.order ?? data ?? {};
-
       const acceptance: OrderAcceptance = doc?.orderAcceptance ?? "pending";
 
-      // If admin has explicitly rejected the order (orderAcceptance === 'rejected')
-      // treat it the same as a cancelled order on the client: navigate to the
-      // OrderResult (cancel) screen and clear the active order state.
       if (acceptance === "rejected") {
-        // Remove local storage flag so the bar doesn't reappear
         localStorage.removeItem(LS_KEY);
         try {
-          // Attempt to hit the server cancel route so Stripe refund is triggered.
-          // We don't block the UX on this — if it fails we log and still show the
-          // cancelled screen to the user.
-          const token = await tokenStorage.getToken();
+          const t = await tokenStorage.getToken();
           try {
-            await cancelCafeOrder(token, orderId, "Order rejected by admin");
+            await cancelCafeOrder(t, orderId, "Order rejected by admin");
           } catch (err) {
             console.warn("StickBar: cancel endpoint failed for rejected order:", err);
           }
-
           history.push("/OrderResult", {
             orderId,
             orderType: orderTypeRef.current ?? "take-away",
             orderStatus: "cancelled",
           });
         } catch (e) {
-          // history may not be usable in some test environments — ignore navigation errors
           console.warn("StickBar: navigation to OrderResult failed:", e);
         }
         setActiveOrder(null);
@@ -189,18 +279,18 @@ setOrderId(parsed.orderId);
         ? (doc?.appOrderStatusDine ?? doc?.appOrderStatus ?? "pending")
         : (doc?.appOrderStatus ?? "pending");
 
-      console.log(`[StickBar] type=${orderTypeRef.current} status=${rawStatus} acceptance=${acceptance}`);
-
       setOrderStatus(rawStatus);
       setOrderAcceptance(acceptance);
 
-      // --- Slight Delay: if order is still pending acceptance 5+ minutes after
-      // creation, show the 'Slight Delay' label in place of Order ID (design).
+      // Trigger confetti on completion
+      if (rawStatus === "completed") {
+        maybeShowConfetti(orderId);
+      }
+
       try {
         const createdAt = doc?.createdAt ? new Date(doc.createdAt).getTime() : null;
         if (createdAt) {
           const ageMs = Date.now() - createdAt;
-          // Only show the 'Slight Delay' UX for dine-in orders per product request.
           const isDineInOrder = orderTypeRef.current === "dine-in";
           const delayed = isDineInOrder && acceptance === "pending" && ageMs > 5 * 60 * 1000;
           setShowSlightDelay(Boolean(delayed));
@@ -211,28 +301,20 @@ setOrderId(parsed.orderId);
         setShowSlightDelay(false);
       }
 
-      // Remove from localStorage IMMEDIATELY on terminal so navigating away and
-      // back does not re-show the bar with "pending" during the display window.
-      const isTerminal =
-        rawStatus === "completed" ||
-        rawStatus === "cancelled";
-
+      const isTerminal = rawStatus === "completed" || rawStatus === "cancelled";
       if (isTerminal) {
         localStorage.removeItem(LS_KEY);
-        // "cancelled" auto-dismisses after 3s (the cancel flow also redirects).
-        // "completed" stays visible until the user manually closes it via the ✕.
         if (rawStatus === "cancelled") {
           setTimeout(() => {
             setActiveOrder(null);
             setOrderId(null);
           }, 3000);
         }
-        // For "completed" we do nothing here — the user closes it themselves.
       }
     } catch {
       console.warn("StickOrderStatusBar poll error:");
     }
-  }, [orderId, history]); // orderId only — orderType is always fresh via ref
+  }, [orderId, history, maybeShowConfetti]);
 
   useEffect(() => {
     if (!orderId) return;
@@ -241,14 +323,9 @@ setOrderId(parsed.orderId);
     return () => clearInterval(timer);
   }, [orderId, fetchStatus]);
 
-  // Re-check status when the app/tab becomes visible again. This handles the
-  // case where the app was backgrounded and an order was removed while the
-  // app wasn't active.
   useEffect(() => {
     const onVisibility = () => {
-      if (document.visibilityState === "visible") {
-        fetchStatus();
-      }
+      if (document.visibilityState === "visible") fetchStatus();
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
@@ -268,8 +345,8 @@ setOrderId(parsed.orderId);
     if (!orderId) return;
     setCancelling(true);
     try {
-  const token = await tokenStorage.getToken();
-  await cancelCafeOrder(token, orderId, "Cancelled by user");
+      const token = await tokenStorage.getToken();
+      await cancelCafeOrder(token, orderId, "Cancelled by user");
       localStorage.removeItem(LS_KEY);
       setShowCancelPopup(false);
       setActiveOrder(null);
@@ -281,10 +358,6 @@ setOrderId(parsed.orderId);
       });
     } catch (e) {
       console.error("Cancel order failed:", e);
-      // Even if the cancel endpoint fails (e.g., backend rejects refund),
-      // still navigate to the OrderResult cancelled screen so the UX is
-      // consistent for the user. The server-side refund handler will have
-      // logged the reason; surface a console warning here.
       try {
         localStorage.removeItem(LS_KEY);
         setShowCancelPopup(false);
@@ -341,18 +414,16 @@ setOrderId(parsed.orderId);
         </div>
       )}
 
-      <div className={styles.main}>
+      <div className={styles.main} style={{ position: "fixed", overflow: "visible" }}>
+        {showConfetti && (
+          <ConfettiCanvas onDone={() => setShowConfetti(false)} />
+        )}
         <div className={styles.MainContainer}>
           <div className={styles.top}>
             <div className={styles.TopLeft}>
               <h3>{label}</h3>
               {showSlightDelay && orderAcceptance === "pending" ? (
-                <h4 style={{
-                  fontFamily: "Lato, sans-serif",
-                  fontSize: "12px",
-                  color: "#E54842",
-                  margin: 0,
-                }}>
+                <h4 style={{ fontFamily: "Lato, sans-serif", fontSize: "12px", color: "#E54842", margin: 0 }}>
                   Slight Delay
                 </h4>
               ) : (
@@ -362,7 +433,6 @@ setOrderId(parsed.orderId);
 
             <div className={styles.TopRight} ref={menuRef}>
               {orderStatus === "completed" ? (
-                /* Order completed — show ✕ close button instead of the 3-dot menu */
                 <div
                   onClick={() => { setActiveOrder(null); setOrderId(null); }}
                   className={styles.dots}
@@ -373,7 +443,6 @@ setOrderId(parsed.orderId);
                   </svg>
                 </div>
               ) : (
-                /* Normal state — show 3-dot menu */
                 <div onClick={() => setShowMenu((p) => !p)} className={styles.dots}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="5" r="1.5" fill="#4B3827" />
@@ -391,10 +460,7 @@ setOrderId(parsed.orderId);
                       setShowMenu(false);
                       history.push({
                         pathname: "/OrderDetailsCafe",
-                        state: {
-                          orderId,
-                          orderType: activeOrder?.orderType ?? "take-away"
-                        }
+                        state: { orderId, orderType: activeOrder?.orderType ?? "take-away" }
                       });
                     }}
                   >

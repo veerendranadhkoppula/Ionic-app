@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./FormSection.module.css";
-import { IonInput } from "@ionic/react";
 import useAuth from "../../../utils/useAuth";
 import type { User } from "../../../utils/authStorage";
 const submitContactForm = async (data: {
@@ -10,7 +9,6 @@ const submitContactForm = async (data: {
   inquiryType: string;
   message: string;
 }): Promise<unknown> => {
-  // Log payload for debugging (kept minimal)
   try {
     console.info("Contact form: submitting", { fullName: data.fullName, email: data.email, inquiryType: data.inquiryType });
   } catch (err) {
@@ -28,7 +26,6 @@ const submitContactForm = async (data: {
   });
 
   if (!res.ok) {
-    // try to read response body for debugging
     let bodyText = "";
     try {
       bodyText = await res.text();
@@ -36,8 +33,6 @@ const submitContactForm = async (data: {
       console.debug("Contact form: failed reading response body", err);
     }
     console.error("Contact form server error", { status: res.status, body: bodyText });
-    // Some servers historically accept a plain string body without Content-Type.
-    // Retry once using a raw body (no Content-Type) as a fallback to improve resilience.
     if (res.status === 400) {
       try {
         console.info("Contact form: retrying without Content-Type header as fallback");
@@ -74,14 +69,13 @@ const submitContactForm = async (data: {
   try {
     return await res.json();
   } catch (err) {
-    // If server returned empty body but OK, return an empty object
+
     console.debug("Contact form: failed parsing JSON response", err);
     return {};
   }
 };
 const FormSection = () => {
   const mapInquiryType = (value: string) => {
-  // Map visible labels to the exact backend option values configured in Payload CMS.
   const lookup: Record<string, string> = {
     "Order issue": "order_issue",
     "Payment or refund": "payment_refund",
@@ -94,7 +88,6 @@ const FormSection = () => {
 
   if (value in lookup) return lookup[value];
 
-  // Fallback: normalize label to a safe value
   return value.toLowerCase().replace(/&/g, "").replace(/\s+/g, "_");
 };
   const [open, setOpen] = useState(false);
@@ -107,8 +100,6 @@ const FormSection = () => {
 
   const { user, isLoggedIn } = useAuth();
 
-  // Prefill name/email/phone for logged-in users if available. Do not
-  // overwrite user-edited values; only populate when the input is empty.
   useEffect(() => {
     if (!isLoggedIn || !user) return;
     try {
@@ -119,7 +110,6 @@ const FormSection = () => {
 
       if (!fullName && nameFromParts) setFullName(nameFromParts);
       if (!email && u.email) setEmail(u.email);
-      // authStorage stores phone as `mobile`. Some older records may have `phone` key.
       const maybePhone = (user as unknown as Record<string, unknown>)['mobile'] as string | undefined
         || (user as unknown as Record<string, unknown>)['phone'] as string | undefined;
       if (!phone && maybePhone) setPhone(maybePhone);
@@ -158,34 +148,34 @@ const FormSection = () => {
 
           <div className={styles.Form}>
             <div className={styles.InputGroup}>
-              <IonInput
-                type="text"
-                placeholder="Full name"
-                value={fullName}
-                onIonInput={(e) => setFullName(e.detail.value ?? "")}
-                className={styles.IonInput}
-              />
+             <input
+  type="text"
+  placeholder="Full name"
+  value={fullName}
+  onChange={(e) => setFullName(e.target.value)}
+  className={styles.Input}
+/>
             </div>
 
             <div className={styles.Row}>
               <div className={styles.InputGroup}>
-                <IonInput
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onIonInput={(e) => setEmail(e.detail.value ?? "")}
-                  className={styles.IonInput}
-                />
+              <input
+  type="email"
+  placeholder="Email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  className={styles.Input}
+/>
               </div>
 
               <div className={styles.InputGroup}>
-                <IonInput
-                  type="tel"
-                  placeholder="Phone"
-                  value={phone}
-                  onIonInput={(e) => setPhone(e.detail.value ?? "")}
-                  className={styles.IonInput}
-                />
+             <input
+  type="tel"
+  placeholder="Phone"
+  value={phone}
+  onChange={(e) => setPhone(e.target.value)}
+  className={styles.Input}
+/>
               </div>
             </div>
 

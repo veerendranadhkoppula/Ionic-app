@@ -1,5 +1,5 @@
 import styles from "./MantisBeans.module.css";
-import mugs from "./1.png";
+import mugs from "./1.gif";
 import React, { useState, useEffect } from "react";
 import BeansBottomSheet from "../BeansBottomSheet/BeansBottomSheet";
 import tokenStorage from "../../../utils/tokenStorage";

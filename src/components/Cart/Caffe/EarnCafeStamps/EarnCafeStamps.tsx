@@ -11,15 +11,13 @@ const EarnCafeStamps: React.FC<EarnCafeStampsProps> = ({
   totalStamps = 10,
 }) => {
 
-  // Compute rewards and remainder for proper cycle display
   const rewards = Math.floor(earnedStamps / totalStamps);
   const remainder = earnedStamps % totalStamps;
 
-  // If remainder is 0 but rewards > 0, display a full badge (totalStamps/totalStamps)
   const displayUnits = remainder === 0 && rewards > 0 ? totalStamps : remainder;
   const progressPerc = Math.min((displayUnits / totalStamps) * 100, 100);
 
-  // Remaining to next reward should always be non-negative and refer to the NEXT reward
+
   const remaining = displayUnits === 0 ? totalStamps : totalStamps - displayUnits;
 
   return (

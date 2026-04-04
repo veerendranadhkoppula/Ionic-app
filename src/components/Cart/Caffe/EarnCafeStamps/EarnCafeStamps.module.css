@@ -64,7 +64,7 @@
   height: 100%;
   background: #6C7A5F;
   border-radius: 6px;
-  transition: width 0.4s ease;
+   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .progressBadge {
   position: absolute;
@@ -78,6 +78,7 @@
   font-family: var(--lato);
   font-weight: 600;
   white-space: nowrap;
+   transition: left 0.4s ease;
 }
 
 

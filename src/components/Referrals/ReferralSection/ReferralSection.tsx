@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ReferralSection.module.css";
-import cups from "./1.png";
+import cups from "./1.gif";
 
 import { getCurrentUser } from "../../../utils/authStorage";
 import { getUserById } from "../../../utils/apiAuth";

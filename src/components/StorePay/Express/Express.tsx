@@ -146,9 +146,7 @@ const Express: React.FC<ExpressProps> = ({
         console.log("🧾 [EXPRESS→RESULT] pushing taxAmount:", resolvedTaxAmount,
           "| shippingCharge:", resolvedShipping, "| total:", resolvedTotal,
           "| backendTax raw:", subscriptionData.backendTax);
-        // Determine a reliable subscription/document id to show in the results header.
-        // Prefer the subscriptionId supplied in subscriptionData, else the orderId prop,
-        // else fall back to the sessionStorage value written during checkout.
+
         const rawSubId = (subscriptionData.subscriptionId && String(subscriptionData.subscriptionId))
           || (orderId != null ? String(orderId) : "")
           || (typeof window !== "undefined" ? (sessionStorage.getItem("storepay_order_id") ?? "") : "");
@@ -211,7 +209,7 @@ const Express: React.FC<ExpressProps> = ({
       <div className={styles.MainConatiner}>
 
       
-        <div className={styles.Top}>
+        {/* <div className={styles.Top}>
           <h3>Express Checkout</h3>
           <button className={styles.GpayBtn}>
             <svg width="60" height="24" viewBox="0 0 60 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -231,7 +229,7 @@ const Express: React.FC<ExpressProps> = ({
           </button>
         </div>
 
-        <div className={styles.line} />
+        <div className={styles.line} /> */}
 
       
         <div className={styles.Bottom}>

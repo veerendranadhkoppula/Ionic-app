@@ -5,6 +5,7 @@ import cups from "./1.gif";
 import { getCurrentUser } from "../../../utils/authStorage";
 import { getUserById } from "../../../utils/apiAuth";
 import { buildInviteText } from "../../../api/apiReferrals";
+import { Capacitor } from "@capacitor/core";
 
 const ReferralSection: React.FC = () => {
   const [referralCode, setReferralCode] = useState<string | null>(null);
@@ -44,16 +45,20 @@ const ReferralSection: React.FC = () => {
     }
   };
 
-  const sendInvite = async () => {
-    const appLink = "https://play.google.com/store/apps/details?id=com.whitemantis.app";
+const sendInvite = async () => {
+    // Restore correct links after publishing to both stores
+    const ANDROID_LINK = "https://play.google.com/store/apps/details?id=com.whitemantis.app";
+    const IOS_LINK = "https://apps.apple.com/app/idXXXXXXXXXX"; // replace after publishing
+
+    const appLink = Capacitor.getPlatform() === "ios" ? IOS_LINK : ANDROID_LINK;
     const text = buildInviteText(referralCode || "", appLink);
+
     try {
       const nav = navigator as unknown as { share?: (data: { title?: string; text?: string; url?: string }) => Promise<void> };
       if (nav.share) {
         await nav.share({ title: "Join WhiteMantis", text, url: appLink });
         setStatusMessage("Invite sent");
       } else {
-        // Fallback: copy invite text
         await navigator.clipboard.writeText(text);
         setStatusMessage("Invite copied — paste it into your message app");
       }

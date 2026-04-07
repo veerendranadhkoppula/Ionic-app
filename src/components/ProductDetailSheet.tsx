@@ -1,8 +1,8 @@
 import React from "react";
 import { IonModal } from "@ionic/react";
 import styles from "./ProductDetailSheet.module.css";
-import { Share } from "@capacitor/share";
-import { Capacitor } from "@capacitor/core";
+// import { Share } from "@capacitor/share";
+// import { Capacitor } from "@capacitor/core";
 import noStateImg from "../pages/nostatesimg.png";
 
 type VegType = "Veg" | "NonVeg" | "Egg" | "Vegan";
@@ -87,57 +87,57 @@ export default function ProductDetailSheet({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const ANDROID_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.whitemantis.app";
+//   const ANDROID_STORE_URL =
+//   "https://play.google.com/store/apps/details?id=com.whitemantis.app";
 
-const IOS_STORE_URL =
-  "https://apps.apple.com/app/idXXXXXXXXXX"; // replace later
+// const IOS_STORE_URL =
+//   "https://apps.apple.com/app/idXXXXXXXXXX"; // replace later
 
-const getStoreUrl = () => {
-  const platform = Capacitor.getPlatform();
+// const getStoreUrl = () => {
+//   const platform = Capacitor.getPlatform();
 
-  if (platform === "ios") {
-    return IOS_STORE_URL;
-  }
+//   if (platform === "ios") {
+//     return IOS_STORE_URL;
+//   }
 
-  return ANDROID_STORE_URL; // android + web
-};
+//   return ANDROID_STORE_URL; // android + web
+// };
 
-  const handleShare = async () => {
-    if (!product) return;
-const storeUrl = getStoreUrl();
-    const shareText = `${product.name}
-${product.fullDesc ?? product.desc}
+//   const handleShare = async () => {
+//     if (!product) return;
+// const storeUrl = getStoreUrl();
+//     const shareText = `${product.name}
+// ${product.fullDesc ?? product.desc}
 
-Download the app:
-${storeUrl}`;
+// Download the app:
+// ${storeUrl}`;
 
-    try {
-      if (Capacitor.isNativePlatform()) {
-        await Share.share({
-          title: product.name,
-          text: shareText,
-          url: storeUrl ,
-          dialogTitle: "Share product",
-        });
-        return;
-      }
+//     try {
+//       if (Capacitor.isNativePlatform()) {
+//         await Share.share({
+//           title: product.name,
+//           text: shareText,
+//           url: storeUrl ,
+//           dialogTitle: "Share product",
+//         });
+//         return;
+//       }
 
-      if (navigator.share) {
-        await navigator.share({
-          title: product.name,
-          text: shareText,
-          url: storeUrl ,
-        });
-        return;
-      }
+//       if (navigator.share) {
+//         await navigator.share({
+//           title: product.name,
+//           text: shareText,
+//           url: storeUrl ,
+//         });
+//         return;
+//       }
 
-      await navigator.clipboard.writeText(shareText);
-      alert("Link copied to clipboard");
-    } catch (err) {
-      console.log("Share failed", err);
-    }
-  };
+//       await navigator.clipboard.writeText(shareText);
+//       alert("Link copied to clipboard");
+//     } catch (err) {
+//       console.log("Share failed", err);
+//     }
+//   };
 
   if (!product) return null;
 
@@ -198,7 +198,7 @@ ${storeUrl}`;
                   </div>
                 </div>
 
-                <div className={styles.BottomTopTopLeft}>
+                {/* <div className={styles.BottomTopTopLeft}>
                   <button
                     className={styles.ShareBtn}
                     onClick={handleShare}
@@ -218,7 +218,7 @@ ${storeUrl}`;
                       />
                     </svg>
                   </button>
-                </div>
+                </div> */}
               </div>
 
               <div className={styles.BottomTopdesc}>

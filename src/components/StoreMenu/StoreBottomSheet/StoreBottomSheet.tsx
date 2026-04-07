@@ -35,6 +35,7 @@ const StoreBottomSheet = ({ product, onClose }: Props) => {
                   <div className={styles.prodname}>
                     <h3>{product.name}</h3>
                   </div>
+{/*                   
                   <div className={styles.share}>
                     <svg
                       width="35"
@@ -48,7 +49,7 @@ const StoreBottomSheet = ({ product, onClose }: Props) => {
                         fill="#4B3827"
                       />
                     </svg>
-                  </div>
+                  </div> */}
                 </div>
                 <div className={styles.proddesc}>
                   <p>{product.description}</p>

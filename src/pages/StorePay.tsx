@@ -43,14 +43,10 @@ const StorePay: React.FC = () => {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const hasFiredThisMount = useRef(false);
 
-  // Extracted startup flow so we can run it every time the view becomes active
-  // (not just on mount). This ensures the checkout screen is freshly prepared
-  // each time the user opens it.
+
   const startCheckoutFlow = async () => {
     // Always show the preparing loader when entering the checkout screen.
     setIsPreparing(true);
-    // Force a fresh checkout session: clear any in-session clientSecret/order
-    // so we always create a fresh PaymentIntent when user arrives here.
     try {
       sessionStorage.removeItem(SS_CLIENT_SECRET);
       sessionStorage.removeItem(SS_ORDER_ID);
@@ -67,14 +63,11 @@ const StorePay: React.FC = () => {
           const order = await getWebOrderById(token ?? null, existingOrderId);
           if (order && order.paymentStatus === "completed") {
             // Previously-completed order: clear session keys and allow
-            // createOrder to run and create a fresh clientSecret.
             sessionStorage.removeItem(SS_ORDER_FIRED);
             sessionStorage.removeItem(SS_CLIENT_SECRET);
             sessionStorage.removeItem(SS_ORDER_ID);
           } else {
             // If not completed, keep the fired flag so we don't duplicate
-            // an in-flight checkout. Stop preparing and render using the
-            // existing clientSecret (if present).
             setIsPreparing(false);
             return;
           }
@@ -203,8 +196,7 @@ const StorePay: React.FC = () => {
   void createOrder();
   };
 
-  // Run this flow every time the Ionic view becomes active (covers
-  // navigation within the app without a full page reload).
+
   useIonViewWillEnter(() => {
     // Reset guard so the flow may run on repeated entries.
     hasFiredThisMount.current = false;

@@ -183,7 +183,7 @@
 
 .inner {
   position: absolute;
-  inset: 12px;              
+  inset: 12px;
   border-radius: 50%;
   background: #6c7a5f;
 -webkit-tap-highlight-color: transparent;

@@ -15,10 +15,7 @@ import { useCheckout } from "../context/CafeCheckoutContext";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string);
 
-// Session-scoped keys for the in-flight guard.
-// Using sessionStorage means the value survives React Strict Mode's
-// unmount/remount cycle (which resets both useRef and module-level variables
-// via the cleanup return) while still being cleared on tab close.
+
 const SS_ORDER_FIRED   = "cafepay_order_fired";
 const SS_CLIENT_SECRET = "cafepay_client_secret";
 const SS_ORDER_ID      = "cafepay_order_id";
@@ -48,8 +45,7 @@ const CafePay: React.FC = () => {
   const { clearCart } = useCart();
   const { reset, setAppliedCoupon } = useCheckout();
 
-  // Restore from sessionStorage in case React Strict Mode already fired the
-  // API call and stored the result before the component remounted.
+
   const [clientSecret, setClientSecret] = useState<string | null>(
     () => sessionStorage.getItem(SS_CLIENT_SECRET)
   );
@@ -60,17 +56,13 @@ const CafePay: React.FC = () => {
   const effectiveClientSecret = isPreparing ? null : clientSecret;
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  // This ref is only used to avoid double-firing within one mount cycle
-  // (e.g. StrictMode's second synchronous call before any async completes).
+
   const hasFiredThisMount = useRef(false);
 
   const startCheckoutFlow = async () => {
     // Always show the preparing loader when entering the checkout screen.
     setIsPreparing(true);
-    // Force a fresh checkout session: clear any in-session clientSecret/order
-    // so we always create a fresh PaymentIntent when user arrives here.
-    // This avoids reusing a previous PaymentIntent that might already have
-    // an attached payment method and cause confusing re-use behaviour.
+
     try {
       sessionStorage.removeItem(SS_CLIENT_SECRET);
       sessionStorage.removeItem(SS_ORDER_ID);
@@ -78,9 +70,6 @@ const CafePay: React.FC = () => {
     } catch (err) {
       console.warn("⚠️ failed to clear previous checkout session keys:", err);
     }
-    // If we already have a clientSecret (from sessionStorage or previous run
-    // in this mount cycle), check whether the stored order has already been
-    // completed. If it's completed, clear the session keys so a fresh
     // PaymentIntent is created for the next checkout attempt.
     if (sessionStorage.getItem(SS_ORDER_FIRED) === "1") {
       const existingOrderId = sessionStorage.getItem(SS_ORDER_ID);
@@ -93,8 +82,6 @@ const CafePay: React.FC = () => {
             sessionStorage.removeItem(SS_CLIENT_SECRET);
             sessionStorage.removeItem(SS_ORDER_ID);
           } else {
-            // Order exists but not completed — stop preparing and rely on
-            // the existing clientSecret (if any) rather than creating a
             // duplicate order.
             setIsPreparing(false);
             return;
@@ -152,26 +139,17 @@ const CafePay: React.FC = () => {
             ? (state.stampRewards as unknown[]).filter((v): v is number => typeof v === "number").length
             : 0;
 
-          // --- Deduct stamp rewards from wt-stamps immediately ---
-          // The backend afterChangeHook only awards stamps; it never deducts.
-          // We do it here on the frontend right after the order is created.
           if (rewardsUsed > 0) {
             deductStampReward(authToken, id as string | number, rewardsUsed).catch((e) => {
               console.warn("⚙️ deductStampReward failed (non-fatal):", e);
             });
           }
 
-          // --- Patch order with customizations + corrected financials ---
-          // The backend cafe-checkout endpoint saves items with customizations:[]
-          // and calculates subtotal from base menu prices only.
-          // We immediately PATCH the order to inject the real customization data
-          // and correct the subtotal/total to include customization extra prices.
           patchOrderCustomizations(
             authToken,
             id as string | number,
             state.items,
-            // Pass stamp reward IDs so the PATCH body preserves the stampRewards field.
-            // The backend afterChange hook reads this to deduct from wt-stamps.
+
             Array.isArray(state.stampRewards)
               ? (state.stampRewards as unknown[]).filter((v): v is number => typeof v === "number")
               : [],
@@ -180,14 +158,11 @@ const CafePay: React.FC = () => {
             console.warn("⚙️ patchOrderCustomizations failed (non-fatal):", patchErr);
           });
         }
-        // Done preparing regardless of outcome so the UI updates
         setIsPreparing(false);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : "Failed to create order";
         console.error("❌ cafe-checkout error:", msg);
 
-        // If the error is coupon-related, auto-clear the coupon so user doesn't
-        // have to manually remove it before retrying
         const isCouponError = /coupon/i.test(msg);
         if (isCouponError) {
           setAppliedCoupon(null);
@@ -195,7 +170,7 @@ const CafePay: React.FC = () => {
         } else {
           setCheckoutError(msg);
         }
-        // Allow retry
+
         sessionStorage.removeItem(SS_ORDER_FIRED);
         hasFiredThisMount.current = false;
         setIsPreparing(false);
@@ -206,21 +181,16 @@ const CafePay: React.FC = () => {
     void createOrder();
   };
 
-  // Run this flow every time the Ionic view becomes active (covers
-  // navigation within the app without a full page reload).
+
   useIonViewWillEnter(() => {
     hasFiredThisMount.current = false;
     void startCheckoutFlow();
   });
 
-  // Cleanup: called when the user truly navigates away from this page.
-  // We use a separate effect that fires only on unmount.
+
   useEffect(() => {
     return () => {
-      // Only wipe if payment is already done (onPaymentSuccess sets this)
-      // OR if orderId was never set (error / back-press before completion).
-      // We intentionally don't clear SS_ORDER_FIRED here to prevent
-      // Strict Mode's cleanup from resetting it between the two mounts.
+
     };
   }, []);
 

@@ -71,12 +71,6 @@ const Express: React.FC<ExpressProps> = ({ toPay, orderId, orderType, onPaymentS
           console.warn("⚠️ paymentStatus PATCH error (non-fatal):", patchErr);
         }
       }
-
-      // ── Append stamp / reward notifications ────────────────────────────────
-      // NOTE: Stamps are only actually awarded by the backend when the order
-      // reaches "completed" status (not at payment time). But we know exactly
-      // how many stamps WILL be earned (Cart.tsx saved it to sessionStorage).
-      // So we notify the user now based on what they will earn.
       try {
         const token = await tokenStorage.getToken();
         // Cart.tsx saves earned stamp count to sessionStorage as "cafe_earned_stamps"
@@ -115,8 +109,6 @@ const Express: React.FC<ExpressProps> = ({ toPay, orderId, orderType, onPaymentS
       // Clear cart + reset checkout context before navigating away
       if (onPaymentSuccess) await onPaymentSuccess();
 
-      // Reset PaymentElement so if the user returns to pay again shortly the
-      // card fields won't contain previous values.
       try {
         setPaymentElementKey(Date.now());
       } catch (err) {
@@ -133,8 +125,7 @@ localStorage.setItem("active_cafe_order", JSON.stringify({
   persistedAt: Date.now(),
   userId: currentUserId ?? undefined,
 }));
-        // Fire a same-tab event so StickOrderStatusBar picks it up immediately
-        // (the native "storage" event only fires in OTHER browser tabs/windows)
+
         window.dispatchEvent(new Event("cafe_order_placed"));
       }
 
@@ -142,8 +133,7 @@ localStorage.setItem("active_cafe_order", JSON.stringify({
         orderId,
         orderType  : orderType ?? "take-away",
         orderStatus: paymentIntent?.status ?? "confirmed",
-        // Pass cart snapshot so OrderResultsDetail can show customizations
-        // even when the backend doesn't populate them in the stored order.
+
         cartSnapshot: (() => {
           try {
             const raw = sessionStorage.getItem("cafe_cart_snapshot");
@@ -165,8 +155,9 @@ localStorage.setItem("active_cafe_order", JSON.stringify({
     <div className={styles.main}>
       <div className={styles.MainConatiner}>
 
-        {/* ── Express / G Pay row ── */}
-        <div className={styles.Top}>
+      
+        {/* <div className={styles.Top}>
+          
           <h3>Express Checkout</h3>
           <button className={styles.GpayBtn}>
             <svg
@@ -190,9 +181,9 @@ localStorage.setItem("active_cafe_order", JSON.stringify({
               </defs>
             </svg>
           </button>
-        </div>
+        </div> */}
 
-        <div className={styles.line} />
+        {/* <div className={styles.line} /> */}
 
         {/* ── Payment details ── */}
         <div className={styles.Bottom}>

@@ -4,6 +4,7 @@ import baristaimage from "./b.png";
 import { useBaristaList } from "./useBaristaList";
 import type { Barista } from "../../../../api/apiCafe";
 import { useHistory } from "react-router-dom";
+import noBaristaGif from "./1.gif";
 
 interface Props {
   isOpen: boolean;
@@ -145,14 +146,20 @@ React.useEffect(() => {
                   </div>
                 )}
 
-                {/* Empty state */}
-                {!loading && !error && baristas.length === 0 && (
-                  <div style={{ textAlign: "center", padding: "24px 0", color: "#8C8C8C" }}>
-                    No baristas available right now.
-                  </div>
-                )}
+              {/* Empty state */}
+{!loading && !error && baristas.length === 0 && (
+  <div style={{ textAlign: "center", padding: "24px 0", color: "#8C8C8C" }}>
+    <img
+      src={noBaristaGif}
+      alt="No baristas"
+      style={{ width: "120px", height: "120px", marginBottom: "8px" }}
+    />
+    <p style={{ margin: 0, fontSize: "13px", color: "#8C8C8C" }}>
+      No baristas available right now.
+    </p>
+  </div>
+)}
 
-                {/* Barista list */}
                 {!loading &&
                   !error &&
                   baristas.map((barista: Barista) => {

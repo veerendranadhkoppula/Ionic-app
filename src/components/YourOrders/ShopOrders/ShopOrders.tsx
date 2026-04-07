@@ -412,6 +412,7 @@ const ShopOrders: React.FC = () => {
                 subtitle={"You don't have any store orders yet."}
                 ctaText={"Browse store"}
                 onCta={() => history.push("/StoreMenu")}
+                 imageSrc="/noorders.gif"
               />
             </div>
           </div>

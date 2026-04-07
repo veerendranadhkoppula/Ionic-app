@@ -10,6 +10,7 @@ interface Props {
   subtitle?: string;
   ctaText?: string;
   onCta?: () => void;
+   imageSrc?: string; 
 }
 
 const CupIcon: React.FC = () => (
@@ -26,7 +27,7 @@ const BellIcon: React.FC = () => (
   </svg>
 );
 
-const NoState: React.FC<Props> = ({ variant = "cup", title, subtitle, ctaText, onCta }) => {
+const NoState: React.FC<Props> = ({ variant = "cup", title, subtitle, ctaText, onCta, imageSrc }) => {
   const history = useHistory();
 
   const handleCta = () => {
@@ -37,9 +38,19 @@ const NoState: React.FC<Props> = ({ variant = "cup", title, subtitle, ctaText, o
 
   return (
     <div className={styles.container}>
-      <div className={styles.iconWrapper}>
-        {variant === "bell" ? <BellIcon /> : <CupIcon />}
-      </div>
+    <div className={styles.iconWrapper}>
+  {imageSrc ? (
+    <img
+      src={imageSrc}
+      alt="Empty State"
+      style={{ width: "100px", height: "100px" }}
+    />
+  ) : variant === "bell" ? (
+    <BellIcon />
+  ) : (
+    <CupIcon />
+  )}
+</div>
       <h3 className={styles.title}>{title}</h3>
       {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
       {ctaText ? (

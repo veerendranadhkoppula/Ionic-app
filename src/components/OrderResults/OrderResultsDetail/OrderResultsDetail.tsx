@@ -212,7 +212,7 @@ const OrderResultsDetail: React.FC<Props> = ({
     );
   }
 
-  // ── Error state ───────────────────────────────────────────────────────────
+
   if (fetchError || !orderData) {
     return (
       <div className={styles.main}>

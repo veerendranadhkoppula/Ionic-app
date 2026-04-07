@@ -113,6 +113,7 @@ const Articles = () => {
     <NoState
       title={"No articles available right now."}
       subtitle={"Check back later for new articles."}
+       imageSrc="/news.gif"
     />
   </div>
 )}

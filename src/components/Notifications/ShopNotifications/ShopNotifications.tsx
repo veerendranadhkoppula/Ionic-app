@@ -102,7 +102,7 @@ const ShopNotifications: React.FC = () => {
               </div>
             ))
           ) : notifications.length === 0 ? (
-            <NoState variant="bell" title={"No notifications available"} subtitle={"You're all caught up."} />
+            <NoState variant="bell" title={"No notifications available"} subtitle={"You're all caught up."}  imageSrc="/not.gif"/>
           ) : (
             notifications.map((item, index) => (
               <React.Fragment key={item.id}>

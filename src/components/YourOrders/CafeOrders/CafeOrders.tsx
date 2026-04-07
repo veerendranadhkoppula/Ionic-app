@@ -314,6 +314,7 @@ const CafeOrders: React.FC = () => {
                 subtitle={"You don't have any cafe orders yet."}
                 ctaText={"Browse cafe"}
                 onCta={() => history.push("/CafeMenu")}
+                  imageSrc="/noorders.gif"
               />
             </div>
           </div>

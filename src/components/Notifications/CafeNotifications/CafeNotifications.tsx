@@ -213,7 +213,7 @@ const CafeNotifications: React.FC = () => {
               </div>
             ))
           ) : notifications.length === 0 ? (
-            <NoState variant="bell" title={"No new notifications today"} subtitle={"Browse the menu to brew something ☕"} />
+            <NoState variant="bell" title={"No new notifications today"} subtitle={"Browse the menu to brew something ☕"}  imageSrc="/not.gif"/>
           ) : (
             notifications.map((item, index) => (
               <React.Fragment key={item.id}>

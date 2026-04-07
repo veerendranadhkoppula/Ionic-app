@@ -180,6 +180,7 @@ const ShopFavorites = () => {
             subtitle={"Heart a product in the Store to save it here."}
             ctaText={"Browse store"}
             onCta={() => history.push("/StoreMenu")}
+            imageSrc="/fav.gif"
           />
         </div>
       </div>

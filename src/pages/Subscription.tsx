@@ -142,6 +142,7 @@ const Subscription: React.FC = () => {
               <div style={{ width: "100%" }}>
                 <NoState
                   title={"No subscriptions yet"}
+                   imageSrc="/sub.gif"
                   subtitle={"Subscribe to your favorite coffee and get it delivered regularly."}
                   ctaText={"Browse subscriptions"}
                   onCta={() => history.push("/StoreMenu")}

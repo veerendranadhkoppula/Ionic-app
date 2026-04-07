@@ -31,11 +31,15 @@ const WorkshopsSection = () => {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load workshops");
+          setError(
+            err instanceof Error ? err.message : "Failed to load workshops",
+          );
           setLoading(false);
         }
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // called when each <img> fires onLoad or onError
@@ -67,14 +71,22 @@ const WorkshopsSection = () => {
                 <div className={styles.skeletonCard} key={n}>
                   <div className={styles.skeletonImage} />
                   <div className={styles.skeletonDetails}>
-                    <div className={`${styles.skeletonBase} ${styles.skeletonTitle}`} />
+                    <div
+                      className={`${styles.skeletonBase} ${styles.skeletonTitle}`}
+                    />
                     <div className={styles.skeletonLine} />
                     <div className={styles.skeletonInfo}>
                       <div className={styles.skeletonInfoLeft}>
-                        <div className={`${styles.skeletonBase} ${styles.skeletonDate}`} />
-                        <div className={`${styles.skeletonBase} ${styles.skeletonTime}`} />
+                        <div
+                          className={`${styles.skeletonBase} ${styles.skeletonDate}`}
+                        />
+                        <div
+                          className={`${styles.skeletonBase} ${styles.skeletonTime}`}
+                        />
                       </div>
-                      <div className={`${styles.skeletonBase} ${styles.skeletonBtn}`} />
+                      <div
+                        className={`${styles.skeletonBase} ${styles.skeletonBtn}`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -98,13 +110,22 @@ const WorkshopsSection = () => {
                       setWorkshops(data);
                     })
                     .catch((err: unknown) => {
-                      setError(err instanceof Error ? err.message : "Failed to load workshops");
+                      setError(
+                        err instanceof Error
+                          ? err.message
+                          : "Failed to load workshops",
+                      );
                       setLoading(false);
                     });
                 }}
                 style={{
-                  background: "#6C7A5F", color: "#fff", border: "none",
-                  borderRadius: 8, padding: "8px 20px", cursor: "pointer", fontSize: 14,
+                  background: "#6C7A5F",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "8px 20px",
+                  cursor: "pointer",
+                  fontSize: 14,
                 }}
               >
                 Retry
@@ -125,96 +146,117 @@ const WorkshopsSection = () => {
               }}
             >
               <NoState
-                title={"No upcoming programs right now."}
-                subtitle={"Check back later for new programs."}
+                title="No upcoming programs right now."
+                subtitle="Check back later for new programs."
+                imageSrc="/workshops.gif"
               />
             </div>
           )}
 
-          {/* Real cards — rendered (but invisible via opacity) while images load so
-              onLoad / onError fire; hidden skeleton sits on top until all settle */}
-          <div className={styles.WorkshopCards} style={{ display: showSkeleton ? "none" : "flex" }}>
-            {!error && workshops.slice(0, visibleCount).map((workshop) => (
-              <div className={styles.Card} key={workshop.id}>
-                <div className={styles.CardImage}>
-                  <img
-                    src={workshop.image || workshopimg}
-                    alt={workshop.title}
-                    onLoad={handleImageSettled}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = workshopimg;
-                      handleImageSettled();
-                    }}
-                  />
-                </div>
-
-                <div className={styles.CardDetails}>
-                  <div className={styles.CardTitle}>
-                    {/* Title truncation: show first 100 chars with clickable ellipsis to expand */}
-                    {workshop.title && workshop.title.length > 100 ? (
-                      <div className={styles.ExpandableTitle}>
-                        {/* preview (collapsed) */}
-                        <div className={`${styles.titlePreview} ${expandedIds[workshop.id] ? styles.hidden : ""}`}>
-                          <h4>
-                            {workshop.title.slice(0, 100)}
-                            <span
-                              className={styles.ellipsis}
-                              onClick={() => setExpandedIds((prev) => ({ ...prev, [workshop.id]: true }))}
-                              aria-label="Expand title"
-                            >
-                              ...
-                            </span>
-                          </h4>
-                        </div>
-
-                        {/* full title (expanded) */}
-                        <div className={`${styles.fullTitle} ${expandedIds[workshop.id] ? styles.open : ""}`}>
-                          <h4>
-                            {workshop.title}
-                          </h4>
-                          <button
-                            className={styles.collapseButton}
-                            onClick={() => setExpandedIds((prev) => ({ ...prev, [workshop.id]: false }))}
-                            aria-label="Collapse title"
-                          >
-                            {"\u22EE"}
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <h4>{workshop.title}</h4>
-                    )}
+          <div
+            className={styles.WorkshopCards}
+            style={{ display: showSkeleton ? "none" : "flex" }}
+          >
+            {!error &&
+              workshops.slice(0, visibleCount).map((workshop) => (
+                <div className={styles.Card} key={workshop.id}>
+                  <div className={styles.CardImage}>
+                    <img
+                      src={workshop.image || workshopimg}
+                      alt={workshop.title}
+                      onLoad={handleImageSettled}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = workshopimg;
+                        handleImageSettled();
+                      }}
+                    />
                   </div>
 
-                  <div className={styles.line}></div>
+                  <div className={styles.CardDetails}>
+                    <div className={styles.CardTitle}>
+                      {/* Title truncation: show first 100 chars with clickable ellipsis to expand */}
+                      {workshop.title && workshop.title.length > 100 ? (
+                        <div className={styles.ExpandableTitle}>
+                          {/* preview (collapsed) */}
+                          <div
+                            className={`${styles.titlePreview} ${
+                              expandedIds[workshop.id] ? styles.hidden : ""
+                            }`}
+                          >
+                            <h4>
+                              {workshop.title.slice(0, 100)}
+                              <span
+                                className={styles.ellipsis}
+                                onClick={() =>
+                                  setExpandedIds((prev) => ({
+                                    ...prev,
+                                    [workshop.id]: true,
+                                  }))
+                                }
+                                aria-label="Expand title"
+                              >
+                                ...
+                              </span>
+                            </h4>
+                          </div>
 
-                  <div className={styles.CardInfo}>
-                    <div className={styles.CardInfoLeft}>
-                      <h4>{workshop.startDate}</h4>
-                      <p>{workshop.startTime}</p>
+                          {/* full title (expanded) */}
+                          <div
+                            className={`${styles.fullTitle} ${
+                              expandedIds[workshop.id] ? styles.open : ""
+                            }`}
+                          >
+                            <h4>{workshop.title}</h4>
+                            <button
+                              className={styles.collapseButton}
+                              onClick={() =>
+                                setExpandedIds((prev) => ({
+                                  ...prev,
+                                  [workshop.id]: false,
+                                }))
+                              }
+                              aria-label="Collapse title"
+                            >
+                              {"\u22EE"}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <h4>{workshop.title}</h4>
+                      )}
                     </div>
 
-                    <a
-                      href={workshop.calendlyLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button className={styles.BookNowcta}>
-                        Book Now
-                      </button>
-                    </a>
+                    <div className={styles.line}></div>
+
+                    <div className={styles.CardInfo}>
+                      <div className={styles.CardInfoLeft}>
+                        <h4>{workshop.startDate}</h4>
+                        <p>{workshop.startTime}</p>
+                      </div>
+
+                      <a
+                        href={workshop.calendlyLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <button className={styles.BookNowcta}>Book Now</button>
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
             {/* View more link for additional workshops */}
             {!showSkeleton && !error && workshops.length > visibleCount && (
               <div className={styles.viewMoreContainer}>
-                <p className={styles.viewMore} onClick={() => setVisibleCount((v) => v + 5)}>View more</p>
+                <p
+                  className={styles.viewMore}
+                  onClick={() => setVisibleCount((v) => v + 5)}
+                >
+                  View more
+                </p>
               </div>
             )}
           </div>
-
         </div>
       </div>
     </>

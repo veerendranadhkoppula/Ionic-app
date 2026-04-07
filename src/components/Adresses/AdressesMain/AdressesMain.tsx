@@ -128,23 +128,11 @@ const AdressesMain = () => {
           <div className={styles.Top}>
             {addresses.length === 0 && !loading ? (
               <div className={styles.EmptyStateWrapper}>
-                <svg
-                  width="100"
-                  height="100"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g opacity="0.4">
-                    <path
-                      d="M41.6667 8.32812V16.6615M58.3333 8.32812V16.6615M66.6667 33.3281C67.7717 33.3281 68.8315 33.7671 69.6129 34.5485C70.3943 35.3299 70.8333 36.3897 70.8333 37.4948V70.8281C70.8333 75.2484 69.0774 79.4876 65.9518 82.6132C62.8262 85.7388 58.5869 87.4948 54.1667 87.4948H29.1667C24.7464 87.4948 20.5072 85.7388 17.3816 82.6132C14.2559 79.4876 12.5 75.2484 12.5 70.8281V37.4948C12.5 36.3897 12.939 35.3299 13.7204 34.5485C14.5018 33.7671 15.5616 33.3281 16.6667 33.3281H75C79.4203 33.3281 83.6595 35.0841 86.7851 38.2097C89.9107 41.3353 91.6667 45.5745 91.6667 49.9948C91.6667 54.4151 89.9107 58.6543 86.7851 61.7799C83.6595 64.9055 79.4203 66.6615 75 66.6615H70.8333M25 8.32812V16.6615"
-                      stroke="#6C7A5F"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </g>
-                </svg>
+               <img
+  src="/noadress.gif"
+  alt="Empty Cart"
+  style={{ width: "100px", height: "100px" }}
+/>
 
                 <h3 className={styles.EmptyTitle}>No Addresses Saved</h3>
                 <p className={styles.EmptySubtitle}>

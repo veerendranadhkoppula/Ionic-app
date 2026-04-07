@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './OfflineOverlay.module.css';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
-import offlineImg from './1.png';
+import offlineImg from './1.gif';
 
 interface Props {
   onRetry?: () => Promise<void> | void;
@@ -9,7 +9,7 @@ interface Props {
   subtitle?: string;
 }
 
-// SVG removed — using static image instead
+
 
 export default function OfflineOverlay({ onRetry, title = "You're offline", subtitle = 'Please check your internet connection and try again.' }: Props) {
   const { checkOnline } = useNetworkStatus();
@@ -29,8 +29,7 @@ export default function OfflineOverlay({ onRetry, title = "You're offline", subt
     if (ok) {
       window.location.reload();
     } else {
-      // keep overlay; optionally show a small message
-      // using alert to keep changes minimal; app can replace with toast later
+      // keep overlly show message
   alert('Still offline. Please check your connection and try again.');
     }
   };

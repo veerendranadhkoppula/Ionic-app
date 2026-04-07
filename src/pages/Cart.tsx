@@ -808,24 +808,12 @@ const Cart: React.FC<Props> = () => {
           // Empty cart placeholder (centered) — match provided design and spacing
           <div className={cartEmptyStyles.container}>
             <div className={cartEmptyStyles.iconWrapper}>
-              <svg
-                className={cartEmptyStyles.iconSvg}
-                width="100"
-                height="100"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g opacity="0.4">
-                  <path
-                    d="M8.53906 8.54297H16.8724L27.9557 60.293C28.3623 62.1882 29.4169 63.8825 30.9379 65.0841C32.4589 66.2856 34.3512 66.9194 36.2891 66.8763H77.0391C78.9356 66.8732 80.7744 66.2233 82.2517 65.034C83.7289 63.8446 84.7563 62.1868 85.1641 60.3346L92.0391 29.3763H21.3307M37.4974 87.5013C37.4974 89.8025 35.6319 91.668 33.3307 91.668C31.0295 91.668 29.1641 89.8025 29.1641 87.5013C29.1641 85.2001 31.0295 83.3346 33.3307 83.3346C35.6319 83.3346 37.4974 85.2001 37.4974 87.5013ZM83.3307 87.5013C83.3307 89.8025 81.4653 91.668 79.1641 91.668C76.8629 91.668 74.9974 89.8025 74.9974 87.5013C74.9974 85.2001 76.8629 83.3346 79.1641 83.3346C81.4653 83.3346 83.3307 85.2001 83.3307 87.5013Z"
-                    stroke="#6C7A5F"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </g>
-              </svg>
+            <img
+  src="/cart.gif"
+  alt="Empty Cart"
+  style={{ width: "100px", height: "100px" }}
+  className={cartEmptyStyles.icon}
+/>
             </div>
             <h3 className={cartEmptyStyles.title}>
               Your cart is currently empty

@@ -154,6 +154,7 @@ return {
                 subtitle={"Heart items in the Cafe to save them here."}
                 ctaText={"Browse menu"}
                 onCta={() => history.push("/CafeMenu")}
+                imageSrc="/fav.gif"
               />
             )}
             { !showSkeleton && favorites.length > 0 && favorites.map((item) => (

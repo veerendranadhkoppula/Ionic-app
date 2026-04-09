@@ -213,23 +213,36 @@ const Profile: React.FC = () => {
 
     loadProfile();
   }, [history]);
-  const handleImagePick = async () => {
-    try {
-      const photo = await Camera.getPhoto({
-        quality: 85,
-        allowEditing: true,
-        resultType: CameraResultType.Uri,
-      });
+const handleImagePick = async () => {
+  try {
+    // Only request permissions on native (iOS/Android)
+    // Browser doesn't support Camera.requestPermissions()
+    const { Capacitor } = await import('@capacitor/core');
+    const isNative = Capacitor.isNativePlatform();
 
-      if (!photo.webPath) return;
-      // Don't upload immediately — keep a temporary preview and show Save
-      // action. The user must click Save to actually upload.
-      setTempProfileImage(photo.webPath);
-    } catch (err) {
-      console.error("Image upload error:", err);
+    if (isNative) {
+      const permission = await Camera.requestPermissions();
+      if (permission.photos === 'denied') {
+        alert('Please allow photo access in Settings.');
+        return;
+      }
     }
-  };
 
+    const photo = await Camera.getPhoto({
+      quality: 85,
+      allowEditing: true,
+      resultType: CameraResultType.Uri,
+      promptLabelHeader: "Profile Photo",
+      promptLabelPhoto: "Choose from Library",
+      promptLabelPicture: "Take Photo",
+    });
+
+    if (!photo.webPath) return;
+    setTempProfileImage(photo.webPath);
+  } catch (err) {
+    console.error("Image upload error:", err);
+  }
+};
   const uploadProfileImage = async () => {
     if (!tempProfileImage) return;
     if (uploading) return;

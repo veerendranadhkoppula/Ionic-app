@@ -29,6 +29,7 @@
   background: none;
   border: none;
   cursor: pointer;
+   z-index: 1;
   padding: 6px 0;
   transition: background 0.3s ease;
 }
@@ -95,3 +96,19 @@
   transform-origin: center;
 }
 
+.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 50px;
+  height: 5px;
+
+  background: #6C7A5F;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  z-index: 2;
+}

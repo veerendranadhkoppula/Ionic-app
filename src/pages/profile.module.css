@@ -391,3 +391,24 @@
   align-items: center;
   vertical-align: middle;
 }
+.photoBtn {
+  background: transparent;
+  border: 1px solid #6C7A5F;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: var(--lato);
+  font-size: 12px;
+  font-weight: 400;
+  color: #4B3827;
+  cursor: pointer;
+  min-width: 160px;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.photoBtn:disabled {
+  color: #8C8C8C;
+  border-color: #8C8C8C;
+  cursor: not-allowed;
+}

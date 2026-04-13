@@ -234,21 +234,23 @@ const active = visualActive !== null ? visualActive : getActiveTab();
           <button
   key={tab.key}
   className={`${styles.item} ${isActive ? styles.active : ""}`}
-  onClick={() => {
-    // start bounce immediately
-    setBouncingTab(tab.key);
+ onClick={() => {
+  setBouncingTab(tab.key);
 
-    // delay active (pill + color)
-    setTimeout(() => {
-      setVisualActive(tab.key);
-      history.replace(tab.path);
-    }, 220);
+  setTimeout(() => {
+    setVisualActive(tab.key);
 
-    // stop bounce
-    setTimeout(() => {
-      setBouncingTab(null);
-    }, 400);
-  }}
+    history.replace({
+      pathname: tab.path,
+      state: { from: location.pathname }, 
+    });
+
+  }, 220);
+
+  setTimeout(() => {
+    setBouncingTab(null);
+  }, 400);
+}}
 >
 
 

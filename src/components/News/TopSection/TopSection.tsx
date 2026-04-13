@@ -1,16 +1,27 @@
 import React from "react";
 import styles from "./TopSection.module.css";
 import { useHistory } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
+type LocationState = {
+  from?: string;
+};
 const TopSection: React.FC = () => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
+  const handleBack = () => {
+  if (location.state?.from) {
+    history.replace(location.state.from); 
+  } else {
+    history.replace("/home"); 
+  }
+};
   return (
     <>
       <div className={styles.main}>
         <div className={styles.MainContainer}>
           <div
             className={styles.LeftConatiner}
-            onClick={() => history.goBack()}
+           onClick={handleBack}
           >
             <svg
               width="35"

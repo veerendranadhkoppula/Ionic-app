@@ -1,7 +1,6 @@
 ﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
-import { Camera, CameraResultType } from "@capacitor/camera";
-
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import React, { useState } from "react";
 import { IonPage, IonContent } from "@ionic/react";
 import styles from "./Profile.module.css";
@@ -215,32 +214,44 @@ const Profile: React.FC = () => {
   }, [history]);
 const handleImagePick = async () => {
   try {
-    // Only request permissions on native (iOS/Android)
-    // Browser doesn't support Camera.requestPermissions()
-    const { Capacitor } = await import('@capacitor/core');
-    const isNative = Capacitor.isNativePlatform();
+ const { Capacitor } = await import('@capacitor/core');
 
-    if (isNative) {
-      const permission = await Camera.requestPermissions();
+    if (!Capacitor.isNativePlatform()) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async (e: any) => {
+        const file = e.target?.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => setTempProfileImage(reader.result as string);
+        reader.readAsDataURL(file);
+      };
+      input.click();
+      return;
+    }
+
+    try {
+      const permission = await Camera.requestPermissions({ permissions: ['photos'] } as any);
       if (permission.photos === 'denied') {
         alert('Please allow photo access in Settings.');
         return;
       }
-    }
+    } catch { /* ignore permission errors, still try */ }
 
     const photo = await Camera.getPhoto({
       quality: 85,
-      allowEditing: true,
+      allowEditing: false,
       resultType: CameraResultType.Uri,
-      promptLabelHeader: "Profile Photo",
-      promptLabelPhoto: "Choose from Library",
-      promptLabelPicture: "Take Photo",
+      source: CameraSource.Photos,
     });
 
     if (!photo.webPath) return;
     setTempProfileImage(photo.webPath);
-  } catch (err) {
-    console.error("Image upload error:", err);
+  } catch (err: any) {
+    if (err?.message !== 'User cancelled photos app') {
+      console.error("Image pick error:", err);
+    }
   }
 };
   const uploadProfileImage = async () => {
@@ -519,31 +530,34 @@ const handleImagePick = async () => {
               ) : (
                 <>
                   <div className={styles.MiddleTop}>
-                    <div className={styles.ProfileCircle}>
-                      <img
-                        src={tempProfileImage || profileImage || noprofile}
-                        alt="Profile"
-                        onClick={handleImagePick}
-                      />
-                    </div>
+                  <div className={styles.ProfileCircle} onClick={handleImagePick} style={{ cursor: 'pointer' }}>
+  <img
+    src={tempProfileImage || profileImage || noprofile}
+    alt="Profile"
+  />
+</div>
                   </div>
-                  <div className={styles.MiddleBottom}>
-                    {tempProfileImage ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                        <p
-                          onClick={() => { if (!uploading) { setUploadError(null); uploadProfileImage(); } }}
-                          style={{ margin: 0, cursor: uploading ? 'default' : 'pointer', color: uploading ? '#8C8C8C' : undefined, textDecoration: 'underline', textUnderlineOffset: 2 }}
-                        >
-                          {uploading ? 'Saving...' : 'Save'}
-                        </p>
-                        {uploadError && <p className={styles.errorText}>{uploadError}</p>}
-                      </div>
-                    ) : (
-                      <p onClick={handleImagePick}>
-                        {profileImage ? 'Change profile photo' : 'Add profile photo'}
-                      </p>
-                    )}
-                  </div>
+                <div className={styles.MiddleBottom}>
+  {tempProfileImage ? (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+      <button
+        className={styles.photoBtn}
+        onClick={() => { if (!uploading) { setUploadError(null); uploadProfileImage(); } }}
+        disabled={uploading}
+      >
+        {uploading ? 'Saving...' : 'Save photo'}
+      </button>
+      {uploadError && <p className={styles.errorText}>{uploadError}</p>}
+    </div>
+  ) : (
+    <button
+      className={styles.photoBtn}
+      onClick={handleImagePick}
+    >
+      {profileImage ? 'Change profile photo' : 'Add profile photo'}
+    </button>
+  )}
+</div>
                 </>
               )}
             </div>

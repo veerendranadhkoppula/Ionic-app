@@ -4,15 +4,15 @@
   height: 100svh;
   width: 100%;
 }
-/* .BottomBottom {
+.BottomBottom {
   display: none;
-} */
- .BottomBottom{
+}
+ /* .BottomBottom{
     display: flex;
     justify-content: left;
     flex-direction: column;
     gap: 32px;
-}
+} */
 .MainConatiner{
     display: flex;
     align-items: center;

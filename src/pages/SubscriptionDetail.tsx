@@ -156,7 +156,7 @@ await downloadPdf(base64, `invoice-${subscription.displayId.replace("#", "")}.pd
                 <div className={styles.subitemcardTop}>
                   <p>Items</p>
                   <h4>{subscription.itemName}</h4>
-                  {subscription.quantity > 1 && <h4>{subscription.quantity}x Bag Amount</h4>}
+                  {subscription.bagAmount && <h4>{subscription.bagAmount}x bags per delivery</h4>}
                 </div>
                 <div className={styles.subitemcardBottom}>
                   <p>Price per Delivery : </p>

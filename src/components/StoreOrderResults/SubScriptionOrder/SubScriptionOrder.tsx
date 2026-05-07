@@ -14,6 +14,7 @@ export interface SubScriptionOrderProps {
   freqLabel        : string;
   quantity         : number;
   unitPrice        : number;
+  bagAmount       ?: string;
   shippingCharge   : number;
   coinsDiscount    : number;
   total            : number;
@@ -33,6 +34,7 @@ const SubScriptionOrder: React.FC<SubScriptionOrderProps> = ({
   freqLabel,
   quantity,
   unitPrice,
+  bagAmount,
   shippingCharge,
   coinsDiscount,
   total,
@@ -47,7 +49,8 @@ const SubScriptionOrder: React.FC<SubScriptionOrderProps> = ({
   const history = useHistory();
 
   const displayName   = variantName ? `${productName}, ${variantName}` : productName;
-  const quantityLabel = quantity > 1 ? `${freqLabel}  ${quantity} bags` : freqLabel;
+  const bagLabel      = bagAmount ? ` · ${bagAmount} bags` : "";
+  const quantityLabel = `${freqLabel}${bagLabel}`;
   const itemTotal     = unitPrice * quantity;
 
   const billing = billingAddress ?? shippingAddress;

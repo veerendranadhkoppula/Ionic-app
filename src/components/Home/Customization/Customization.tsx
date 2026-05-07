@@ -78,6 +78,7 @@ interface CustomizationSection {
   title: string;
   selectionType: "single" | "multiple";
   groups: CustomizationGroup[];
+  options?: CustomizationOption[]; // direct options — when backend adds options without a group
 }
 
 interface ProductCustomization {
@@ -182,6 +183,11 @@ const Customization: React.FC<CustomizationProps> = ({
                 if (foundGroup) {
                   defaults[s.id] = {
                     [foundGroup.id]: [foundGroup.options[0]],
+                  };
+                } else if (Array.isArray(s.options) && s.options.length > 0) {
+                  // No groups — options are directly on the section
+                  defaults[s.id] = {
+                    __direct__: [s.options[0]],
                   };
                 }
               }
@@ -359,10 +365,6 @@ const Customization: React.FC<CustomizationProps> = ({
                                 }
                                 onChange={(e) => {
                                   if (section.selectionType === "single") {
-                                    // For radios, determine if this option is already selected
-                                    // and toggle it off if so. We ignore e.target.checked because
-                                    // the browser's native radio behavior can conflict with our
-                                    // controlled state; compute desired state from current state.
                                     const alreadySelected =
                                       selectedOptions[section.id]?.[group.id]?.length === 1 &&
                                       selectedOptions[section.id][group.id][0].id === option.id;
@@ -377,6 +379,38 @@ const Customization: React.FC<CustomizationProps> = ({
                         ))}
                       </div>
                     ))}
+
+                    {/* Direct options — rendered when the section has no groups */}
+                    {section.groups.length === 0 && Array.isArray(section.options) && section.options.map((option) => {
+                      const directGroup: CustomizationGroup = { id: "__direct__", groupTitle: "", options: section.options! };
+                      return (
+                        <div key={option.id} className={styles.Bagqntyselectbtn}>
+                          <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                            <h3>{option.label}</h3>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            {option.price > 0 && (
+                              <span className={styles.ExtraPrice}>+ AED {option.price}</span>
+                            )}
+                            <input
+                              type={section.selectionType === "single" ? "radio" : "checkbox"}
+                              name={section.selectionType === "single" ? `${section.id}` : `${section.id}-__direct__`}
+                              checked={selectedOptions[section.id]?.["__direct__"]?.some((o) => o.id === option.id) || false}
+                              onChange={(e) => {
+                                if (section.selectionType === "single") {
+                                  const alreadySelected =
+                                    selectedOptions[section.id]?.["__direct__"]?.length === 1 &&
+                                    selectedOptions[section.id]["__direct__"][0].id === option.id;
+                                  handleOptionSelect(section, directGroup, option, !alreadySelected);
+                                } else {
+                                  handleOptionSelect(section, directGroup, option, (e.target as HTMLInputElement).checked);
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )),
               )}

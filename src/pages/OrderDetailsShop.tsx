@@ -119,10 +119,10 @@ const OrderDetailsShop: React.FC = () => {
   const getStatusLabel = () => {
     if (status === "delivered")         return "Delivered";
     if (status === "cancelled")         return "Cancelled";
-    if (status === "shipped")           return "Shipped";
+    if (status === "shipped")           return "In Progress";
     if (status === "refund-initiated")  return "Refund Initiated";
     if (status === "refunded")          return "Refunded";
-    return "Ongoing";
+    return "Order Placed";
   };
 const handleDownloadInvoice = async () => {
   setInvoiceGenerating(true);
@@ -208,39 +208,13 @@ const handleDownloadInvoice = async () => {
                   <h4>{order.displayId}</h4>
                 </div>
                 <div
-                  className={`${styles.OrderStatus} 
-    ${isCancelled ? styles.cancelledStatus : ""} 
-    ${isDelivered ? styles.deliveredStatus : ""} 
-    ${isOngoing ? styles.ongoingStatus : ""}`}
+                  className={`${styles.OrderStatus} ${
+                    isCancelled ? styles.cancelledStatus :
+                    isDelivered ? styles.deliveredStatus :
+                    styles.ongoingStatus
+                  }`}
                 >
                   <p>{getStatusLabel()}</p>
-                  {isCancelled && (
-                    <svg width="10" height="10" viewBox="0 0 10 10">
-                      <path
-                        d="M0.75 8.6145L4.68225 4.68225L8.6145 8.6145M8.6145 0.75L4.6815 4.68225L0.75 0.75"
-                        stroke="#E54842"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                  {isDelivered && (
-                    <svg width="14" height="14" viewBox="0 0 18 18">
-                      <path
-                        d="M3.75 10.875C3.75 10.875 4.875 10.875 6.375 13.5C6.375 13.5 10.5443 6.62475 14.25 5.25"
-                        stroke="#6C7A5F"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                  {isOngoing && (
-                    <svg width="12" height="12" viewBox="0 0 12 12">
-                      <circle cx="6" cy="6" r="5" stroke="#FFA500" strokeWidth="1.5" />
-                    </svg>
-                  )}
                 </div>
               </div>
               <div className={styles.OrderDetails}>

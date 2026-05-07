@@ -2,6 +2,7 @@ import React from "react";
 import {
   StoreCartShape,
   StoreCartItem,
+  SelectedProductHighlight,
   fetchStoreCart,
   addStoreCartItem,
   incrementStoreCartItem,
@@ -24,6 +25,7 @@ export interface StoreCartContextShape {
     variantId?: string,
     variantName?: string,
     unitPrice?: number,
+    productHighlights?: SelectedProductHighlight[],
   ) => Promise<StoreCartShape | null>;
   incrementStoreItem: (itemId: string) => Promise<StoreCartShape | null>;
   decrementStoreItem: (itemId: string) => Promise<StoreCartShape | null>;
@@ -139,6 +141,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       variantId?: string,
       variantName?: string,
       unitPrice?: number,
+      productHighlights?: SelectedProductHighlight[],
     ): Promise<StoreCartShape | null> =>
       enqueue(async () => {
         setLoading(true);
@@ -175,7 +178,7 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           }
 
           console.log(`🟢 [addToStoreCart] calling addStoreCartItem — productId=${productId} variantId=${variantId ?? "none"}`);
-          const cart = await addStoreCartItem(productId, quantity, variantId, variantName, unitPrice);
+          const cart = await addStoreCartItem(productId, quantity, variantId, variantName, unitPrice, productHighlights);
           console.log(`🟢 [addToStoreCart] addStoreCartItem returned:`, cart ? `items=${cart.items.length} origin=${cart.origin}` : "null");
           if (cart) {
             const hasStoreItem = cart.items.some((it) => it.relationTo === "web-products");

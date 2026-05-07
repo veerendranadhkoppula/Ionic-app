@@ -147,6 +147,37 @@ export async function storeCheckout(
 
 
 
+export interface SelectedProductHighlight {
+  sectionTitle: string;
+  selectedPoint: string;
+}
+
+/** Transform internal highlight (one selected point) to the Payload CMS schema format */
+function toPayloadHighlights(highlights: SelectedProductHighlight[]): unknown[] {
+  return highlights.map((h) => ({
+    sectionTitle: h.sectionTitle,
+    items: [{ point: h.selectedPoint }],
+  }));
+}
+
+/** Parse Payload CMS highlight format back into our internal type */
+function fromPayloadHighlights(raw: unknown[]): SelectedProductHighlight[] {
+  return raw
+    .map((h: unknown) => {
+      const obj = h as Record<string, unknown>;
+      const sectionTitle = String(obj.sectionTitle ?? "");
+      // Handle both Payload format { items:[{point}] } and legacy { selectedPoint }
+      let selectedPoint = "";
+      if (Array.isArray(obj.items) && obj.items.length > 0) {
+        selectedPoint = String((obj.items[0] as Record<string, unknown>).point ?? "");
+      } else if (obj.selectedPoint != null) {
+        selectedPoint = String(obj.selectedPoint);
+      }
+      return { sectionTitle, selectedPoint };
+    })
+    .filter((h) => h.sectionTitle && h.selectedPoint);
+}
+
 export interface StoreCartItem {
   id: string;
   productId: number;
@@ -157,6 +188,7 @@ export interface StoreCartItem {
   productImage?: string;
   unitPrice?: number;
   relationTo?: string;
+  productHighlights?: SelectedProductHighlight[];
 }
 
 export interface StoreCartShape {
@@ -249,7 +281,12 @@ export function normalizeStoreCart(raw: unknown): StoreCartShape | null {
         item.price != null ? Number(item.price) :
         undefined;
 
-      return { id, productId: pid, quantity, variantId, variantName, productName, productImage, unitPrice, relationTo };
+      const productHighlights: SelectedProductHighlight[] | undefined =
+        Array.isArray(item.productHighlights) && item.productHighlights.length > 0
+          ? fromPayloadHighlights(item.productHighlights as unknown[])
+          : undefined;
+
+      return { id, productId: pid, quantity, variantId, variantName, productName, productImage, unitPrice, relationTo, productHighlights };
     })
     .filter((x): x is StoreCartItem => x !== null);
   const topLevelOrigin = data.origin as "store" | "cafe" | undefined;
@@ -322,6 +359,7 @@ async function patchStoreCartDirect(
   variantId?: string,
   variantName?: string,
   unitPrice?: number,
+  productHighlights?: SelectedProductHighlight[],
 ): Promise<StoreCartShape | null> {
   const COLLECTION_PATCH_URL = `${API_BASE}/app-cart/${cartId}`;
   const existingPayloadItems = existingItems.map((it) => {
@@ -334,6 +372,7 @@ async function patchStoreCartDirect(
     if (it.variantId) item.vId = it.variantId;
     if (it.variantName) item.variantName = it.variantName;
     if (it.unitPrice != null) item.unitPrice = it.unitPrice;
+    if (it.productHighlights && it.productHighlights.length > 0) item.productHighlights = toPayloadHighlights(it.productHighlights);
     return item;
   });
 
@@ -345,6 +384,7 @@ async function patchStoreCartDirect(
   if (variantId) newItem.vId = variantId;
   if (variantName) newItem.variantName = variantName;
   if (unitPrice != null) newItem.unitPrice = unitPrice;
+  if (productHighlights && productHighlights.length > 0) newItem.productHighlights = toPayloadHighlights(productHighlights);
 
   const patchRes = await authFetch(COLLECTION_PATCH_URL, {
     method: "PATCH",
@@ -373,6 +413,7 @@ export async function addStoreCartItem(
   variantId?: string,
   variantName?: string,
   unitPrice?: number,
+  productHighlights?: SelectedProductHighlight[],
 ): Promise<StoreCartShape | null> {
 
   console.log(`🛒 [addStoreCartItem] START — productId=${productId} qty=${quantity} variantId=${variantId ?? "none"} variantName=${variantName ?? "none"} unitPrice=${unitPrice ?? "none"}`);
@@ -418,6 +459,7 @@ export async function addStoreCartItem(
       variantId,
       variantName,
       unitPrice,
+      productHighlights,
     );
     console.log(`🛒 [addStoreCartItem] after patchStoreCartDirect:`, updatedCart ? `${updatedCart.items.length} items` : "null");
 
@@ -455,8 +497,9 @@ export async function addStoreCartItem(
     customizations: [],
   };
   // Intentionally omit vId here — added via PATCH after cart creation (see below)
-  if (variantName)        postPayload.variantName = variantName;
-  if (unitPrice != null)  postPayload.unitPrice   = unitPrice;
+  if (variantName)                                    postPayload.variantName       = variantName;
+  if (unitPrice != null)                              postPayload.unitPrice         = unitPrice;
+  if (productHighlights && productHighlights.length > 0) postPayload.productHighlights = toPayloadHighlights(productHighlights);
 
   console.log(`🛒 [addStoreCartItem] POST payload:`, JSON.stringify(postPayload));
 
@@ -494,12 +537,14 @@ export async function addStoreCartItem(
         };
         if (it.unitPrice != null) base.unitPrice = it.unitPrice;
         if (it.id === created.id) {
-          // Attach the variant to this item
+          // Attach the variant and highlights to this item
           base.vId = String(variantId);
           if (variantName) base.variantName = variantName;
+          if (productHighlights && productHighlights.length > 0) base.productHighlights = toPayloadHighlights(productHighlights);
         } else {
           if (it.variantId) base.vId = it.variantId;
           if (it.variantName) base.variantName = it.variantName;
+          if (it.productHighlights && it.productHighlights.length > 0) base.productHighlights = toPayloadHighlights(it.productHighlights);
         }
         return base;
       });

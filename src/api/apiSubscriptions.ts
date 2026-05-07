@@ -25,20 +25,21 @@ export interface SubPaymentRecord {
 export interface UserSubscription {
 
   id               : number;
-  displayId        : string;       
+  displayId        : string;
   status           : SubStatus;
-  productName      : string;        
-  itemName         : string;       
-  deliveryFrequency: string;        
+  productName      : string;
+  itemName         : string;
+  deliveryFrequency: string;
   quantity         : number;
   unitPrice        : number;
+  bagAmount        : string | null;
   shippingCharge   : number;
   taxAmount        : number;
   total            : number;
   coinsDiscount    : number;
-  nextDelivery     : string | null; 
+  nextDelivery     : string | null;
   cancelledOn      : string | null;
-  placedAtLabel    : string;      
+  placedAtLabel    : string;
   shippingAddress  : SubAddress | null;
   billingAddress   : SubAddress | null;
   paymentHistory   : SubPaymentRecord[];
@@ -224,6 +225,7 @@ function mapDoc(
 
   const quantity  = firstItem ? Number(firstItem.quantity ?? 1) : 1;
   const unitPrice = firstItem ? Number(firstItem.price ?? 0)    : 0;
+  const bagAmount = firstItem?.bagAmount ? String(firstItem.bagAmount) : null;
   const deliveryFrequency = buildFreqLabel(product, subFreqID, firstItem, docSubFreq, doc, variantSubFreq);
   console.log(`[sub #${doc.id}] deliveryFrequency="${deliveryFrequency}"`);
 
@@ -260,6 +262,7 @@ function mapDoc(
     deliveryFrequency,
     quantity,
     unitPrice,
+    bagAmount,
     shippingCharge,
     taxAmount,
     total,

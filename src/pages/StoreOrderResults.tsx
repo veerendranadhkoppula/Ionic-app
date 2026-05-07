@@ -38,6 +38,7 @@ export interface StoreOrderResultsState {
   freqLabel           ?: string;
   quantity            ?: number;
   unitPrice           ?: number;
+  bagAmount           ?: string;
   coinsDiscount       ?: number;
   total               ?: number;
   orderType           ?: "delivery" | "pickup";
@@ -140,6 +141,7 @@ if (subscriptionIdForTop) {
                 freqLabel={s.freqLabel ?? ""}
                 quantity={s.quantity ?? 1}
                 unitPrice={s.unitPrice ?? 0}
+                bagAmount={s.bagAmount}
                 shippingCharge={shipping}
                 coinsDiscount={s.coinsDiscount ?? 0}
                 total={grandTot}

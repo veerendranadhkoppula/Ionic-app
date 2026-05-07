@@ -1,25 +1,39 @@
 import React, { useState } from "react";
 import styles from "./AddBottomSheet.module.css";
 import { StoreProduct, StoreVariant } from "../../../api/apiStoreMenu";
+import { SelectedProductHighlight } from "../../../api/apiStoreCart";
 
 interface Props {
   product: StoreProduct;
   onClose: () => void;
   onSubscribe: (product: StoreProduct, selectedVariant: StoreVariant | null) => void;
-  onAddToCart: (productId: number, quantity: number, variant: StoreVariant | null, unitPrice: number) => void;
+  onAddToCart: (
+    productId: number,
+    quantity: number,
+    variant: StoreVariant | null,
+    unitPrice: number,
+    productHighlights: SelectedProductHighlight[],
+  ) => void;
 }
 
 const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) => {
   const [quantity, setQuantity] = useState(1);
   const [isClosing, setIsClosing] = useState(false);
-const [isAdded, setIsAdded] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
   // For variant products, default-select the first in-stock variant (or first overall)
   const firstVariant = product.hasVariantOptions && product.variants.length > 0
     ? (product.variants.find((v) => v.variantInStock) ?? product.variants[0])
     : null;
-
   const [selectedVariant, setSelectedVariant] = useState<StoreVariant | null>(firstVariant);
 
+  // For product highlights, default-select the first item in each section
+  const [selectedHighlights, setSelectedHighlights] = useState<SelectedProductHighlight[]>(
+    (product.productHighlights ?? []).map((section) => ({
+      sectionTitle: section.sectionTitle,
+      selectedPoint: section.items[0]?.point ?? "",
+    }))
+  );
 
   const unitPrice: number = product.hasVariantOptions
     ? selectedVariant
@@ -29,14 +43,21 @@ const [isAdded, setIsAdded] = useState(false);
 
   const displayPrice = unitPrice * quantity;
 
-
   const hasSubscription = product.hasVariantOptions
     ? product.variants.some((v) => v.hasVariantSub)
     : product.hasSimpleSub;
 
+  const hasHighlights = (product.productHighlights ?? []).length > 0;
+
   const triggerClose = () => {
     setIsClosing(true);
     setTimeout(onClose, 300);
+  };
+
+  const handleSelectHighlight = (sectionTitle: string, point: string) => {
+    setSelectedHighlights((prev) =>
+      prev.map((h) => h.sectionTitle === sectionTitle ? { ...h, selectedPoint: point } : h)
+    );
   };
 
   return (
@@ -45,10 +66,11 @@ const [isAdded, setIsAdded] = useState(false);
       onClick={triggerClose}
     >
       <div
-        className={`${styles.main} ${isClosing ? styles.close : ""} ${product.hasVariantOptions ? styles.mainWithVariants : styles.mainNoVariants}`}
+        className={`${styles.main} ${isClosing ? styles.close : ""} ${
+          (product.hasVariantOptions || hasHighlights) ? styles.mainWithVariants : styles.mainNoVariants
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
-   
         <div className={styles.stickyTop}>
           {/* Close icon */}
           <div className={styles.WrongIcon} onClick={(e) => { e.stopPropagation(); triggerClose(); }}>
@@ -60,7 +82,6 @@ const [isAdded, setIsAdded] = useState(false);
             </svg>
           </div>
 
-
           <div className={styles.TitleandquntyConatiner}>
             <h3>{product.name}</h3>
             <div className={styles.QntyContainer}>
@@ -70,7 +91,6 @@ const [isAdded, setIsAdded] = useState(false);
             </div>
           </div>
 
-
           <div className={styles.PriceContainer}>
             <h4>AED {displayPrice}.00</h4>
           </div>
@@ -78,24 +98,20 @@ const [isAdded, setIsAdded] = useState(false);
           <div className={styles.line} />
         </div>
 
-
         <div className={styles.scrollArea}>
+          {/* Variant selector */}
           {product.hasVariantOptions && product.variants.length > 0 && (
             <div className={styles.variantSection}>
-
               <div className={styles.variantHeader}>
                 <span className={styles.variantLabel}>Quantity</span>
                 <span className={styles.requiredBadge}>Required</span>
               </div>
-
-
               <div className={styles.variantList}>
                 {product.variants.map((variant) => {
                   const isSelected = selectedVariant?.id === variant.id;
                   const price = variant.variantSalePrice > 0
                     ? variant.variantSalePrice
                     : variant.variantRegularPrice;
-
                   return (
                     <div
                       key={variant.id}
@@ -115,9 +131,41 @@ const [isAdded, setIsAdded] = useState(false);
               </div>
             </div>
           )}
+
+          {/* Product highlights selector */}
+          {(product.productHighlights ?? []).map((section) => {
+            const selectedPoint = selectedHighlights.find(
+              (h) => h.sectionTitle === section.sectionTitle
+            )?.selectedPoint ?? "";
+            return (
+              <div key={section.sectionTitle} className={styles.variantSection}>
+                <div className={styles.variantHeader}>
+                  <span className={styles.variantLabel}>{section.sectionTitle}</span>
+                  <span className={styles.requiredBadge}>Required</span>
+                </div>
+                <div className={styles.variantList}>
+                  {section.items.map((item) => {
+                    const isSelected = selectedPoint === item.point;
+                    return (
+                      <div
+                        key={item.point}
+                        className={styles.variantRow}
+                        onClick={() => handleSelectHighlight(section.sectionTitle, item.point)}
+                      >
+                        <span className={styles.variantName}>{item.point}</span>
+                        <div className={`${styles.radio} ${isSelected ? styles.radioSelected : ""}`}>
+                          {isSelected && <div className={styles.radioDot} />}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className={`${styles.stickyBottom} ${product.hasVariantOptions ? styles.stickyBottomPush : ""}`}>
+        <div className={`${styles.stickyBottom} ${(product.hasVariantOptions || hasHighlights) ? styles.stickyBottomPush : ""}`}>
           <div className={styles.BottomContainer}>
             {hasSubscription && (
               <button
@@ -127,21 +175,19 @@ const [isAdded, setIsAdded] = useState(false);
                 Subscribe
               </button>
             )}
-           <button
-  className={`${styles.addtocart} ${isAdded ? styles.added : ""}`}
-  onClick={() => {
-    if (isAdded) return;
-
-    setIsAdded(true);
-
-    setTimeout(() => {
-      onAddToCart(product.id, quantity, selectedVariant, unitPrice);
-      triggerClose();
-    }, 500); 
-  }}
->
-  {isAdded ? "✓ Added" : "Add to Cart"}
-</button>
+            <button
+              className={`${styles.addtocart} ${isAdded ? styles.added : ""}`}
+              onClick={() => {
+                if (isAdded) return;
+                setIsAdded(true);
+                setTimeout(() => {
+                  onAddToCart(product.id, quantity, selectedVariant, unitPrice, selectedHighlights);
+                  triggerClose();
+                }, 500);
+              }}
+            >
+              {isAdded ? "✓ Added" : "Add to Cart"}
+            </button>
           </div>
         </div>
       </div>

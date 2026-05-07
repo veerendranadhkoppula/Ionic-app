@@ -8,6 +8,7 @@ interface Props {
   freqLabel: string;
   quantity: number;
   unitPrice: number;
+  bagAmount?: string;
 }
 
 const SubScriptionOrderSummary: React.FC<Props> = ({
@@ -17,9 +18,11 @@ const SubScriptionOrderSummary: React.FC<Props> = ({
   freqLabel,
   quantity,
   unitPrice,
+  bagAmount,
 }) => {
   const displayName = variantName ? `${productName}, ${variantName}` : productName;
-  const quantityLabel = quantity > 1 ? `${freqLabel} · ${quantity} bags` : freqLabel;
+  const bagLabel = bagAmount ? ` · ${bagAmount} bags` : "";
+  const quantityLabel = `${freqLabel}${bagLabel}`;
 
   return (
     <>

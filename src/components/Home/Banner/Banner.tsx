@@ -15,6 +15,7 @@ interface BannerItem {
 
 interface Props {
   currentPage: PageValue;
+  onBannersResolved?: (hasBanners: boolean) => void;
 }
 
 const PAGE_ROUTES: Record<PageValue, string> = {
@@ -25,7 +26,7 @@ const PAGE_ROUTES: Record<PageValue, string> = {
 
 const AUTO_SCROLL_INTERVAL = 3500;
 
-const Banner: React.FC<Props> = ({ currentPage }) => {
+const Banner: React.FC<Props> = ({ currentPage, onBannersResolved }) => {
   const history = useHistory();
   const [banners, setBanners] = useState<BannerItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -62,16 +63,18 @@ const Banner: React.FC<Props> = ({ currentPage }) => {
           });
         setBanners(mapped);
         setActiveIndex(0);
+        onBannersResolved?.(mapped.length > 0);
       } catch (err) {
         console.warn("Banner: failed to fetch banners", err);
         setBanners([]);
+        onBannersResolved?.(false);
       } finally {
         if (mounted) setLoading(false);
       }
     };
     fetchBanners();
     return () => { mounted = false; };
-  }, []);
+  }, [onBannersResolved]);
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);

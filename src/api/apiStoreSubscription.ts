@@ -23,6 +23,7 @@ export interface SubscriptionCheckoutPayload {
     variantId: string | null;
     subscriptionId: string;
     quantity: number;
+    bagAmountID?: string | null;
   };
   useWTCoins: boolean;
 }

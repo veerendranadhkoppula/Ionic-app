@@ -41,10 +41,7 @@ const Subscription: React.FC = () => {
     return () => { cancelled = true; };
   }, []);
 
-  // Only consider active subscriptions that have at least one successful payment
-  // (paymentHistory non-empty). This hides subscriptions that were created but
-  // whose initial payment did not succeed yet.
-  const activeSubscriptions = subscriptions.filter((s) => s.status === "active" && (s.paymentHistory?.length ?? 0) > 0);
+  const activeSubscriptions = subscriptions.filter((s) => s.status === "active");
   const pastSubscriptions   = subscriptions.filter((s) => s.status === "cancelled");
 
   const openDetail = (sub: UserSubscription) =>

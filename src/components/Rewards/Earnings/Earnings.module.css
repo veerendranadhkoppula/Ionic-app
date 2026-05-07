@@ -338,3 +338,18 @@
   height: 11px;
   width: 80px;
 }
+
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.emptyText {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #888888;
+  margin: 0;
+}

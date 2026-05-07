@@ -281,9 +281,8 @@
 .prodaddons{
     display: flex;
     justify-content: left;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 2px;
 }
 .prodaddons p{
     font-size: 12px;

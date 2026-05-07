@@ -365,28 +365,16 @@ const OrderResultsDetail: React.FC<Props> = ({
                                 const label = String(cc['label'] ?? cc['selectedOptionLabel'] ?? cc['optionLabel'] ?? cc['selectedLabel'] ?? cc['sectionTitle'] ?? "");
                                 const price = Number(cc['price'] ?? cc['optionPrice'] ?? cc['selectedOptionPrice'] ?? 0) || 0;
                                 return (
-                                  <React.Fragment key={ci}>
-                                    {ci > 0 && (
-                                      <svg width="6" height="6">
-                                        <circle cx="3" cy="3" r="3" fill="#8C8C8C" />
-                                      </svg>
-                                    )}
-                                    <p>
-                                      {label}
-                                      {price > 0 && ` +AED ${price.toFixed(2)}`}
-                                    </p>
-                                  </React.Fragment>
+                                  <p key={ci}>
+                                    {label}
+                                    {price > 0 && ` +AED ${price.toFixed(2)}`}
+                                  </p>
                                 );
                               })}
                             </div>
                           ) : item.variant || item.addon ? (
                       <div className={styles.prodaddons}>
                         {item.variant && <p>{item.variant}</p>}
-                        {item.variant && item.addon && (
-                          <svg width="6" height="6">
-                            <circle cx="3" cy="3" r="3" fill="#8C8C8C" />
-                          </svg>
-                        )}
                         {item.addon && <p>{item.addon}</p>}
                       </div>
                     ) : null}

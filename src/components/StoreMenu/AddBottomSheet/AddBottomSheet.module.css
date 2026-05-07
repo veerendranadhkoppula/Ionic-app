@@ -108,6 +108,9 @@
   overflow-y: auto;
   padding: 20px 24px;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .scrollArea::-webkit-scrollbar {

@@ -19,14 +19,20 @@ export type WebOrderPaymentStatus =
 
 export type WebOrderOrigin = "one-time" | "subscription";
 
+export interface WebOrderItemHighlight {
+  sectionTitle : string;
+  selectedPoint: string;
+}
+
 export interface WebOrderItem {
-  id       : string;
-  productId: number;
-  productName: string;
-  variantId  : string | null;
-  variantName: string | null;
-  quantity : number;
-  price    : number;   // unit price
+  id              : string;
+  productId       : number;
+  productName     : string;
+  variantId       : string | null;
+  variantName     : string | null;
+  quantity        : number;
+  price           : number;   // unit price
+  productHighlights?: WebOrderItemHighlight[];
 }
 
 export interface WebOrderAddress {
@@ -155,6 +161,22 @@ function mapItems(raw: unknown[]): WebOrderItem[] {
     const variantId   = i.variantID   ? String(i.variantID) : null;
     const variantName = i.variantName ? String(i.variantName) : null;
 
+    const productHighlights: WebOrderItemHighlight[] | undefined =
+      Array.isArray(i.productHighlights) && i.productHighlights.length > 0
+        ? (i.productHighlights as Record<string, unknown>[])
+            .map((h) => {
+              const sectionTitle = String(h.sectionTitle ?? "");
+              let selectedPoint = "";
+              if (Array.isArray(h.items) && h.items.length > 0) {
+                selectedPoint = String((h.items[0] as Record<string, unknown>).point ?? "");
+              } else if (h.selectedPoint != null) {
+                selectedPoint = String(h.selectedPoint);
+              }
+              return { sectionTitle, selectedPoint };
+            })
+            .filter((h) => h.sectionTitle && h.selectedPoint)
+        : undefined;
+
     return {
       id         : String(i.id ?? idx),
       productId,
@@ -163,6 +185,7 @@ function mapItems(raw: unknown[]): WebOrderItem[] {
       variantName,
       quantity   : Number(i.quantity ?? 1),
       price      : Number(i.price    ?? 0),
+      productHighlights,
     };
   });
 }

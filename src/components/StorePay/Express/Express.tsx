@@ -22,6 +22,7 @@ interface SubscriptionResultData {
   backendShippingCharge?: number | null;
   backendTax           ?: number;
   backendTotal         ?: number | null;
+  bagAmount            ?: string;
 }
 
 interface ExpressProps {
@@ -162,7 +163,7 @@ const Express: React.FC<ExpressProps> = ({
           freqLabel      : subscriptionData.freqLabel,
           quantity       : subscriptionData.quantity,
           unitPrice      : subscriptionData.unitPrice,
-        
+          bagAmount      : subscriptionData.bagAmount,
           shippingCharge : resolvedShipping,
           coinsDiscount  : subscriptionData.coinsDiscount,
           taxAmount      : resolvedTaxAmount,
@@ -170,7 +171,6 @@ const Express: React.FC<ExpressProps> = ({
           orderType      : subscriptionData.orderType,
           email          : userEmail,
           userEmail,
-         
           subShippingAddress: fmtSubAddr(subscriptionData.shippingAddr),
           subBillingAddress : fmtSubAddr(subscriptionData.billingAddr),
           cardLast4,

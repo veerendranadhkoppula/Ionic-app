@@ -26,6 +26,9 @@ export interface SubscriptionPayState {
   freqLabel: string;
   quantity: number;
   unitPrice: number;
+  productHighlights?: import("../api/apiStoreCart").SelectedProductHighlight[];
+  bagAmountId?: string;
+  bagAmount?: string;
   // Delivery
   deliveryOption: "delivery" | "pickup";
   shippingAddress: ReturnType<typeof mapToSubscriptionAddress> | null;
@@ -157,6 +160,9 @@ console.log("unitPrice:", unitPrice);
       freqLabel: state.freqLabel,
       quantity: state.quantity,
       unitPrice: state.unitPrice,
+      productHighlights: state.productHighlights,
+      bagAmountId: state.bagAmountId,
+      bagAmount: state.bagAmount,
       deliveryOption:
         deliveryState.deliveryMode === "ship" ? "delivery" : "pickup",
       shippingAddress: shippingAddr,
@@ -187,6 +193,7 @@ console.log("unitPrice:", unitPrice);
           freqLabel={state?.freqLabel ?? ""}
           quantity={state?.quantity ?? 1}
           unitPrice={state?.unitPrice ?? 0}
+          bagAmount={state?.bagAmount}
         />
         <Delivery onDeliveryChange={handleDeliveryChange} />
         <CuponsCoins

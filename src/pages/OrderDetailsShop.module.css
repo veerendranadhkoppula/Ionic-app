@@ -146,14 +146,14 @@
   align-items: center;
   flex-direction: row;
   gap: 4px;
- 
 }
 .OrderStatus p{
   font-size: 12px;
   font-weight: 400;
-  color: #E54842;
   font-family: var(--lato);
   margin: 0;
+  padding: 3px 6px;
+  border-radius: 4px;
 }
 .OrderDetailsRight p{
   font-size: 12px;
@@ -245,7 +245,6 @@
   justify-content: space-between;
   width: 100%;
   flex-direction: row;
-
 }
 .Item h4{
   font-size: 14px;
@@ -340,14 +339,17 @@
 }
 .cancelledStatus p{
   color: #E54842;
+  background-color: #E548421A;
 }
 
 .deliveredStatus p{
-  color: #6C7A5F;
+  color: #47890D;
+  background-color: #47890D26;
 }
 
 .ongoingStatus p{
-  color: #FFA500;
+  color: #D0892F;
+  background-color: #D0892F1A;
 }
 
 /* ── Modal shared overlay ── */

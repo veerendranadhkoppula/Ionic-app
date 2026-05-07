@@ -239,13 +239,16 @@ await drawLogo(doc, rm, 22);
 
   // ── ITEMS TABLE ───────────────────────────────────────────────────────────
   const amount = (sub.unitPrice * sub.quantity).toFixed(0);
+  const itemDescription = sub.bagAmount
+    ? `${sub.itemName}\n${sub.bagAmount} bags per delivery`
+    : sub.itemName;
 
   autoTable(doc, {
     startY      : y,
     margin      : { left: lm, right: 20 },
     head        : [["Description", "Frequency", "Qty", "Unit Price", "Amount"]],
     body        : [[
-      sub.itemName,
+      itemDescription,
       sub.deliveryFrequency,
       String(sub.quantity),
       `AED${sub.unitPrice.toFixed(0)}`,
@@ -520,12 +523,21 @@ export async function generateShopInvoice(
   y += 8;
 
   // ── ITEMS TABLE ───────────────────────────────────────────────────────────
-  const tableBody = order.items.map((item) => [
-    item.productName + (item.variantName ? ` — ${item.variantName}` : ""),
-    String(item.quantity),
-    `AED${item.price.toFixed(0)}`,
-    `AED ${(item.price * item.quantity).toFixed(0)}`,
-  ]);
+  const tableBody = order.items.map((item) => {
+    let desc = item.productName + (item.variantName ? ` — ${item.variantName}` : "");
+    if (item.productHighlights && item.productHighlights.length > 0) {
+      const highlightStr = item.productHighlights
+        .map((h) => `${h.sectionTitle}: ${h.selectedPoint}`)
+        .join(", ");
+      desc += `\n${highlightStr}`;
+    }
+    return [
+      desc,
+      String(item.quantity),
+      `AED${item.price.toFixed(0)}`,
+      `AED ${(item.price * item.quantity).toFixed(0)}`,
+    ];
+  });
 
   autoTable(doc, {
     startY      : y,

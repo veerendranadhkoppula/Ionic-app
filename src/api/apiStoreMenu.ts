@@ -9,6 +9,11 @@ export interface SubFreq {
   interval: string;
 }
 
+export interface BagAmountOption {
+  id: string;
+  amount: string;
+}
+
 export interface StoreVariant {
   id: string;
   variantName: string;
@@ -20,6 +25,7 @@ export interface StoreVariant {
   hasVariantSub: boolean;
   subscriptionDiscount: number;
   subFreq: SubFreq[];
+  bagAmountOptions: BagAmountOption[];
 }
 
 export interface BrewGuide {
@@ -77,6 +83,17 @@ export interface WebSubCategoryDoc {
   level1: SubCatLevel1[];
 }
 
+// ─── Product Highlights types ─────────────────────────────────────────────────
+
+export interface ProductHighlightItem {
+  point: string;
+}
+
+export interface ProductHighlight {
+  sectionTitle: string;
+  items: ProductHighlightItem[];
+}
+
 // ─── Main product type ────────────────────────────────────────────────────────
 
 export interface StoreProduct {
@@ -99,6 +116,7 @@ export interface StoreProduct {
   hasSimpleSub: boolean;
   subscriptionDiscount: number | null;
   subFreq: SubFreq[];
+  bagAmountOptions: BagAmountOption[];
 
   // Media
   productImage: { url: string; thumbnailURL?: string };
@@ -120,6 +138,7 @@ export interface StoreProduct {
   finish: string;
   brewing: string;
   brewGuide: BrewGuide;
+  productHighlights: ProductHighlight[];
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -252,6 +271,10 @@ function mapDocToProduct(doc: Record<string, unknown>): StoreProduct {
         duration: Number((s as { duration?: unknown }).duration ?? 0),
         interval: String((s as { interval?: unknown }).interval ?? ""),
       })),
+      bagAmountOptions: (variant.bagAmountOptions ?? []).map((b: Record<string, unknown>) => ({
+        id: String(b.id ?? ""),
+        amount: String(b.amount ?? ""),
+      })),
     };
   });
 
@@ -289,6 +312,10 @@ function mapDocToProduct(doc: Record<string, unknown>): StoreProduct {
       duration: Number((s as { duration?: unknown }).duration ?? 0),
       interval: String((s as { interval?: unknown }).interval ?? ""),
     })),
+    bagAmountOptions: (d.bagAmountOptions ?? []).map((b: Record<string, unknown>) => ({
+      id: String(b.id ?? ""),
+      amount: String(b.amount ?? ""),
+    })),
 
     productImage: { url: imageUrl, thumbnailURL: d.productImage?.thumbnailURL ? resolveImageUrl(String(d.productImage.thumbnailURL)) : undefined },
 
@@ -312,5 +339,11 @@ function mapDocToProduct(doc: Record<string, unknown>): StoreProduct {
     finish: String(d.finish ?? ""),
     brewing: String(d.brewing ?? ""),
     brewGuide,
+    productHighlights: (d.productHighlights ?? []).map((h: Record<string, unknown>) => ({
+      sectionTitle: String(h.sectionTitle ?? ""),
+      items: (Array.isArray(h.items) ? h.items : []).map((item: Record<string, unknown>) => ({
+        point: String(item.point ?? ""),
+      })),
+    })),
   };
 }

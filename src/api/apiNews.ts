@@ -49,11 +49,11 @@ function mapBlogDoc(d: any): NewsArticle {
   return {
     id: d.id,
     title: d.title ?? "",
-    tagline: d.meta?.description ?? d.tagline ?? "",
+    tagline: d.meta?.description ?? d.tagline ?? d.description ?? "",
     minutesToRead: `${d.readTime ?? 1} min read`,
     date: formattedDate,
     image: imageUrl,
-    content: plainContent,
+    content: plainContent || d.description || "",
     isFeatured: d.isFeatured ?? false,
     slug: d.slug ?? String(d.id),
   };
@@ -81,6 +81,17 @@ export async function getBlogs(): Promise<NewsArticle[]> {
   return docs.map(mapBlogDoc);
 }
 
+export async function getFeaturedNews(): Promise<NewsArticle[]> {
+  const res = await fetch(`${API_BASE}/featured-news?sort=-createdAt&limit=50`, {
+    method: "GET",
+  });
+
+  if (!res.ok) throw new Error(`Featured news fetch failed: ${res.status}`);
+
+  const data = await res.json();
+  const docs: any[] = data?.docs ?? [];
+  return docs.map(mapBlogDoc);
+}
 
 export async function getBlogById(id: number): Promise<NewsArticle> {
   const res = await fetch(`${API_BASE}/blogs/${id}?depth=1`, {

@@ -37,6 +37,7 @@ const Home: React.FC = () => {
   // Shop open/close state for showing CafeClose on the home screen
   const [shopClosed, setShopClosed] = useState(false);
   const [openingTime, setOpeningTime] = useState<string | null>(null);
+  const [hasBanners, setHasBanners] = useState(true);
   const user = getCurrentUser();
 
   useEffect(() => {
@@ -95,9 +96,13 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen className="home-content">
   {shopClosed && <CafeClose openingTime={openingTime} />}
-        <Banner currentPage="Home"/>
+        <Banner currentPage="Home" onBannersResolved={setHasBanners}/>
   {/* <DevNote /> */}
-  {!user?.isGuest && <RewardsSection />}
+  {!user?.isGuest && (
+    <div style={{ paddingTop: hasBanners ? undefined : '24px' }}>
+      <RewardsSection />
+    </div>
+  )}
         <CafeShopCat />
         <CafeCategories />
         <ShopCategories />

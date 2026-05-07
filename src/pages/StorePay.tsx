@@ -7,8 +7,8 @@ import { getWebOrderById } from "../api/apiStoreOrders";
 import "./Home.css";
 import TopSection from "../components/StorePay/TopSection/TopSection";
 import Express from "../components/StorePay/Express/Express";
-import { storeCheckout } from "../api/apiStoreCart";
-import { clearStoreCart } from "../api/apiStoreCart";
+import { storeCheckout, clearStoreCart } from "../api/apiStoreCart";
+import type { SelectedProductHighlight } from "../api/apiStoreCart";
 import { subscriptionCheckout, SubscriptionCheckoutPayload } from "../api/apiStoreSubscription";
 import tokenStorage from "../utils/tokenStorage";
 import type { StorePayState } from "./StoreCheckout";
@@ -103,10 +103,17 @@ const StorePay: React.FC = () => {
             shippingAddressAsBillingAddress: _shippingAsBilling,
             email                         : subState.userEmail,
             product: {
-              productId     : subState.productId,
-              variantId     : subState.variantId ?? null,
-              subscriptionId: subState.subscriptionId,
-              quantity      : subState.quantity,
+              productId        : subState.productId,
+              variantId        : subState.variantId ?? null,
+              subscriptionId   : subState.subscriptionId,
+              quantity         : subState.quantity,
+              bagAmountID      : subState.bagAmountId ?? null,
+              ...(subState.productHighlights && subState.productHighlights.length > 0
+                ? { productHighlights: subState.productHighlights.map((h: SelectedProductHighlight) => ({
+                    sectionTitle: h.sectionTitle,
+                    items: [{ point: h.selectedPoint }],
+                  })) }
+                : {}),
             },
             useWTCoins: subState.useWTCoins,
           };
@@ -290,6 +297,7 @@ const StorePay: React.FC = () => {
                 backendShippingCharge: subShippingCharge,
                 backendTax     : subTax,
                 backendTotal   : subGrandTotal,
+                bagAmount      : subState!.bagAmount,
               } : undefined}
               onPaymentSuccess={handlePaymentSuccess}
             />

@@ -4,43 +4,50 @@ import { getCurrentUser } from "../../../utils/authStorage";
 import UserQRCode from "../UserQRCode";
 import { getEarningTransactions, EarningTransaction } from "../../../api/apiStamps";
 import { getToken } from "../../../utils/tokenStorage";
+import emptyImg from "./1.png";
 
 const Earnings = () => {
   const [activeTab, setActiveTab] = useState<"scan" | "transactions">("scan");
   const [transactions, setTransactions] = useState<EarningTransaction[]>([]);
   const [loading, setLoading] = useState(false);
-  // Transactions are not selectable/clickable UI — implement paginated reveal (5 at a time).
-  const [visibleCount, setVisibleCount] = useState<number>(5);
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  // Increment refreshKey on every mount so switching to this screen always re-fetches
-  useEffect(() => {
-    setRefreshKey((k) => k + 1);
-  }, []);
 
   useEffect(() => {
     if (activeTab !== "transactions") return;
+
     let cancelled = false;
     setLoading(true);
-    getToken().then((token) =>
-      getEarningTransactions(token).then((data) => {
-        if (!cancelled) {
-          setTransactions(data);
-          setLoading(false);
-        }
-      }).catch(() => { if (!cancelled) setLoading(false); })
-    );
-    return () => { cancelled = true; };
-  }, [activeTab, refreshKey]);
+
+    getToken()
+      .then((token) =>
+        getEarningTransactions(token)
+          .then((data) => {
+            if (!cancelled) {
+              setTransactions(data);
+              setLoading(false);
+            }
+          })
+          .catch(() => {
+            if (!cancelled) setLoading(false);
+          })
+      );
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab]);
 
   return (
     <div className={styles.main}>
       <div className={styles.MainContainer}>
+
+        {/* ---------- TABS ---------- */}
         <div className={styles.top}>
           <div className={styles.tabs}>
             <button
               className={
-                activeTab === "scan" ? styles.activeTab : styles.inactiveTab
+                activeTab === "scan"
+                  ? styles.activeTab
+                  : styles.inactiveTab
               }
               onClick={() => setActiveTab("scan")}
             >
@@ -58,10 +65,14 @@ const Earnings = () => {
               TRANSACTIONS
             </button>
           </div>
-          <div className={styles.line}></div>
+
+          <div className={styles.fullLine}></div>
         </div>
 
+        {/* ---------- CONTENT ---------- */}
         <div className={styles.bottom}>
+
+          {/* SCAN TAB */}
           {activeTab === "scan" && (
             <div className={styles.scanContainer}>
               <div className={styles.ScanDetails}>
@@ -71,8 +82,6 @@ const Earnings = () => {
 
               <div className={styles.ScanCode}>
                 <div className={styles.QRContainer}>
-                  {/* Render QR code for logged-in user: reward_user_<userId>
-                      If guest or not logged in, show a friendly message */}
                   {(() => {
                     const user = getCurrentUser();
                     if (!user || user.isGuest) {
@@ -86,72 +95,69 @@ const Earnings = () => {
                     return <UserQRCode userId={user.id} />;
                   })()}
                 </div>
-                <p>{getCurrentUser()?.id ? `reward_user_${getCurrentUser()?.id}` : ""}</p>
+
+                <p>
+                  {getCurrentUser()?.id
+                    ? `reward_user_${getCurrentUser()?.id}`
+                    : ""}
+                </p>
               </div>
             </div>
           )}
 
+          {/* TRANSACTIONS TAB */}
           {activeTab === "transactions" && (
-            <div className={styles.transhistoryContainer}>
+            <>
+              <h3 className={styles.heading}>Recent Activity</h3>
+
               {loading ? (
-                <div className={styles.transhistoryContainer}>
+                <div className={styles.list}>
                   {[1, 2, 3].map((n) => (
-                    <div className={styles.skeletonCard} key={n}>
-                      <div className={styles.skeletonLeft}>
-                        <div className={`${styles.skeletonBase} ${styles.skeletonTag}`} />
-                        <div className={`${styles.skeletonBase} ${styles.skeletonTitle}`} />
-                        <div className={`${styles.skeletonBase} ${styles.skeletonOrderId}`} />
+                    <div key={n} className={styles.card}>
+                      <div className={styles.left}>
+                        <h4>Loading...</h4>
+                        <p>Fetching data</p>
                       </div>
-                      <div className={styles.skeletonRight}>
-                        <div className={`${styles.skeletonBase} ${styles.skeletonAmount}`} />
-                        <div className={`${styles.skeletonBase} ${styles.skeletonDate}`} />
+                      <div className={styles.right}>
+                        <h4>--</h4>
+                        <p>--</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : transactions.length === 0 ? (
-                <p className={styles.emptyText}>No transactions yet.</p>
+                <div className={styles.emptyState}>
+                  <p className={styles.emptyText}>No transactions yet</p>
+                </div>
               ) : (
-                // show only visibleCount items and make cards non-clickable
-                transactions.slice(0, visibleCount).map((item) => (
-                  <div key={item.id} className={styles.transhistoryCard}>
-                    <div className={styles.transhistoryCardLeft}>
-                      <div className={styles.Ordertype}>
-                        <p>{item.orderType}</p>
-                      </div>
-
-                      <div className={styles.OrderDetails}>
+                <div className={styles.list}>
+                  {transactions.map((item) => (
+                    <div key={item.id} className={styles.card}>
+                      <div className={styles.left}>
                         <h4>{item.title}</h4>
-                        <p>Order {item.orderId}</p>
-                      </div>
-                    </div>
-
-                    <div className={styles.transhistoryCardRight}>
-                      <div
-                        className={
-                          item.isPositive
-                            ? styles.statusPositive
-                            : styles.statusNegative
-                        }
-                      >
-                        <p>{item.amount}</p>
+                        <p>Order #{item.orderId}</p>
                       </div>
 
-                      <div className={styles.dateandtime}>
+                      <div className={styles.right}>
+                        <h4
+                          className={
+                            item.isPositive
+                              ? styles.positive
+                              : styles.negative
+                          }
+                        >
+                          {item.amount}
+                        </h4>
+
                         <p>{item.date}</p>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-              {/* View more link - reveal 5 more per click, matching orders UX */}
-              {activeTab === "transactions" && transactions.length > visibleCount && (
-                <div className={styles.viewMoreContainer}>
-                  <p className={styles.viewMore} onClick={() => setVisibleCount((v) => v + 5)}>View more</p>
+                  ))}
                 </div>
               )}
-            </div>
+            </>
           )}
+
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./SubScribeBottomSheet.module.css";
-import { StoreProduct, StoreVariant, SubFreq } from "../../../api/apiStoreMenu";
+import { StoreProduct, StoreVariant, SubFreq, BagAmountOption } from "../../../api/apiStoreMenu";
+import { SelectedProductHighlight } from "../../../api/apiStoreCart";
 import { useHistory } from "react-router-dom";
 import tokenStorage from "../../../utils/tokenStorage";
 
@@ -20,6 +21,9 @@ export interface SubScriptionCheckoutRouteState {
   quantity: number;
   unitPrice: number;
   userEmail: string;
+  productHighlights?: SelectedProductHighlight[];
+  bagAmountId?: string;  // Payload row ID — sent to backend as bagAmountID
+  bagAmount?: string;    // display value e.g. "2x" — for UI only
 }
 
 const formatFreq = (freq: SubFreq): string => {
@@ -49,7 +53,6 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
     resolveInitialVariant
   );
 
-
   const freqOptions: SubFreq[] = isVariant
     ? selectedVariant?.subFreq ?? []
     : product.subFreq;
@@ -58,13 +61,34 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
     freqOptions[0]?.id ?? ""
   );
 
+  const bagAmountOptions: BagAmountOption[] = isVariant
+    ? selectedVariant?.bagAmountOptions ?? []
+    : product.bagAmountOptions ?? [];
 
+  const [selectedBagAmountId, setSelectedBagAmountId] = useState<string>(
+    bagAmountOptions[0]?.id ?? ""
+  );
+
+  // Product highlights — default-select first item per section
+  const [selectedHighlights, setSelectedHighlights] = useState<SelectedProductHighlight[]>(
+    (product.productHighlights ?? []).map((section) => ({
+      sectionTitle: section.sectionTitle,
+      selectedPoint: section.items[0]?.point ?? "",
+    }))
+  );
+
+  // When variant changes, reset freq and bag amount to first valid option
   useEffect(() => {
     if (!isVariant) return;
     const newFreqs = selectedVariant?.subFreq ?? [];
-    const stillValid = newFreqs.some((f) => f.id === selectedFreqId);
-    if (!stillValid) {
+    const stillValidFreq = newFreqs.some((f) => f.id === selectedFreqId);
+    if (!stillValidFreq) {
       setSelectedFreqId(newFreqs[0]?.id ?? "");
+    }
+    const newBagOpts = selectedVariant?.bagAmountOptions ?? [];
+    const stillValidBag = newBagOpts.some((b) => b.id === selectedBagAmountId);
+    if (!stillValidBag) {
+      setSelectedBagAmountId(newBagOpts[0]?.id ?? "");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariant]);
@@ -74,17 +98,24 @@ const SubScribeBottomSheet = ({ product, initialVariantId, onClose }: Props) => 
     setTimeout(onClose, 300);
   };
 
+  const handleSelectHighlight = (sectionTitle: string, point: string) => {
+    setSelectedHighlights((prev) =>
+      prev.map((h) => h.sectionTitle === sectionTitle ? { ...h, selectedPoint: point } : h)
+    );
+  };
+
   const handleStartSubscription = async () => {
-      console.log("variant full data:", JSON.stringify(selectedVariant));
-  console.log("product full data:", JSON.stringify({ salePrice: product.salePrice, regularPrice: product.regularPrice }));
+    console.log("variant full data:", JSON.stringify(selectedVariant));
+    console.log("product full data:", JSON.stringify({ salePrice: product.salePrice, regularPrice: product.regularPrice }));
     const selectedFreq = freqOptions.find((f) => f.id === selectedFreqId);
     if (!selectedFreq) return;
 
     const freqLabel = formatFreq(selectedFreq);
-const unitPrice = isVariant && selectedVariant
-  ? (selectedVariant.variantSalePrice > 0 ? selectedVariant.variantSalePrice : selectedVariant.variantRegularPrice) ?? 0
-  : (product.salePrice && product.salePrice > 0 ? product.salePrice : product.regularPrice) ?? 0;
-console.log("selectedVariant full:", JSON.stringify(selectedVariant));
+    const unitPrice = isVariant && selectedVariant
+      ? (selectedVariant.variantSalePrice > 0 ? selectedVariant.variantSalePrice : selectedVariant.variantRegularPrice) ?? 0
+      : (product.salePrice && product.salePrice > 0 ? product.salePrice : product.regularPrice) ?? 0;
+    console.log("selectedVariant full:", JSON.stringify(selectedVariant));
+
     let userEmail = "";
     try {
       const storedEmail = await tokenStorage.getItem("user_email");
@@ -92,6 +123,11 @@ console.log("selectedVariant full:", JSON.stringify(selectedVariant));
     } catch {
       userEmail = "";
     }
+
+    const currentBagOpts = isVariant
+      ? (selectedVariant?.bagAmountOptions ?? [])
+      : (product.bagAmountOptions ?? []);
+    const selectedBagOpt = currentBagOpts.find((b) => b.id === selectedBagAmountId);
 
     const state: SubScriptionCheckoutRouteState = {
       productId: product.id,
@@ -103,6 +139,9 @@ console.log("selectedVariant full:", JSON.stringify(selectedVariant));
       quantity: 1,
       unitPrice,
       userEmail,
+      productHighlights: selectedHighlights.length > 0 ? selectedHighlights : undefined,
+      bagAmountId: selectedBagOpt?.id,
+      bagAmount: selectedBagOpt ? `${selectedBagOpt.amount}x` : undefined,
     };
 
     history.push("/SubScriptionCheckout", state);
@@ -119,8 +158,6 @@ console.log("selectedVariant full:", JSON.stringify(selectedVariant));
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.MainContainer}>
-
-
           <div className={styles.Top}>
             <div className={styles.subscrihead}>
               <div className={styles.subscripheadtext}>
@@ -143,7 +180,6 @@ console.log("selectedVariant full:", JSON.stringify(selectedVariant));
             </div>
             <div className={styles.line} />
           </div>
-
 
           <div className={styles.Middle}>
 
@@ -201,13 +237,71 @@ console.log("selectedVariant full:", JSON.stringify(selectedVariant));
               </div>
             )}
 
-          </div>
+            {bagAmountOptions.length > 0 && (
+              <div className={styles.BagContainer}>
+                <div className={styles.BagTitle}>
+                  <h3>Bag Amount</h3>
+                  <p>Required</p>
+                </div>
+                <div className={styles.Bagqntyselect}>
+                  {bagAmountOptions.map((opt) => (
+                    <div
+                      key={opt.id}
+                      className={styles.Bagqntyselectbtn}
+                      onClick={() => setSelectedBagAmountId(opt.id)}
+                    >
+                      <h3>{opt.amount}x bags per delivery</h3>
+                      <input
+                        type="radio"
+                        name="bagAmount"
+                        value={opt.id}
+                        checked={selectedBagAmountId === opt.id}
+                        onChange={() => setSelectedBagAmountId(opt.id)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
+            {/* Product highlights selector */}
+            {(product.productHighlights ?? []).map((section) => {
+              const selectedPoint = selectedHighlights.find(
+                (h) => h.sectionTitle === section.sectionTitle
+              )?.selectedPoint ?? "";
+              return (
+                <div key={section.sectionTitle} className={styles.BagContainer}>
+                  <div className={styles.BagTitle}>
+                    <h3>{section.sectionTitle}</h3>
+                    <p>Required</p>
+                  </div>
+                  <div className={styles.Bagqntyselect}>
+                    {section.items.map((item) => (
+                      <div
+                        key={item.point}
+                        className={styles.Bagqntyselectbtn}
+                        onClick={() => handleSelectHighlight(section.sectionTitle, item.point)}
+                      >
+                        <h3>{item.point}</h3>
+                        <input
+                          type="radio"
+                          name={`highlight_${section.sectionTitle}`}
+                          value={item.point}
+                          checked={selectedPoint === item.point}
+                          onChange={() => handleSelectHighlight(section.sectionTitle, item.point)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+
+          </div>
 
           <div className={styles.Bottom}>
             <button className={styles.stsubscribe} onClick={handleStartSubscription}>Start Subscription</button>
           </div>
-
         </div>
       </div>
     </div>

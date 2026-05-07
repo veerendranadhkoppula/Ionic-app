@@ -9,6 +9,7 @@ import {
   StoreVariant,
   SubCatLevel1,
 } from "../../../api/apiStoreMenu";
+import { SelectedProductHighlight } from "../../../api/apiStoreCart";
 import StoreBottomSheet from "../StoreBottomSheet/StoreBottomSheet";
 import AddBottomSheet from "../AddBottomSheet/AddBottomSheet";
 import SubScribeBottomSheet from "../SubScribeBottomSheet/SubScribeBottomSheet";
@@ -50,6 +51,7 @@ const StoreMain = ({
     quantity: number;
     variant: StoreVariant | null;
     unitPrice: number;
+    selectedHighlights: SelectedProductHighlight[];
   } | null>(null);
 
   // ── handleAddToCart — called by AddBottomSheet ─────────────────────────────
@@ -59,6 +61,7 @@ const StoreMain = ({
       quantity: number,
       variant: StoreVariant | null,
       unitPrice: number,
+      selectedHighlights: SelectedProductHighlight[],
     ) => {
       console.log(
         `🛍️ [StoreMain] handleAddToCart — productId=${productId} qty=${quantity} variant=${
@@ -84,7 +87,7 @@ const StoreMain = ({
 
       if (!storeAlreadyHasItems && genuineCafeItems.length > 0) {
         // Conflict: real cafe items exist, user is trying to start a store cart
-        pendingAddRef.current = { productId, quantity, variant, unitPrice };
+        pendingAddRef.current = { productId, quantity, variant, unitPrice, selectedHighlights };
         setConflictVisible(true);
         return;
       }
@@ -95,6 +98,7 @@ const StoreMain = ({
         variant?.id,
         variant?.variantName,
         unitPrice,
+        selectedHighlights,
       );
     },
     [cafeCart, storeCart, storeCartCount, addToStoreCart],
@@ -113,6 +117,7 @@ const StoreMain = ({
       pending.variant?.id,
       pending.variant?.variantName,
       pending.unitPrice,
+      pending.selectedHighlights,
     );
   }, [clearCafeCart, addToStoreCart]);
 

@@ -95,7 +95,7 @@ const Login: React.FC = () => {
         const firstName = url.searchParams.get("firstName") || "";
         const lastName = url.searchParams.get("lastName") || "";
         await handleAppleSuccess({
-          identityToken: token,
+          idToken: token,
           profile: { givenName: firstName, familyName: lastName },
         });
       } catch (e) {
@@ -172,7 +172,7 @@ const Login: React.FC = () => {
   const handleAppleSuccess = async (appleResult: any) => {
     try {
       setLoading(true);
-      const identityToken = appleResult?.identityToken ?? appleResult?.accessToken?.token;
+      const identityToken = appleResult?.idToken;
       if (!identityToken) throw new Error("No Apple identity token received");
 
       const givenName = appleResult?.profile?.givenName ?? appleResult?.given_name ?? "";

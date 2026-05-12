@@ -99,7 +99,17 @@
 }
 .TwoBottom{
     display: flex;
+    flex-direction: column;
     justify-content: left;
+    gap: 8px;
+}
+.TwoBottom p{
+    font-size: 12px;
+    margin: 0;
+    color: #4B3827;
+    font-weight: 400;
+    font-family: var(--lato);
+    line-height: 140%;
 }
 .BulletList{
     display: flex;
@@ -119,6 +129,12 @@
     display: flex;
     justify-content: left;
     flex-direction: column;
+}
+.ContactLink {
+    font-size: 12px;
+    color: #4B3827;
+    font-family: var(--lato);
+    text-decoration: underline;
 }
 .ThreeBottom p{
     font-size: 12px;

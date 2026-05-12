@@ -1,0 +1,199 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 99999;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.overlayClose {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  width: 100%;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow: hidden;
+  transform: translateY(100%);
+  animation: slideUp 0.3s ease forwards;
+}
+
+.close {
+  animation: slideDown 0.3s ease forwards;
+}
+
+/* ── Close icon ────────────────────────────────────────────────────────────── */
+.closeIcon {
+  display: flex;
+  justify-content: flex-end;
+  padding: 9px 17px 0 17px;
+  cursor: pointer;
+}
+
+/* ── Title section ─────────────────────────────────────────────────────────── */
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 24px 16px 24px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: #8C8C8C;
+  font-family: var(--lato);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Divider ───────────────────────────────────────────────────────────────── */
+.divider {
+  width: calc(100% - 48px);
+  height: 1px;
+  background-color: rgba(140, 140, 140, 0.2);
+  margin: 0 24px;
+}
+
+/* ── Input section ─────────────────────────────────────────────────────────── */
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 24px 8px 24px;
+}
+
+.inputLabel {
+  font-size: 13px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid rgba(140, 140, 140, 0.4);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  background: #ffffff;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #6C7A5F;
+}
+
+.phoneRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid rgba(140, 140, 140, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.phoneRow:focus-within {
+  border-color: #6C7A5F;
+}
+
+.countryCode {
+  padding: 12px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  background-color: #f7f7f7;
+  border-right: 1px solid rgba(140, 140, 140, 0.2);
+  flex-shrink: 0;
+}
+
+.phoneInput {
+  flex: 1;
+  padding: 12px 14px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4B3827;
+  font-family: var(--lato);
+  background: #ffffff;
+  min-width: 0;
+}
+
+.errorText {
+  font-size: 12px;
+  font-weight: 400;
+  color: #A83434;
+  font-family: var(--lato);
+  margin: 0;
+}
+
+/* ── Bottom / confirm button ───────────────────────────────────────────────── */
+.bottomSection {
+  padding: 16px 24px 37px 24px;
+}
+
+.confirmBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid #6C7A5F;
+  background-color: #6C7A5F;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--lato);
+  line-height: 24px;
+}
+
+.confirmBtnDisabled {
+  background-color: #f2f2f2 !important;
+  border-color: #d9d9d9 !important;
+  color: #8c8c8c !important;
+  cursor: not-allowed !important;
+}
+
+/* ── Animations (same as AddBottomSheet) ───────────────────────────────────── */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0%); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(0%); }
+  to   { transform: translateY(100%); }
+}
+
+@keyframes fadeIn {
+  from { background: rgba(0, 0, 0, 0); }
+  to   { background: rgba(0, 0, 0, 0.4); }
+}
+
+@keyframes fadeOut {
+  from { background: rgba(0, 0, 0, 0.4); }
+  to   { background: rgba(0, 0, 0, 0); }
+}

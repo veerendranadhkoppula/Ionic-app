@@ -12,6 +12,7 @@ import SubScriptionOrderSummary from "../components/SubScriptionCheckout/SubScri
 import { DeliveryState } from "../components/SubScriptionCheckout/Delivery/Delivery";
 import { mapToSubscriptionAddress } from "../api/apiStoreSubscription";
 import tokenStorage from "../utils/tokenStorage";
+import MissingInfoSheet from "../components/MissingInfoSheet/MissingInfoSheet";
 import { getShipAndTax, ShipAndTax } from "../api/apiCafe";
 import { getWtCoinsConfig } from "../api/apiCoins";
 import { SubScriptionCheckoutRouteState } from "../components/StoreMenu/SubScribeBottomSheet/SubScribeBottomSheet";
@@ -119,6 +120,8 @@ console.log("unitPrice:", unitPrice);
     ),
   );
 
+  const [pendingField, setPendingField] = useState<"email" | "phone" | null>(null);
+
   const handlePay = async () => {
     if (!state) return;
 
@@ -126,6 +129,18 @@ console.log("unitPrice:", unitPrice);
     if (!token) {
       // Guest: redirect to auth so they can sign in / sign up before payment.
       history.push("/auth");
+      return;
+    }
+
+    // Ensure email and phone are filled before proceeding.
+    const storedEmail = await tokenStorage.getItem("user_email");
+    if (!storedEmail) {
+      setPendingField("email");
+      return;
+    }
+    const storedPhone = await tokenStorage.getItem("user_mobile");
+    if (!storedPhone) {
+      setPendingField("phone");
       return;
     }
 
@@ -179,6 +194,11 @@ console.log("unitPrice:", unitPrice);
     history.push("/StorePay", payState);
   };
 
+  const handleFieldSaved = () => {
+    setPendingField(null);
+    handlePay();
+  };
+
   return (
     <IonPage>
       <IonHeader slot="fixed">
@@ -226,6 +246,13 @@ console.log("unitPrice:", unitPrice);
         <div id="subscription-checkout-footer-overlays" style={{ position: "relative", width: "100%", height: 0 }} />
         
       </IonFooter>
+      {pendingField && (
+        <MissingInfoSheet
+          field={pendingField}
+          onClose={() => setPendingField(null)}
+          onSaved={handleFieldSaved}
+        />
+      )}
     </IonPage>
   );
 };

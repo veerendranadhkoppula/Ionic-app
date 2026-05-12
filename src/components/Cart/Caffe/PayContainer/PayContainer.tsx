@@ -8,6 +8,7 @@ import { getShipAndTax } from "../../../../api/apiCafe";
 import { getUserWtCoins, getWtCoinsConfig } from "../../../../api/apiCoins";
 import tokenStorage from "../../../../utils/tokenStorage";
 import useAuth from "../../../../utils/useAuth";
+import MissingInfoSheet from "../../../MissingInfoSheet/MissingInfoSheet";
 
 const PayContainer = () => {
   const history = useHistory();
@@ -30,6 +31,7 @@ const PayContainer = () => {
   const [pointsToAed, setPointsToAed] = useState<number>(10);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingField, setPendingField] = useState<"email" | "phone" | null>(null);
   
 
   useEffect(() => {
@@ -82,6 +84,20 @@ const PayContainer = () => {
       history.push("/auth");
       return;
     }
+
+    // Before proceeding to checkout, ensure the user has both email and phone
+    // on their profile. Apple/social logins may be missing one or both fields.
+    const storedEmail = await tokenStorage.getItem("user_email");
+    if (!storedEmail) {
+      setPendingField("email");
+      return;
+    }
+    const storedPhone = await tokenStorage.getItem("user_mobile");
+    if (!storedPhone) {
+      setPendingField("phone");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {
@@ -178,8 +194,20 @@ const PayContainer = () => {
     }
   };
 
+  const handleFieldSaved = () => {
+    setPendingField(null);
+    handlePay();
+  };
+
   return (
     <>
+      {pendingField && (
+        <MissingInfoSheet
+          field={pendingField}
+          onClose={() => setPendingField(null)}
+          onSaved={handleFieldSaved}
+        />
+      )}
       {error && (
         <div style={{ background: "#FFF3F3", padding: "8px 24px", textAlign: "center" }}>
           <p style={{ color: "#A83434", fontFamily: "var(--lato)", fontSize: 12, margin: 0 }}>{error}</p>

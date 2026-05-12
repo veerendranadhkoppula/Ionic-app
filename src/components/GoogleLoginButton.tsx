@@ -22,6 +22,8 @@ const GoogleLoginButton: React.FC<GoogleLoginProps> = ({
           google: {
             webClientId:
               "134359262850-c4g1hsnecjtkc7f2kr2l4q1j0gpqcrog.apps.googleusercontent.com",
+            iOSClientId:
+              "134359262850-oj7mlbl3n9nhso764nee8v8vdn6p5l9c.apps.googleusercontent.com",
             mode: "online",
           },
         });

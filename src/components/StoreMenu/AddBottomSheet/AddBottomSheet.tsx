@@ -35,6 +35,8 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
     }))
   );
 
+  const isVariantOutOfStock = product.hasVariantOptions && selectedVariant != null && !selectedVariant.variantInStock;
+
   const unitPrice: number = product.hasVariantOptions
     ? selectedVariant
       ? (selectedVariant.variantSalePrice > 0 ? selectedVariant.variantSalePrice : selectedVariant.variantRegularPrice)
@@ -115,8 +117,8 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
                   return (
                     <div
                       key={variant.id}
-                      className={styles.variantRow}
-                      onClick={() => setSelectedVariant(variant)}
+                      className={`${styles.variantRow} ${!variant.variantInStock ? styles.variantRowOutOfStock : ""}`}
+                      onClick={() => { if (variant.variantInStock) setSelectedVariant(variant); }}
                     >
                       <span className={styles.variantName}>{variant.variantName} gm</span>
                       <div className={styles.variantRight}>
@@ -176,9 +178,10 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
               </button>
             )}
             <button
-              className={`${styles.addtocart} ${isAdded ? styles.added : ""}`}
+              className={`${styles.addtocart} ${isAdded ? styles.added : ""} ${isVariantOutOfStock ? styles.addtocartDisabled : ""}`}
+              disabled={isVariantOutOfStock}
               onClick={() => {
-                if (isAdded) return;
+                if (isAdded || isVariantOutOfStock) return;
                 setIsAdded(true);
                 setTimeout(() => {
                   onAddToCart(product.id, quantity, selectedVariant, unitPrice, selectedHighlights);
@@ -186,7 +189,7 @@ const AddBottomSheet = ({ product, onClose, onSubscribe, onAddToCart }: Props) =
                 }, 500);
               }}
             >
-              {isAdded ? "✓ Added" : "Add to Cart"}
+              {isAdded ? "✓ Added" : isVariantOutOfStock ? "Out of Stock" : "Add to Cart"}
             </button>
           </div>
         </div>

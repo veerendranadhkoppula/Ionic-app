@@ -113,14 +113,14 @@ const Earnings = () => {
               {loading ? (
                 <div className={styles.list}>
                   {[1, 2, 3].map((n) => (
-                    <div key={n} className={styles.card}>
-                      <div className={styles.left}>
-                        <h4>Loading...</h4>
-                        <p>Fetching data</p>
+                    <div key={n} className={styles.skeletonCard}>
+                      <div className={styles.skeletonLeft}>
+                        <div className={styles.skeletonTitle} />
+                        <div className={styles.skeletonOrderId} />
                       </div>
-                      <div className={styles.right}>
-                        <h4>--</h4>
-                        <p>--</p>
+                      <div className={styles.skeletonRight}>
+                        <div className={styles.skeletonAmount} />
+                        <div className={styles.skeletonDate} />
                       </div>
                     </div>
                   ))}

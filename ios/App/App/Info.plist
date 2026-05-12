@@ -57,5 +57,14 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.134359262850-oj7mlbl3n9nhso764nee8v8vdn6p5l9c</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

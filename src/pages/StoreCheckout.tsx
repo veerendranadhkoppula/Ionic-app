@@ -23,6 +23,7 @@ import { getShipAndTax, ShipAndTax } from "../api/apiCafe";
 import { getUserWtCoins, getWtCoinsConfig } from "../api/apiCoins";
 import type { StoreCheckoutAddress } from "../api/apiStoreCart";
 import cartStyles from "./Cart.module.css";
+import MissingInfoSheet from "../components/MissingInfoSheet/MissingInfoSheet";
 
 export interface StorePayState {
   toPay: number;
@@ -55,6 +56,8 @@ const StoreCheckout: React.FC = () => {
   useEffect(() => {
     tokenStorage.getItem("user_email").then((e) => setUserEmail(e ?? ""));
   }, []);
+
+  const [pendingField, setPendingField] = useState<"email" | "phone" | null>(null);
 
   const { isLoggedIn } = useAuth();
 
@@ -238,6 +241,56 @@ const StoreCheckout: React.FC = () => {
     }
   }, [appliedCoupon, itemsTotal]);
 
+  const handleProceed = async () => {
+    if (!isLoggedIn) {
+      history.push("/auth");
+      return;
+    }
+    if (!deliveryMode) return;
+
+    // Ensure email and phone are filled before proceeding.
+    // Apple/social logins may be missing one or both fields.
+    const storedEmail = await tokenStorage.getItem("user_email");
+    if (!storedEmail) {
+      setPendingField("email");
+      return;
+    }
+    const storedPhone = await tokenStorage.getItem("user_mobile");
+    if (!storedPhone) {
+      setPendingField("phone");
+      return;
+    }
+
+    const state: StorePayState = {
+      toPay,
+      deliveryMode: deliveryMode as "ship" | "pickup",
+      shippingAddress,
+      billingAddress,
+      shippingAsBilling: deliveryMode === "ship",
+      items: (storeCart?.items ?? []).map((it) => ({
+        productId: it.productId,
+        productName: it.productName,
+        quantity: it.quantity,
+        variantId: it.variantId,
+        variantName: it.variantName,
+        unitPrice: it.unitPrice,
+      })),
+      useWTCoins: useCoins,
+      appliedCouponCode: appliedCoupon?.code ?? null,
+      taxRate: shipAndTax.tax,
+      shippingCharge,
+      couponDiscount,
+      beansDiscount,
+      userEmail: storedEmail,
+    };
+    history.push("/StorePay", state);
+  };
+
+  const handleFieldSaved = () => {
+    setPendingField(null);
+    handleProceed();
+  };
+
   return (
     <IonPage>
       <IonHeader slot="fixed">
@@ -284,45 +337,8 @@ const StoreCheckout: React.FC = () => {
       <IonFooter>
         <PayContainer
           total={toPay}
-          // disabled prop controls visual state; onProceed will now directly
-          // redirect guests to the auth screen instead of showing a transient toast.
-            disabled={!addressReady}
-            onProceed={() => {
-              // If guest, redirect straight to /auth so they can sign in / sign up.
-              if (!isLoggedIn) {
-                history.push("/auth");
-                return;
-              }
-
-            // For logged-in users, ensure a delivery mode was selected before proceeding
-            // (this preserves previous behavior for authenticated checkout flow).
-            if (!deliveryMode) return;
-
-            const state: StorePayState = {
-              toPay,
-              deliveryMode: deliveryMode as "ship" | "pickup",
-              shippingAddress,
-              billingAddress,
-
-              shippingAsBilling: deliveryMode === "ship",
-              items: (storeCart?.items ?? []).map((it) => ({
-                productId: it.productId,
-                productName: it.productName,
-                quantity: it.quantity,
-                variantId: it.variantId,
-                variantName: it.variantName,
-                unitPrice: it.unitPrice,
-              })),
-              useWTCoins: useCoins,
-              appliedCouponCode: appliedCoupon?.code ?? null,
-              taxRate: shipAndTax.tax,
-              shippingCharge,
-              couponDiscount,
-              beansDiscount,
-              userEmail,
-            };
-            history.push("/StorePay", state);
-          }}
+          disabled={!addressReady}
+          onProceed={handleProceed}
         />
 
         {/* Login toast removed: guests are redirected immediately to /auth when tapping Pay */}
@@ -361,6 +377,13 @@ const StoreCheckout: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+      {pendingField && (
+        <MissingInfoSheet
+          field={pendingField}
+          onClose={() => setPendingField(null)}
+          onSaved={handleFieldSaved}
+        />
       )}
     </IonPage>
   );

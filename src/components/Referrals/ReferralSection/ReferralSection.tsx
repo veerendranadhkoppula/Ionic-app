@@ -46,12 +46,12 @@ const ReferralSection: React.FC = () => {
   };
 
 const sendInvite = async () => {
-    // Restore correct links after publishing to both stores
-    const ANDROID_LINK = "https://play.google.com/store/apps/details?id=com.whitemantis.app";
-    const IOS_LINK = "https://apps.apple.com/app/idXXXXXXXXXX"; // replace after publishing
+    const code = referralCode || "";
+    const IOS_LINK = "https://apps.apple.com/us/app/whitemantis/id6760647986";
+    const ANDROID_LINK = `https://play.google.com/store/apps/details?id=com.whitemantis.app${code ? `&referrer=${encodeURIComponent(code)}` : ""}`;
 
     const appLink = Capacitor.getPlatform() === "ios" ? IOS_LINK : ANDROID_LINK;
-    const text = buildInviteText(referralCode || "", appLink);
+    const text = buildInviteText(code, appLink);
 
     try {
       const nav = navigator as unknown as { share?: (data: { title?: string; text?: string; url?: string }) => Promise<void> };

@@ -87,10 +87,13 @@ const Login: React.FC = () => {
   const handleLoginSuccess = async (googleUser: any) => {
     try {
       setLoading(true);
+      console.log("[GoogleSuccess] result keys:", JSON.stringify(Object.keys(googleUser || {})));
+      console.log("[GoogleSuccess] idToken present:", !!googleUser?.idToken, "serverAuthCode present:", !!googleUser?.serverAuthCode);
 
       const idToken = googleUser?.idToken;
       if (!idToken) throw new Error("No Google ID token received");
 
+      console.log("[GoogleSuccess] calling postGoogleAuth...");
       const authResult = await postGoogleAuth(idToken);
 
       await tokenStorage.setToken(authResult.token);
@@ -122,7 +125,8 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error("Google login failed:", error);
-      setError("Google sign-in failed. Please try again.");
+      const msg = error instanceof Error ? error.message : String(error);
+      setError(`Google sign-in failed: ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -151,6 +155,8 @@ const Login: React.FC = () => {
   const handleAppleSuccess = async (appleResult: any) => {
     try {
       setLoading(true);
+      console.log("[AppleSuccess] result keys:", JSON.stringify(Object.keys(appleResult || {})));
+      console.log("[AppleSuccess] idToken present:", !!appleResult?.idToken, "profile:", JSON.stringify(appleResult?.profile));
       const identityToken = appleResult?.idToken;
       if (!identityToken) throw new Error("No Apple identity token received");
 
@@ -200,6 +206,7 @@ const Login: React.FC = () => {
 
   const handleAppleError = (err: any) => {
     console.error("Apple login failed!", err);
+    setError("Apple sign-in failed. Please try again.");
   };
 const onSkip = () => {
   setGuest();

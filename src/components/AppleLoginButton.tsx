@@ -13,12 +13,13 @@ const AppleLoginButton: React.FC<AppleLoginProps> = ({ onSuccess, onFailure }) =
   useEffect(() => {
     const init = async () => {
       try {
-        const redirectUrl = Capacitor.getPlatform() === "android"
+        const isAndroid = Capacitor.getPlatform() === "android";
+        const redirectUrl = isAndroid
           ? "https://whitemantis.ae/api/app/apple-auth-android-callback"
           : "https://whitemantis.ae/api/auth/callback/apple";
         await SocialLogin.initialize({
           apple: {
-            clientId: "com.whitemantis.app.ios",
+            clientId: isAndroid ? "com.whitemantis.app.ios" : "com.whitemantis.appname",
             redirectUrl,
           },
         });

@@ -188,7 +188,8 @@ const Login: React.FC = () => {
       navigateAfterApple(authResult);
     } catch (err) {
       console.error("Apple login failed:", err);
-      setError("Apple sign-in failed. Please try again.");
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Apple sign-in failed: ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -206,7 +207,8 @@ const Login: React.FC = () => {
 
   const handleAppleError = (err: any) => {
     console.error("Apple login failed!", err);
-    setError("Apple sign-in failed. Please try again.");
+    const msg = err instanceof Error ? err.message : (typeof err === 'object' ? JSON.stringify(err) : String(err));
+    setError(`Apple sign-in failed: ${msg}`);
   };
 const onSkip = () => {
   setGuest();

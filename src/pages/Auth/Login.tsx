@@ -26,7 +26,6 @@ const Login: React.FC = () => {
   const history = useHistory();
   const ionRouter = useIonRouter();
   const listenerRef = useRef<any>(null);
-  const appleDeepLinkRef = useRef<any>(null);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -85,26 +84,6 @@ const Login: React.FC = () => {
     };
   }, [ionRouter]);
 
-  useEffect(() => {
-    App.addListener("appUrlOpen", async (event) => {
-      if (!event.url.includes("://apple-auth")) return;
-      try {
-        const url = new URL(event.url);
-        const token = url.searchParams.get("token");
-        if (!token) return;
-        const firstName = url.searchParams.get("firstName") || "";
-        const lastName = url.searchParams.get("lastName") || "";
-        await handleAppleSuccess({
-          idToken: token,
-          profile: { givenName: firstName, familyName: lastName },
-        });
-      } catch (e) {
-        console.error("[AppleDeepLink] Failed to handle deep link", e);
-      }
-    }).then((h) => { appleDeepLinkRef.current = h; });
-    return () => { appleDeepLinkRef.current?.remove(); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const handleLoginSuccess = async (googleUser: any) => {
     try {
       setLoading(true);

@@ -85,12 +85,61 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
+    const handleDeepLinkUrl = async (url: string) => {
+      console.log("[DeepLink] url:", url);
+      if (url.includes("://apple-auth")) {
+        try {
+          const urlObj = new URL(url);
+          const token = urlObj.searchParams.get("token");
+          const tokenType = urlObj.searchParams.get("tokenType") || "id_token";
+          console.log("[AppleDeepLink] token present:", !!token, "tokenType:", tokenType);
+          if (!token) return;
+          const firstName = urlObj.searchParams.get("firstName") || "";
+          const lastName = urlObj.searchParams.get("lastName") || "";
+          const { postAppleAuth } = await import("./api/apiApple");
+          const tsModule = await import("./utils/tokenStorage");
+          const { saveUser, setCurrentUser } = await import("./utils/authStorage");
+          const authResult = await postAppleAuth(token, firstName, lastName, tokenType);
+          await tsModule.default.setToken(authResult.token);
+          const u = authResult.user;
+          const userToSave = {
+            id: String(u.id ?? ""),
+            email: u.email ?? "",
+            firstName: u.firstName ?? "",
+            lastName: u.lastName ?? "",
+            name: `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim(),
+          };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          saveUser(userToSave as any);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setCurrentUser(userToSave as any);
+          if (u.email) await tsModule.default.setItem("user_email", u.email);
+          const hasProfile = !authResult.isNewUser && !!u.firstName && String(u.firstName).trim().length > 0;
+          if (!hasProfile) {
+            const params = new URLSearchParams({
+              email: u.email ?? "",
+              firstName: String(u.firstName ?? "").trim(),
+              lastName: String(u.lastName ?? "").trim(),
+            });
+            window.location.href = `/auth/almost?${params}`;
+          } else {
+            window.location.href = "/home";
+          }
+        } catch (err) {
+          console.error("[AppleDeepLink] Auth failed:", String(err));
+          console.error("[AppleDeepLink] Auth failed detail:", JSON.stringify(err));
+        }
+        return;
+      }
+      try {
+        const path = new URL(url).pathname;
+        window.location.href = path;
+      } catch { /* ignore */ }
+    };
+
     const handleAction = async (action: unknown) => {
       try {
         console.log("[App] Notification action received at app-level:", action);
-        // Simple default: navigate to /notifications. If payload contains a "screen" field,
-        // navigate there instead.
-        // Using optional chaining with type-guards below to avoid `any` usage.
         let screen = "/notifications";
         try {
           const act = action as Record<string, unknown>;
@@ -100,33 +149,36 @@ const App: React.FC = () => {
             screen = String(data["screen"] ?? data["route"] ?? screen);
           }
         } catch { /* ignore parsing */ }
-        // Navigate to the chosen screen (fallback to setting location.href)
         try { window.location.href = screen; } catch { /* ignore */ }
       } catch (e) {
-        // keep catch minimal
         console.warn("[App] failed to handle notification action", e);
       }
     };
 
-    // Attach global listener
     PushNotifications.addListener("pushNotificationActionPerformed", handleAction);
 
-    // Also ensure app open via intent is covered (some platforms deliver via App plugin)
-    CapacitorApp.addListener("appUrlOpen", (e) => {
-      try {
-        const ev = e as { url?: string } | undefined;
-        const url = ev?.url;
-        if (url) {
-          // If the URL contains our app route, route to it
-          const path = new URL(url).pathname;
-          try { window.location.href = path; } catch { /* ignore */ }
-        }
-      } catch { /* ignore */ }
+    // Primary: Capacitor App plugin (fires when app opens from cold start via deep link)
+    CapacitorApp.addListener("appUrlOpen", async (e) => {
+      const ev = e as { url?: string } | undefined;
+      const url = ev?.url;
+      if (!url) return;
+      console.log("[AppUrlOpen] fired, url:", url);
+      await handleDeepLinkUrl(url);
     });
+
+    // Fallback: MainActivity.onNewIntent dispatches this when app resumes via intent
+    const handleNativeUrlOpen = async (e: Event) => {
+      const url = (e as CustomEvent).detail?.url as string | undefined;
+      if (!url) return;
+      console.log("[NativeAppUrlOpen] fired, url:", url);
+      await handleDeepLinkUrl(url);
+    };
+    window.addEventListener("nativeAppUrlOpen", handleNativeUrlOpen);
 
     return () => {
       try { PushNotifications.removeAllListeners(); } catch { /* ignore */ }
       try { CapacitorApp.removeAllListeners(); } catch { /* ignore */ }
+      window.removeEventListener("nativeAppUrlOpen", handleNativeUrlOpen);
     };
   }, []);
 

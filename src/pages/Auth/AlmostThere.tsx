@@ -104,8 +104,8 @@ const AlmostThere: React.FC = () => {
     })();
   }, [router, location.search, location.state]);
  
-  const [firstName, setFirstName] = useState(location.state?.firstName ?? "");
-  const [lastName, setLastName] = useState(location.state?.lastName ?? "");
+  const [firstName, setFirstName] = useState(location.state?.firstName ?? new URLSearchParams(location.search).get("firstName") ?? "");
+  const [lastName, setLastName] = useState(location.state?.lastName ?? new URLSearchParams(location.search).get("lastName") ?? "");
 
  
   const [mobile, setMobile] = useState("");

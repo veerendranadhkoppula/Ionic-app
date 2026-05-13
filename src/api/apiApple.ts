@@ -25,11 +25,12 @@ export async function postAppleAuth(
   appleToken: string,
   firstName: string = "",
   lastName: string = "",
+  tokenType: string = "id_token",
 ): Promise<AppleAuthResponse> {
   const res = await fetch(`${API_BASE}/app/apple-auth`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ appleToken, firstName, lastName }),
+    body: JSON.stringify({ appleToken, firstName, lastName, tokenType }),
   });
 
   if (!res.ok) {

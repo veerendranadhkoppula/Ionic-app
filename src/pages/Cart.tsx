@@ -83,6 +83,17 @@ const Cart: React.FC<Props> = () => {
   const cafeHasItems = (cart?.items ?? []).length > 0;
   const isEmpty = !isStoreCart && !cafeHasItems;
 
+  // Remember the last cart type so the empty-state "Browse Menu" button
+  // can navigate back to the right menu. Only update when cart has items —
+  // never overwrite when empty, so the last-known origin is preserved.
+  useEffect(() => {
+    if (isStoreCart) {
+      localStorage.setItem("last_cart_origin", "store");
+    } else if (cafeHasItems) {
+      localStorage.setItem("last_cart_origin", "cafe");
+    }
+  }, [isStoreCart, cafeHasItems]);
+
   // Derive store order items for StoreCartOrderSummary
   const storeOrderItems: CartStoreItem[] = React.useMemo(
     () =>
@@ -435,9 +446,6 @@ const Cart: React.FC<Props> = () => {
         ((matched as any).dietaryType || "").toLowerCase().indexOf("non") ===
         -1,
       // Prefer the authoritative single-item productDefs value when available,
-      // but fall back to the list-endpoint `matched.isStampEligible` so the
-      // UI can show stamp-related containers immediately after adding an
-      // eligible product (before getSingleMenuItem completes).
       isStampEligible:
         (productDefs[pid] as any)?.isStampEligible === true ||
         (matched as any)?.isStampEligible === true,
@@ -520,10 +528,7 @@ const Cart: React.FC<Props> = () => {
   }, [stampEligibleResolved, earnedStampsLive]);
 
   // Show coupon-applied modal whenever a coupon is set in the checkout context.
-  // Show coupon-applied modal when a coupon is newly applied in the cafe cart.
-  // We track the previously-seen coupon code and which coupon has been
-  // acknowledged (closed) so the modal appears when a coupon is applied but
-  // does not reappear after the user explicitly closes it.
+
   const prevAppliedCouponCodeRef = React.useRef<string | null>(null);
 
   const SESSION_KEY = "cafe_acknowledged_coupon";
@@ -605,12 +610,7 @@ const Cart: React.FC<Props> = () => {
 
   // Show stamp/reward containers if:
   //  a) we have computed live stamp-eligible items, OR
-  //  b) we have a cached count from a previous render (survives refresh)
-  // Show the stamp/reward container if we have a positive earnedStamps count
-  // OR if any enriched cart item is flagged stamp-eligible from the (fast)
-  // list-endpoint `matched` data. This ensures the EarnCafeStamps box
-  // appears immediately after adding an eligible product without waiting
-  // for getSingleMenuItem to finish.
+
   const hasAnyStampEligible =
     earnedStamps > 0 ||
     allCartItems.some((it) => Boolean((it as any)?.product?.isStampEligible));
@@ -780,8 +780,6 @@ const Cart: React.FC<Props> = () => {
       // Re-add the same product with the new customization the same number of times
       // so the new variant ends up with the same total quantity.
       for (let i = 0; i < qtyToTransfer; i++) {
-        // serialise to keep server-side quantity consistent.
-        // addToCart merges with existing variants if selection matches, so this handles merges too.
         await addToCart(pid, data);
       }
     } catch (err) {
@@ -823,7 +821,10 @@ const Cart: React.FC<Props> = () => {
             </p>
             <div className={cartEmptyStyles.ctaWrap}>
               <button
-                onClick={() => history.push("/CafeMenu")}
+                onClick={() => {
+                  const lastOrigin = localStorage.getItem("last_cart_origin");
+                  history.push(lastOrigin === "store" ? "/StoreMenu" : "/CafeMenu");
+                }}
                 className={cartEmptyStyles.browseBtn}
               >
                 Browse Menu

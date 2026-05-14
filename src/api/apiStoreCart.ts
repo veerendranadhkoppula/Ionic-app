@@ -524,8 +524,12 @@ export async function addStoreCartItem(
 
   if (variantId != null && variantId !== "") {
     console.log(`🛒 [addStoreCartItem] variant item — now patching vId onto created item`);
-    const created = findExisting(updatedCart); // finds by productId + no variantId yet
-    console.log(`🛒 [addStoreCartItem] findExisting (no-vId match) result:`, created ? `id=${created.id}` : "NOT FOUND");
+    console.log(`🔍 [DIAG] variant PATCH search — looking for productId=${productId} variantId="${variantId}" in cart items:`,
+      JSON.stringify((updatedCart?.items ?? []).map(it => ({ id: it.id, productId: it.productId, variantId: it.variantId ?? "NONE" }))));
+    const created = (updatedCart?.items ?? []).find(
+      it => it.productId === productId && !it.variantId
+    ) ?? null;
+    console.log(`🔍 [DIAG] findExisting result:`, created ? `FOUND id=${created.id}` : "NOT FOUND — variantId will NOT be saved on this cart item");
     if (created && updatedCart?.cartId != null) {
 
       const patchedItems = (updatedCart.items ?? []).map((it) => {

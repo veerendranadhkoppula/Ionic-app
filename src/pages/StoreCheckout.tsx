@@ -261,20 +261,30 @@ const StoreCheckout: React.FC = () => {
       return;
     }
 
+    const cartItemsForPay = (storeCart?.items ?? []).map((it) => ({
+      productId: it.productId,
+      productName: it.productName,
+      quantity: it.quantity,
+      variantId: it.variantId,
+      variantName: it.variantName,
+      unitPrice: it.unitPrice,
+    }));
+    console.log("🔍 [DIAG] StoreCheckout items going to StorePay:",
+      JSON.stringify(cartItemsForPay.map(it => ({
+        productId: it.productId,
+        productName: it.productName,
+        variantId: it.variantId ?? "MISSING",
+        variantName: it.variantName ?? "none",
+        qty: it.quantity,
+      }))));
+
     const state: StorePayState = {
       toPay,
       deliveryMode: deliveryMode as "ship" | "pickup",
       shippingAddress,
       billingAddress,
       shippingAsBilling: deliveryMode === "ship",
-      items: (storeCart?.items ?? []).map((it) => ({
-        productId: it.productId,
-        productName: it.productName,
-        quantity: it.quantity,
-        variantId: it.variantId,
-        variantName: it.variantName,
-        unitPrice: it.unitPrice,
-      })),
+      items: cartItemsForPay,
       useWTCoins: useCoins,
       appliedCouponCode: appliedCoupon?.code ?? null,
       taxRate: shipAndTax.tax,

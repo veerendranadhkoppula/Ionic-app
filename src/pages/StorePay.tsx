@@ -151,6 +151,15 @@ const StorePay: React.FC = () => {
           setSubTax(Math.max(0, bkTaxAmount));
         } else {
           const s = state as StorePayState;
+          console.log("🔍 [DIAG] StorePay about to call storeCheckout. Item variantId check:",
+            JSON.stringify((s.items ?? []).map(it => ({
+              productId: it.productId,
+              productName: it.productName,
+              variantId: it.variantId ?? "MISSING",
+              variantName: it.variantName ?? "none",
+              qty: it.quantity,
+            }))));
+          console.log("🔍 [DIAG] StorePay deliveryMode:", s.deliveryMode, "| emirate:", s.shippingAddress?.emirates ?? "none");
           const response = await storeCheckout(token, {
             deliveryType      : s.deliveryMode ?? "ship",
             shippingAddress   : s.shippingAddress ?? null,

@@ -105,6 +105,7 @@ const Login: React.FC = () => {
         firstName: u.firstName ?? (u as any).given_name ?? "",
         lastName: u.lastName ?? (u as any).family_name ?? "",
         name: `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim(),
+        mobile: (u as any).phone ?? (u as any).mobile ?? "",
       };
       saveUser(userToSave as any);
       setCurrentUser(userToSave as any);
@@ -173,6 +174,7 @@ const Login: React.FC = () => {
         firstName: u.firstName ?? "",
         lastName: u.lastName ?? "",
         name: `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim(),
+        mobile: (u as any).phone ?? (u as any).mobile ?? "",
       };
       saveUser(userToSave as any);
       setCurrentUser(userToSave as any);

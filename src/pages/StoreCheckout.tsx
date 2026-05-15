@@ -18,6 +18,7 @@ import PayContainer from "../components/StoreCheckout/PayContainer/PayContainer"
 import Delivery from "../components/StoreCheckout/Delivery/Delivery";
 import { useStoreCart } from "../context/useStoreCart";
 import tokenStorage from "../utils/tokenStorage";
+import { getCurrentUser } from "../utils/authStorage";
 import { useAuth } from "../utils/useAuth";
 import { getShipAndTax, ShipAndTax } from "../api/apiCafe";
 import { getUserWtCoins, getWtCoinsConfig } from "../api/apiCoins";
@@ -248,18 +249,47 @@ const StoreCheckout: React.FC = () => {
     }
     if (!deliveryMode) return;
 
-    // Ensure email and phone are filled before proceeding.
-    // Apple/social logins may be missing one or both fields.
-    const storedEmail = await tokenStorage.getItem("user_email");
+    // Ensure email and phone are present before proceeding.
+    // Priority: tokenStorage → localStorage → live backend API.
+    let storedEmail = await tokenStorage.getItem("user_email");
     if (!storedEmail) {
-      setPendingField("email");
-      return;
+      const localEmail = getCurrentUser()?.email;
+      if (localEmail) { await tokenStorage.setItem("user_email", localEmail); storedEmail = localEmail; }
     }
-    const storedPhone = await tokenStorage.getItem("user_mobile");
+
+    let storedPhone = await tokenStorage.getItem("user_mobile");
     if (!storedPhone) {
-      setPendingField("phone");
-      return;
+      const localPhone = getCurrentUser()?.mobile;
+      if (localPhone) { await tokenStorage.setItem("user_mobile", localPhone); storedPhone = localPhone; }
     }
+
+    // If either is still missing, fetch live from backend before showing the sheet
+    if (!storedEmail || !storedPhone) {
+      try {
+        const userId = await tokenStorage.getItem("user_id");
+        const token  = await tokenStorage.getToken();
+        if (userId && token) {
+          const res = await fetch(`https://endpoint.whitemantis.ae/api/users/${userId}`, {
+            headers: { Authorization: `JWT ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const u = (data?.doc ?? data) as Record<string, unknown>;
+            if (!storedEmail && u?.email) {
+              storedEmail = String(u.email);
+              await tokenStorage.setItem("user_email", storedEmail);
+            }
+            if (!storedPhone && (u?.phone ?? u?.mobile)) {
+              storedPhone = String(u.phone ?? u.mobile);
+              await tokenStorage.setItem("user_mobile", storedPhone);
+            }
+          }
+        }
+      } catch { /* ignore — fall through to sheet */ }
+    }
+
+    if (!storedEmail) { setPendingField("email"); return; }
+    if (!storedPhone) { setPendingField("phone"); return; }
 
     const cartItemsForPay = (storeCart?.items ?? []).map((it) => ({
       productId: it.productId,

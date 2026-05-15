@@ -81,6 +81,15 @@ const App: React.FC = () => {
     })();
   }, []);
 
+  React.useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    import("@capacitor-community/stripe").then(({ Stripe }) => {
+      Stripe.initialize({
+        publishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string,
+      }).catch(() => {});
+    }).catch(() => {});
+  }, []);
+
   // Ensure notification click (action) is handled even on cold start.
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;

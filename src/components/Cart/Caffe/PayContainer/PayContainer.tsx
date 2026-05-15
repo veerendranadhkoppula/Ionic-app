@@ -85,18 +85,37 @@ const PayContainer = () => {
       return;
     }
 
-    // Before proceeding to checkout, ensure the user has both email and phone
-    // on their profile. Apple/social logins may be missing one or both fields.
-    const storedEmail = await tokenStorage.getItem("user_email");
-    if (!storedEmail) {
-      setPendingField("email");
-      return;
+    // Ensure email and phone are present before proceeding.
+    // Priority: tokenStorage → live backend API.
+    let storedEmail = await tokenStorage.getItem("user_email");
+    let storedPhone = await tokenStorage.getItem("user_mobile");
+
+    if (!storedEmail || !storedPhone) {
+      try {
+        const userId = await tokenStorage.getItem("user_id");
+        const token  = await tokenStorage.getToken();
+        if (userId && token) {
+          const res = await fetch(`https://endpoint.whitemantis.ae/api/users/${userId}`, {
+            headers: { Authorization: `JWT ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const u = (data?.doc ?? data) as Record<string, unknown>;
+            if (!storedEmail && u?.email) {
+              storedEmail = String(u.email);
+              await tokenStorage.setItem("user_email", storedEmail);
+            }
+            if (!storedPhone && (u?.phone ?? u?.mobile)) {
+              storedPhone = String(u.phone ?? u.mobile);
+              await tokenStorage.setItem("user_mobile", storedPhone);
+            }
+          }
+        }
+      } catch { /* ignore — fall through to sheet */ }
     }
-    const storedPhone = await tokenStorage.getItem("user_mobile");
-    if (!storedPhone) {
-      setPendingField("phone");
-      return;
-    }
+
+    if (!storedEmail) { setPendingField("email"); return; }
+    if (!storedPhone) { setPendingField("phone"); return; }
 
     setIsLoading(true);
     setError(null);

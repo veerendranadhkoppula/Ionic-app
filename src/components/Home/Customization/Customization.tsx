@@ -244,7 +244,7 @@ const Customization: React.FC<CustomizationProps> = ({
         Object.values(groupObj).reduce(
           (groupAcc: number, options) =>
             groupAcc +
-            options.reduce((optAcc: number, opt) => optAcc + opt.price, 0),
+            options.reduce((optAcc: number, opt) => optAcc + (Number(opt.price) || 0), 0),
           0,
         )
       );
@@ -252,7 +252,8 @@ const Customization: React.FC<CustomizationProps> = ({
     0,
   );
 
-  const totalPrice = (product.price + optionsTotal) * quantity;
+  const basePrice = Number(product.price) || 0;
+  const totalPrice = (basePrice + optionsTotal) * quantity;
 
   const hasCustomizations = !!(product.customizations && product.customizations.length > 0);
 

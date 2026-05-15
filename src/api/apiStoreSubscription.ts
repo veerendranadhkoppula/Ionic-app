@@ -85,7 +85,7 @@ export async function subscriptionCheckout(
   };
   console.log("🔑 [SUB API] Authorization header:", `JWT ${token.slice(0,20)}...`);
   console.log("📤 [SUB API] Sending payload:", JSON.stringify(payload, null, 2));
-  const response = await fetch(`${BASE_URL}/api/checkout/subscription`, {
+  const response = await fetch(`${BASE_URL}api/checkout/subscription`, {
     method: "POST",
     headers,
     body: JSON.stringify(payload),

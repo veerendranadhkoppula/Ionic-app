@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IonContent, IonPage, useIonViewWillEnter } from "@ionic/react";
 import { useLocation, useHistory } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import './Home.css'
@@ -12,6 +13,9 @@ import { getWebOrderById } from "../api/apiStoreOrders";
 import tokenStorage from "../utils/tokenStorage";
 import { useCart } from "../context/useCart";
 import { useCheckout } from "../context/CafeCheckoutContext";
+
+const isNative = Capacitor.isNativePlatform();
+const CAFE_API = "https://endpoint.whitemantis.ae/api";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string);
 
@@ -56,42 +60,59 @@ const CafePay: React.FC = () => {
   const effectiveClientSecret = isPreparing ? null : clientSecret;
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-
   const hasFiredThisMount = useRef(false);
 
+  // Native-only payment sheet state
+  const [nativeState, setNativeState] = useState<"idle" | "presenting" | "canceled">("idle");
+  const nativeSheetFired = useRef(false);
+
   const startCheckoutFlow = async () => {
-    // Always show the preparing loader when entering the checkout screen.
     setIsPreparing(true);
 
-    try {
-      sessionStorage.removeItem(SS_CLIENT_SECRET);
-      sessionStorage.removeItem(SS_ORDER_ID);
-      sessionStorage.removeItem(SS_ORDER_FIRED);
-    } catch (err) {
-      console.warn("⚠️ failed to clear previous checkout session keys:", err);
-    }
-    // PaymentIntent is created for the next checkout attempt.
-    if (sessionStorage.getItem(SS_ORDER_FIRED) === "1") {
-      const existingOrderId = sessionStorage.getItem(SS_ORDER_ID);
-      if (existingOrderId) {
+    // Read BEFORE clearing — the guard must run first to prevent duplicate orders
+    const existingFired  = sessionStorage.getItem(SS_ORDER_FIRED);
+    const existingSecret = sessionStorage.getItem(SS_CLIENT_SECRET);
+    const existingId     = sessionStorage.getItem(SS_ORDER_ID);
+
+    if (existingFired === "1") {
+      if (existingSecret) {
+        // Order fully created — check if it was paid
         try {
           const token = await tokenStorage.getToken();
-          const order = await getWebOrderById(token ?? null, existingOrderId);
+          const order = await getWebOrderById(token ?? null, existingId ?? "");
           if (order && order.paymentStatus === "completed") {
+            // Paid — clear and fall through to create a fresh order
             sessionStorage.removeItem(SS_ORDER_FIRED);
             sessionStorage.removeItem(SS_CLIENT_SECRET);
             sessionStorage.removeItem(SS_ORDER_ID);
           } else {
-            // duplicate order.
+            // Not paid — reuse
+            setClientSecret(existingSecret);
+            if (existingId) setOrderId(existingId);
             setIsPreparing(false);
             return;
           }
-        } catch (err) {
-          console.warn("⚠️ could not check existing cafe order status:", err);
+        } catch {
+          // Backend unreachable — reuse to be safe
+          setClientSecret(existingSecret);
+          if (existingId) setOrderId(existingId);
+          setIsPreparing(false);
           return;
         }
       } else {
+        // SS_ORDER_FIRED = "1" but secret not stored yet — a concurrent
+        // startCheckoutFlow call is mid-flight. Return to avoid firing a
+        // second checkout request (causes duplicate order conflict).
+        return;
+      }
+    } else {
+      // No existing order session — clear stale keys and start fresh
+      try {
+        sessionStorage.removeItem(SS_CLIENT_SECRET);
+        sessionStorage.removeItem(SS_ORDER_ID);
         sessionStorage.removeItem(SS_ORDER_FIRED);
+      } catch (err) {
+        console.warn("⚠️ failed to clear previous checkout session keys:", err);
       }
     }
 
@@ -184,15 +205,108 @@ const CafePay: React.FC = () => {
 
   useIonViewWillEnter(() => {
     hasFiredThisMount.current = false;
+    nativeSheetFired.current = false;
+    setNativeState("idle");
     void startCheckoutFlow();
   });
 
-
+  // On native: auto-present payment sheet as soon as clientSecret is ready
   useEffect(() => {
-    return () => {
+    if (!isNative || !effectiveClientSecret || nativeSheetFired.current) return;
+    nativeSheetFired.current = true;
+    void handleNativePayment(effectiveClientSecret);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveClientSecret]);
 
-    };
-  }, []);
+  const handleNativePayment = async (secret: string) => {
+    setNativeState("presenting");
+    try {
+      const { Stripe, PaymentSheetEventsEnum } = await import("@capacitor-community/stripe");
+      await Stripe.createPaymentSheet({
+        paymentIntentClientSecret: secret,
+        merchantDisplayName: "White Mantis",
+        enableApplePay: true,
+        applePayMerchantId: "merchant.com.whitemantis.app",
+        enableGooglePay: true,
+        GooglePayIsTesting: (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string)?.startsWith("pk_test_") ?? true,
+        countryCode: "AE",
+      });
+      const { paymentResult } = await Stripe.presentPaymentSheet();
+
+      if (paymentResult === PaymentSheetEventsEnum.Completed) {
+        const authToken = await tokenStorage.getToken();
+
+        // Patch order payment status
+        if (orderId) {
+          try {
+            const headers: Record<string, string> = { "Content-Type": "application/json" };
+            if (authToken) headers["Authorization"] = `JWT ${authToken}`;
+            await fetch(`${CAFE_API}/app-orders/${orderId}`, {
+              method: "PATCH",
+              headers,
+              body: JSON.stringify({ paymentStatus: "paid" }),
+            });
+          } catch { /* non-fatal */ }
+
+          // Stamp reward notification
+          try {
+            const earnedStamps = parseInt(sessionStorage.getItem("cafe_earned_stamps") ?? "0", 10) || 0;
+            const prevStampCount = parseInt(sessionStorage.getItem("cafe_stamp_count") ?? "0", 10) || 0;
+            if (earnedStamps > 0) {
+              const prevRewards = Math.floor(prevStampCount / 10);
+              const newRewards  = Math.floor((prevStampCount + earnedStamps) / 10);
+              if (newRewards > prevRewards) {
+                const { appendNotifications } = await import("../api/apiCafeNotifications");
+                await appendNotifications(authToken, [{
+                  title           : "🎁 Free reward unlocked!",
+                  description     : "You've earned a free reward! Head to the Rewards section to redeem it on your next order.",
+                  origin          : "cafe",
+                  notificationType: "reward",
+                }]);
+              }
+            }
+          } catch { /* non-fatal */ }
+
+          // Persist active order for StickOrderStatusBar
+          const currentUserId = await tokenStorage.getItem("user_id");
+          localStorage.setItem("active_cafe_order", JSON.stringify({
+            orderId,
+            orderType : state.orderType ?? "take-away",
+            persistedAt: Date.now(),
+            userId    : currentUserId ?? undefined,
+          }));
+          window.dispatchEvent(new Event("cafe_order_placed"));
+        }
+
+        await handlePaymentSuccess();
+
+        history.push("/OrderResult", {
+          orderId,
+          orderType  : state.orderType ?? "take-away",
+          orderStatus: "succeeded",
+          cartSnapshot: (() => {
+            try {
+              const raw = sessionStorage.getItem("cafe_cart_snapshot");
+              return raw ? JSON.parse(raw) : undefined;
+            } catch { return undefined; }
+          })(),
+        });
+      } else if (paymentResult === PaymentSheetEventsEnum.Canceled) {
+        setNativeState("canceled");
+      } else {
+        setCheckoutError("Payment failed. Please try again.");
+      }
+    } catch (e: unknown) {
+      setCheckoutError(e instanceof Error ? e.message : "Payment failed. Please try again.");
+    }
+  };
+
+  const retryNativePayment = () => {
+    if (!effectiveClientSecret) return;
+    nativeSheetFired.current = false;
+    setNativeState("idle");
+    void handleNativePayment(effectiveClientSecret);
+  };
 
   const handlePaymentSuccess = async () => {
     // Clear sessionStorage keys for this payment session
@@ -214,59 +328,56 @@ const CafePay: React.FC = () => {
           sessionStorage.removeItem(SS_ORDER_ID);
         }} />
         {checkoutError ? (
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "48px 24px",
-            gap: "16px",
-            textAlign: "center",
-          }}>
-            <div style={{
-              width: 48,
-              height: 48,
-              borderRadius: "50%",
-              background: "#FFF0F0",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 22,
-            }}>❌</div>
-            <p style={{
-              color: "#c0392b",
-              fontSize: 14,
-              fontFamily: "var(--lato)",
-              margin: 0,
-              lineHeight: 1.5,
-            }}>{checkoutError}</p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 24px", gap: "16px", textAlign: "center" }}>
+            <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#FFF0F0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>❌</div>
+            <p style={{ color: "#c0392b", fontSize: 14, fontFamily: "var(--lato)", margin: 0, lineHeight: 1.5 }}>{checkoutError}</p>
             <button
               onClick={() => {
-                // Clear sessionStorage guards so the next checkout attempt fires fresh
                 sessionStorage.removeItem(SS_ORDER_FIRED);
                 sessionStorage.removeItem(SS_CLIENT_SECRET);
                 sessionStorage.removeItem(SS_ORDER_ID);
-                // Clear the bad coupon from context so it's not re-sent
                 setAppliedCoupon(null);
                 history.goBack();
               }}
-              style={{
-                marginTop: 8,
-                padding: "10px 28px",
-                borderRadius: 8,
-                border: "none",
-                background: "#6C7A5F",
-                color: "#fff",
-                fontFamily: "var(--lato)",
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
+              style={{ marginTop: 8, padding: "10px 28px", borderRadius: 8, border: "none", background: "#6C7A5F", color: "#fff", fontFamily: "var(--lato)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
             >
               Go Back &amp; Fix
             </button>
           </div>
+        ) : isNative ? (
+          /* ── Native app: payment sheet is presented natively ── */
+          nativeState === "canceled" ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 24px", gap: "16px", textAlign: "center" }}>
+              <p style={{ color: "#555", fontSize: 14, fontFamily: "var(--lato)", margin: 0 }}>
+                Payment was cancelled.
+              </p>
+              <button
+                onClick={retryNativePayment}
+                style={{ padding: "12px 32px", borderRadius: 8, border: "none", background: "#6C7A5F", color: "#fff", fontFamily: "var(--lato)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+              >
+                Try Again
+              </button>
+              <button
+                onClick={() => {
+                  sessionStorage.removeItem(SS_ORDER_FIRED);
+                  sessionStorage.removeItem(SS_CLIENT_SECRET);
+                  sessionStorage.removeItem(SS_ORDER_ID);
+                  history.goBack();
+                }}
+                style={{ padding: "10px 28px", borderRadius: 8, border: "1px solid #6C7A5F", background: "transparent", color: "#6C7A5F", fontFamily: "var(--lato)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+              >
+                Go Back
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 24px", gap: "16px" }}>
+              <div style={{ width: 36, height: 36, border: "3px solid #e0e0e0", borderTop: "3px solid #6c7a5f", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
+              <p style={{ color: "#6c7a5f", fontSize: 14, margin: 0, fontFamily: "var(--lato)" }}>Preparing payment…</p>
+              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </div>
+          )
         ) : effectiveClientSecret ? (
+          /* ── Web: existing Stripe PaymentElement flow — unchanged ── */
           <Elements key={effectiveClientSecret ?? "preparing"} stripe={stripePromise} options={{ clientSecret: effectiveClientSecret ?? undefined }}>
             <Express
               toPay={state.toPay}
@@ -276,25 +387,9 @@ const CafePay: React.FC = () => {
             />
           </Elements>
         ) : (
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "60px 24px",
-            gap: "16px",
-          }}>
-            <div style={{
-              width: 36,
-              height: 36,
-              border: "3px solid #e0e0e0",
-              borderTop: "3px solid #6c7a5f",
-              borderRadius: "50%",
-              animation: "spin 0.9s linear infinite",
-            }} />
-            <p style={{ color: "#6c7a5f", fontSize: 14, margin: 0, fontFamily: "var(--lato)" }}>
-              Preparing payment…
-            </p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 24px", gap: "16px" }}>
+            <div style={{ width: 36, height: 36, border: "3px solid #e0e0e0", borderTop: "3px solid #6c7a5f", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
+            <p style={{ color: "#6c7a5f", fontSize: 14, margin: 0, fontFamily: "var(--lato)" }}>Preparing payment…</p>
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         )}

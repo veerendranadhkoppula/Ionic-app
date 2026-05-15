@@ -232,12 +232,21 @@ export async function getSingleMenuItem(
 
   const item = data.item;
 
+  console.log("[getSingleMenuItem] raw price fields:", {
+    name: item.name,
+    salePrice: item.salePrice,
+    regularPrice: item.regularPrice,
+    price: item.price,
+  });
+
+  const resolvedPrice = Number(item.salePrice || item.regularPrice || item.price) || 0;
+
   return {
     id: item.id,
     name: item.name,
     desc: item.description || "",
     fullDesc: item.description || "",
-    price: item.salePrice || item.regularPrice,
+    price: resolvedPrice,
     originalPrice:
       item.salePrice < item.regularPrice
         ? item.regularPrice

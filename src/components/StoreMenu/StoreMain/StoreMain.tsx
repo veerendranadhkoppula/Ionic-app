@@ -53,6 +53,8 @@ const StoreMain = ({
     unitPrice: number;
     selectedHighlights: SelectedProductHighlight[];
   } | null>(null);
+  // Pending "Buy Now" product — conflict was triggered before opening the sheet
+  const pendingBuyNowProductRef = React.useRef<StoreProduct | null>(null);
 
   // ── handleAddToCart — called by AddBottomSheet ─────────────────────────────
   const handleAddToCart = React.useCallback(
@@ -107,6 +109,16 @@ const StoreMain = ({
   // ── handleConflictReplace — user tapped "Replace" ─────────────────────────
   const handleConflictReplace = React.useCallback(async () => {
     setConflictVisible(false);
+    // Buy Now path: conflict was triggered before the sheet opened — open sheet after clearing
+    if (pendingBuyNowProductRef.current) {
+      const product = pendingBuyNowProductRef.current;
+      pendingBuyNowProductRef.current = null;
+      await clearCafeCart();
+      setSelectedProduct(product);
+      setIsAddSheetOpen(true);
+      return;
+    }
+    // Add to Cart path: conflict triggered inside the sheet — directly add pending item
     const pending = pendingAddRef.current;
     pendingAddRef.current = null;
     if (!pending) return;
@@ -124,6 +136,7 @@ const StoreMain = ({
   const handleConflictCancel = React.useCallback(() => {
     setConflictVisible(false);
     pendingAddRef.current = null;
+    pendingBuyNowProductRef.current = null;
   }, []);
 
   const [selectedProduct, setSelectedProduct] =
@@ -526,6 +539,20 @@ const StoreMain = ({
                       disabled={isOut}
                       onClick={(e) => {
                         e.stopPropagation();
+                        // Check for conflict BEFORE opening the bottom sheet
+                        const storeAlreadyHasItems = (storeCart?.items ?? []).length > 0;
+                        const genuineCafeItems = (cafeCart?.items ?? []).filter((item) => {
+                          const prod = item.product as Record<string, unknown> | undefined;
+                          if (prod?.relationTo === "web-products") return false;
+                          const storeIds = new Set((storeCart?.items ?? []).map((s) => s.id));
+                          if (item.id && storeIds.has(item.id)) return false;
+                          return true;
+                        });
+                        if (!storeAlreadyHasItems && genuineCafeItems.length > 0) {
+                          pendingBuyNowProductRef.current = product;
+                          setConflictVisible(true);
+                          return;
+                        }
                         setSelectedProduct(product);
                         setIsAddSheetOpen(true);
                       }}

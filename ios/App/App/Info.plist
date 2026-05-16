@@ -47,6 +47,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app uses the camera to scan QR codes and capture profile photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app requires photo aceess to upload profile pictures and food images</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

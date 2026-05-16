@@ -20,7 +20,7 @@ const PayContainer = ({ total, onProceed, label = "Pay now", disabled = false }:
         className={`${styles.main} ${disabled ? styles.disabled : ""}`}
         // keep a disabled cursor but allow clicks so the parent can show
         // the login toast for guests (matching cafe behaviour)
-        style={{ cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}
+        style={{ cursor: disabled ? "not-allowed" : "pointer" }}
         onClick={onProceed}
       >
         <div className={styles.MainCoantiner}>

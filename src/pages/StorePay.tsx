@@ -196,15 +196,6 @@ const StorePay: React.FC = () => {
           setSubTax(Math.max(0, bkTaxAmount));
         } else {
           const s = state as StorePayState;
-          console.log("🔍 [DIAG] StorePay about to call storeCheckout. Item variantId check:",
-            JSON.stringify((s.items ?? []).map(it => ({
-              productId: it.productId,
-              productName: it.productName,
-              variantId: it.variantId ?? "MISSING",
-              variantName: it.variantName ?? "none",
-              qty: it.quantity,
-            }))));
-          console.log("🔍 [DIAG] StorePay deliveryMode:", s.deliveryMode, "| emirate:", s.shippingAddress?.emirates ?? "none");
           const response = await storeCheckout(token, {
             deliveryType      : s.deliveryMode ?? "ship",
             shippingAddress   : s.shippingAddress ?? null,
@@ -287,7 +278,7 @@ const StorePay: React.FC = () => {
         paymentIntentClientSecret: secret,
         merchantDisplayName: "White Mantis",
         enableApplePay: true,
-        applePayMerchantId: "merchant.com.whitemantis.app",
+        applePayMerchantId: "merchant.com.whitemantis.appname",
         enableGooglePay: true,
         GooglePayIsTesting: (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string)?.startsWith("pk_test_") ?? true,
         countryCode: "AE",

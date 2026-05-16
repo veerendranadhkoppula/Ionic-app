@@ -39,7 +39,6 @@
 
 /* muted/disabled state for the sticky pay bar */
 .disabled {
-    opacity: 0.45;
-    filter: grayscale(20%);
-    transition: opacity 200ms ease, filter 200ms ease;
+    background-color: #B0BAA8;
+    transition: background-color 200ms ease;
 }

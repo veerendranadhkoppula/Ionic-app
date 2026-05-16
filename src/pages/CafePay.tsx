@@ -125,10 +125,7 @@ const CafePay: React.FC = () => {
     const createOrder = async () => {
       try {
         const authToken = await tokenStorage.getToken();
-        console.log("🔑 JWT token for this order:", authToken);
         const response = await cafeCafeCheckout(authToken, state);
-
-        console.log("🛒 cafe-checkout response:", response);
 
         const secret =
           (response as Record<string, unknown>).clientSecret as string | undefined ??
@@ -140,8 +137,6 @@ const CafePay: React.FC = () => {
           (response.order as Record<string, unknown> | undefined)?.id ??
           (response.doc   as Record<string, unknown> | undefined)?.id ??
           response.id;
-
-        console.log("🆔 resolved orderId:", id, "| raw response keys:", Object.keys(response as object));
 
         if (secret) {
           // Persist to sessionStorage so remounts don't re-fire
@@ -226,7 +221,7 @@ const CafePay: React.FC = () => {
         paymentIntentClientSecret: secret,
         merchantDisplayName: "White Mantis",
         enableApplePay: true,
-        applePayMerchantId: "merchant.com.whitemantis.app",
+        applePayMerchantId: "merchant.com.whitemantis.appname",
         enableGooglePay: true,
         GooglePayIsTesting: (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string)?.startsWith("pk_test_") ?? true,
         countryCode: "AE",

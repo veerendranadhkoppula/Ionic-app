@@ -133,6 +133,13 @@
     margin: 0;
     letter-spacing: 4px;
 }
+.recentActivityHeading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4B3827;
+  font-family: var(--lato);
+  margin: 0 0 16px 0;
+}
 .transhistoryContainer{
     display: flex;
     justify-content: left;

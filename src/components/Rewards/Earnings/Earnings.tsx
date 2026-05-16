@@ -108,13 +108,14 @@ const Earnings = () => {
           {/* TRANSACTIONS TAB */}
           {activeTab === "transactions" && (
             <>
-              <h3 className={styles.heading}>Recent Activity</h3>
+              <h3 className={styles.recentActivityHeading}>Recent Activity</h3>
 
               {loading ? (
-                <div className={styles.list}>
+                <div className={styles.transhistoryContainer}>
                   {[1, 2, 3].map((n) => (
                     <div key={n} className={styles.skeletonCard}>
                       <div className={styles.skeletonLeft}>
+                        <div className={styles.skeletonTag} />
                         <div className={styles.skeletonTitle} />
                         <div className={styles.skeletonOrderId} />
                       </div>
@@ -130,26 +131,25 @@ const Earnings = () => {
                   <p className={styles.emptyText}>No transactions yet</p>
                 </div>
               ) : (
-                <div className={styles.list}>
+                <div className={styles.transhistoryContainer}>
                   {transactions.map((item) => (
-                    <div key={item.id} className={styles.card}>
-                      <div className={styles.left}>
-                        <h4>{item.title}</h4>
-                        <p>Order #{item.orderId}</p>
+                    <div key={item.id} className={styles.transhistoryCard}>
+                      <div className={styles.transhistoryCardLeft}>
+                        <div className={styles.Ordertype}>
+                          <p>{item.orderType}</p>
+                        </div>
+                        <div className={styles.OrderDetails}>
+                          <h4>{item.title}</h4>
+                          <p>Order Id #{item.orderId}</p>
+                        </div>
                       </div>
-
-                      <div className={styles.right}>
-                        <h4
-                          className={
-                            item.isPositive
-                              ? styles.positive
-                              : styles.negative
-                          }
-                        >
-                          {item.amount}
-                        </h4>
-
-                        <p>{item.date}</p>
+                      <div className={styles.transhistoryCardRight}>
+                        <div className={item.isPositive ? styles.statusPositive : styles.statusNegative}>
+                          <p>{item.amount}</p>
+                        </div>
+                        <div className={styles.dateandtime}>
+                          <p>{item.date}</p>
+                        </div>
                       </div>
                     </div>
                   ))}

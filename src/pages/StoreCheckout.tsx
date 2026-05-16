@@ -374,7 +374,7 @@ const StoreCheckout: React.FC = () => {
         />
       </IonContent>
 
-      <IonFooter>
+      <IonFooter style={{ background: addressReady ? '#6C7A5F' : '#B0BAA8' }}>
         <PayContainer
           total={toPay}
           disabled={!addressReady}

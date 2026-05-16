@@ -4,7 +4,7 @@
     align-items: center;
     width: 100%;
     background-color: #6C7A5F;
-    padding: 28px 62px 28px 40px;
+    padding: 28px 62px calc(28px + env(safe-area-inset-bottom, 0px)) 40px;
 }
 .MainCoantiner{
     display: flex;

@@ -255,7 +255,8 @@ const Delivery = ({ onDeliveryModeChange, onShippingEmirateChange, onAddressRead
                     Warehouse #2 – 26, 26th Street Al Quoz Industrial Area 4,
                     Dubai, UAE
                   </p>
-                  <h5>Store Timing : 10:00 AM to 07:00 PM</h5>
+                  <h5>Store Timing : Mon–Sat 09:00 AM to 05:00 PM</h5>
+                  <h5>Sunday : Closed</h5>
                   <h6>
                     <a
                       href="https://www.google.com/maps/search/?api=1&query=White+Mantis+Roastery"

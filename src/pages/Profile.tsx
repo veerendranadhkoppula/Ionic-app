@@ -755,12 +755,19 @@ const handleImagePick = async () => {
                     <div className={styles.InfoLeft}>
                       <span>Phone Number</span>
                       {editing === "phone" ? (
-                        <input
-                          value={tempValue}
-                          onChange={(e) => setTempValue(e.target.value)}
-                          autoFocus
-                          placeholder="Add phone number"
-                        />
+                        <>
+                          <input
+                            value={tempValue}
+                            onChange={(e) => setTempValue(e.target.value)}
+                            autoFocus
+                            placeholder="Add phone number"
+                          />
+                          {tempValue.trim() !== "" && !/^\d{7,15}$/.test(tempValue.replace(/\D/g, "")) && (
+                            <p style={{ color: "#A83434", fontSize: 12, margin: "4px 0 0 0" }}>
+                              Please enter a valid phone number (7–15 digits)
+                            </p>
+                          )}
+                        </>
                       ) : (
                         <p>{phone || "Add phone number"}</p>
                       )}
@@ -820,7 +827,7 @@ const handleImagePick = async () => {
                     <div className={styles.ActionRow}>
                       <button
                         className={styles.UpdateBtn}
-                        disabled={!tempValue.trim()}
+                        disabled={!tempValue.trim() || !/^\d{7,15}$/.test(tempValue.replace(/\D/g, ""))}
                         onClick={() => handleUpdate("phone")}
                       >
                         Update

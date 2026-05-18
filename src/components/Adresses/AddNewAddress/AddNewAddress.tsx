@@ -236,10 +236,10 @@ const AddNewAddress: React.FC<Props> = ({
             />
           </div>
 
-          {/* Phone validation hint — show only after user attempts to save */}
-          {attemptedSubmit && !isPhoneValid(formData.phone) && (
+          {/* Phone validation hint — show only when phone has content but is invalid */}
+          {attemptedSubmit && formData.phone.trim() !== "" && !isPhoneValid(formData.phone) && (
             <div style={{ color: "#A83434", fontSize: 12, marginTop: 6 }}>
-              Please enter a valid phone number (digits only, 7–15 characters).
+              Please enter a valid phone number.
             </div>
           )}
 

@@ -210,7 +210,13 @@ const onSubmit = async () => {
   setError(null);
 
   if (!firstName || !lastName || !mobile) {
-    setError("First name, last name and mobile are required");
+    setError("First name, last name and mobile number are required");
+    return;
+  }
+
+  const mobileDigits = mobile.replace(/\D/g, "");
+  if (mobileDigits.length < 7 || mobileDigits.length > 15) {
+    setError("Please enter a valid mobile number (7–15 digits)");
     return;
   }
 
@@ -451,7 +457,7 @@ const onSubmit = async () => {
               <div className={styles.BottomBottom}>
                 <button
                   className={`${styles.continue} ${
-                    firstName && lastName && mobile ? styles.continueActive : ""
+                    firstName && lastName && mobile && /^\d{7,15}$/.test(mobile.replace(/\D/g, "")) ? styles.continueActive : ""
                   }`}
                   onClick={onSubmit}
                 >

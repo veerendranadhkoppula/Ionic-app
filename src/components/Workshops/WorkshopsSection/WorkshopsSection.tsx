@@ -140,7 +140,7 @@ const WorkshopsSection = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                minHeight: "50vh", // center the empty state vertically in the page
+                minHeight: "calc(100vh - 140px)", // center the empty state vertically in the page
                 padding: "24px",
                 boxSizing: "border-box",
               }}

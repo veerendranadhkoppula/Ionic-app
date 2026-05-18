@@ -136,7 +136,7 @@ const Subscription: React.FC = () => {
 
             {/* If user has no active AND no past subscriptions show a single centered NoState */}
             {activeSubscriptions.length === 0 && pastSubscriptions.length === 0 ? (
-              <div style={{ width: "100%" }}>
+              <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "calc(100vh - 140px)" }}>
                 <NoState
                   title={"No subscriptions yet"}
                    imageSrc="/sub.gif"

@@ -8,6 +8,7 @@ import { getShipAndTax } from "../../../../api/apiCafe";
 import { getUserWtCoins, getWtCoinsConfig } from "../../../../api/apiCoins";
 import tokenStorage from "../../../../utils/tokenStorage";
 import useAuth from "../../../../utils/useAuth";
+import { getCurrentUser } from "../../../../utils/authStorage";
 import MissingInfoSheet from "../../../MissingInfoSheet/MissingInfoSheet";
 
 const PayContainer = () => {
@@ -70,9 +71,7 @@ const PayContainer = () => {
 
   const { isLoggedIn } = useAuth();
 
-  // cafe checkout requires the cart to have items, shopId resolved and not loading.
-  // Do NOT gate the button's enabled state on authentication — guests should
-  // be able to click the Pay button and be redirected to auth when needed.
+
   const canCheckout = (cart?.items?.length ?? 0) > 0 && !isLoading && shopId !== null;
 
   const handlePay = async () => {
@@ -86,9 +85,18 @@ const PayContainer = () => {
     }
 
     // Ensure email and phone are present before proceeding.
-    // Priority: tokenStorage → live backend API.
+    // Priority: tokenStorage → localStorage (getCurrentUser) → live backend API.
     let storedEmail = await tokenStorage.getItem("user_email");
+    if (!storedEmail) {
+      const localEmail = getCurrentUser()?.email;
+      if (localEmail) { await tokenStorage.setItem("user_email", localEmail); storedEmail = localEmail; }
+    }
+
     let storedPhone = await tokenStorage.getItem("user_mobile");
+    if (!storedPhone) {
+      const localPhone = getCurrentUser()?.mobile;
+      if (localPhone) { await tokenStorage.setItem("user_mobile", localPhone); storedPhone = localPhone; }
+    }
 
     if (!storedEmail || !storedPhone) {
       try {
@@ -120,9 +128,7 @@ const PayContainer = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Build items array from cart — one entry per virtual cart row.
-      // Virtual rows already have separate customizations + individual quantities
-      // so we can send them as-is: each row becomes one order item.
+
       // Backend accepts multiple items with the same productId but different customizations.
       const items = (cart?.items ?? []).map((item) => {
         const rawCust: unknown[] = item.customizations ?? [];

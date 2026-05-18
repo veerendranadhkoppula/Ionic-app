@@ -198,3 +198,29 @@
   margin: 0;
   flex: 1;
 }
+
+@media (min-width: 768px) {
+  .main {
+    height: auto;
+    max-height: 80vh;
+  }
+
+  .MainContainer {
+    gap: 16px;
+  }
+
+  .Top {
+    max-height: 200px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .Top img {
+    aspect-ratio: auto;
+    height: 200px;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+}

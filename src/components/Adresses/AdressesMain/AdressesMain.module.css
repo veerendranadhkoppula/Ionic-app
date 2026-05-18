@@ -114,8 +114,6 @@
 
 .EmptyCTAWrapper{
   width: 100%;
-
- 
 }
 
 .EmptyCTA{
@@ -129,6 +127,16 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .EmptyCTAWrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .EmptyCTA {
+    max-width: 360px;
+  }
 }
 .DisabledButton {
   opacity: 0.5;

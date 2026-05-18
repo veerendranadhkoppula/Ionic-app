@@ -103,7 +103,9 @@ const Home: React.FC = () => {
       <RewardsSection />
     </div>
   )}
-        <CafeShopCat />
+        <div style={{ paddingTop: (!hasBanners && (!user || user?.isGuest)) ? '20px' : undefined }}>
+          <CafeShopCat />
+        </div>
         <CafeCategories />
         <ShopCategories />
 

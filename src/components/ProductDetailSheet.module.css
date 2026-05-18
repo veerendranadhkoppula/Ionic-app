@@ -48,9 +48,18 @@
 .productSheet {
   --height: auto;
   --max-height: 85vh;
+  --width: 100%;
+  --max-width: 100%;
   align-items: flex-end;
    overflow-y: auto;
     --background: transparent;
+}
+
+@media (min-width: 768px) {
+  .Top img {
+    max-height: 280px;
+    object-fit: cover;
+  }
 }
 .SheetHeader {
   height: 44px;

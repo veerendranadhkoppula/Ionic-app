@@ -12,11 +12,12 @@ React.useEffect(() => {
   setVisualActive(null);
 }, [pathname]);
   const getActiveTab = () => {
-    if (pathname.startsWith("/home")) return "home";
-    if (pathname.startsWith("/StoreMenu")) return "store";
-    if (pathname.startsWith("/CafeMenu")) return "cafe";
-    if (pathname.startsWith("/workshops")) return "workshop";
-    if (pathname.startsWith("/News")) return "news";
+    const p = pathname.toLowerCase();
+    if (p.startsWith("/home")) return "home";
+    if (p.startsWith("/storemenu")) return "store";
+    if (p.startsWith("/cafemenu")) return "cafe";
+    if (p.startsWith("/workshops")) return "workshop";
+    if (p.startsWith("/news")) return "news";
     return "home";
   };
 

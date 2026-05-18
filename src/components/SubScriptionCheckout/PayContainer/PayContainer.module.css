@@ -4,7 +4,8 @@
     align-items: center;
     width: 100%;
     background-color: #6C7A5F;
-    padding: 28px 62px 28px 40px;
+    padding: 28px 62px calc(28px + env(safe-area-inset-bottom, 0px)) 40px;
+    transition: background-color 200ms ease;
 }
 .MainCoantiner{
     display: flex;
@@ -37,9 +38,7 @@
     margin: 0;
 }
 
-/* disabled/muted state */
+/* disabled/muted state — uses background-color change (not opacity) so content behind never shows through */
 .disabled {
-    opacity: 0.45;
-    filter: grayscale(20%);
-    transition: opacity 200ms ease, filter 200ms ease;
+    background-color: #B0BAA8;
 }

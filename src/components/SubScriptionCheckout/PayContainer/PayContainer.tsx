@@ -13,7 +13,7 @@ const PayContainer: React.FC<Props> = ({ total, onPay, loading = false, disabled
     <>
       <div
         className={`${styles.main} ${disabled ? styles.disabled : ""}`}
-        style={{ cursor: loading || disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}
+        style={{ cursor: loading || disabled ? "not-allowed" : "pointer" }}
         onClick={disabled || loading ? undefined : onPay}
       >
         <div className={styles.MainCoantiner}>

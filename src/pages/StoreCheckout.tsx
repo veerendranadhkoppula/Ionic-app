@@ -248,6 +248,7 @@ const StoreCheckout: React.FC = () => {
       return;
     }
     if (!deliveryMode) return;
+    if (!addressReady) return;
 
     // Ensure email and phone are present before proceeding.
     // Priority: tokenStorage → localStorage → live backend API.

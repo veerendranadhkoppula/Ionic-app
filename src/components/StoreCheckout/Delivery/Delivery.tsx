@@ -30,10 +30,21 @@ const Delivery = ({ onDeliveryModeChange, onShippingEmirateChange, onAddressRead
   const handleSetDeliveryMode = (mode: "ship" | "pickup") => {
     setDeliveryMode(mode);
     onDeliveryModeChange?.(mode);
-    // When switching to pickup, clear the emirate charge and shipping address
     if (mode === "pickup") {
+      // Clear shipping address/emirate on parent when switching to pickup
       onShippingEmirateChange?.("");
       onShippingAddressChange?.(null);
+    }
+    if (mode === "ship") {
+      // Re-sync internal addresses back to parent when returning to ship mode
+      if (shippingAddress) {
+        onShippingAddressChange?.(shippingAddress);
+        onShippingEmirateChange?.(shippingAddress.emirates ?? "");
+      }
+      const effectiveBilling = useShippingAsBilling ? shippingAddress : billingAddress;
+      if (effectiveBilling) {
+        onBillingAddressChange?.(effectiveBilling);
+      }
     }
   };
 

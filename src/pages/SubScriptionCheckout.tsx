@@ -120,6 +120,13 @@ console.log("unitPrice:", unitPrice);
     ),
   );
 
+  const addressReady =
+    deliveryState.deliveryMode === "ship"
+      ? !!deliveryState.shippingAddress
+      : deliveryState.deliveryMode === "pickup"
+      ? !!deliveryState.billingAddress
+      : false;
+
   const [pendingField, setPendingField] = useState<"email" | "phone" | null>(null);
 
   const handlePay = async () => {
@@ -230,7 +237,7 @@ console.log("unitPrice:", unitPrice);
         />
       </IonContent>
 
-      <IonFooter>
+      <IonFooter style={{ background: addressReady ? '#6C7A5F' : '#B0BAA8' }}>
           {/* Transient login toast removed — guests are redirected directly to /auth when they tap Pay */}
  <PayContainer
           total={total}

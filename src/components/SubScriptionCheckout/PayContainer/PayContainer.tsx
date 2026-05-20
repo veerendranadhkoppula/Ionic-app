@@ -10,25 +10,17 @@ interface Props {
 
 const PayContainer: React.FC<Props> = ({ total, onPay, loading = false, disabled = false }) => {
   return (
-    <>
+    <div className={styles.footer}>
       <div
-        className={`${styles.main} ${disabled ? styles.disabled : ""}`}
+        className={`${styles.btn} ${disabled ? styles.disabled : ""}`}
         style={{ cursor: loading || disabled ? "not-allowed" : "pointer" }}
         onClick={disabled || loading ? undefined : onPay}
       >
-        <div className={styles.MainCoantiner}>
-          <div className={styles.left}>
-            <h4>{loading ? "Processing..." : "Pay now"}</h4>
-          </div>
-          <div className={styles.right}>
-            <h4>AED {total.toFixed(2)}</h4>
-          </div>
-        </div>
+        <h4>{loading ? "Processing..." : "Pay now"}</h4>
+        <h4>AED {total.toFixed(2)}</h4>
       </div>
-    </>
+    </div>
   );
 };
 
 export default PayContainer;
-
- 

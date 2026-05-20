@@ -112,7 +112,8 @@
     gap: 8px;
     flex-direction: row;
     align-items: flex-start;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
 }
 .proditemImage{
     display: flex;
@@ -200,7 +201,7 @@
 .proditemRight{
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    flex-shrink: 0;
     flex-direction: column;
     gap: 15px;
     align-items: end;

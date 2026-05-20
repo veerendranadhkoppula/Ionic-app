@@ -71,8 +71,12 @@ const StoreCheckout: React.FC = () => {
   const [coinsLoading, setCoinsLoading] = useState(true);
   const [useCoins, setUseCoins] = useState(false);
   const [pointsToAed, setPointsToAed] = useState<number>(10);
+  const [pointsEarn, setPointsEarn] = useState<number>(10);
   useEffect(() => {
-    getWtCoinsConfig().then((c) => setPointsToAed(c.pointsToAed));
+    getWtCoinsConfig().then((c) => {
+      setPointsToAed(c.pointsToAed);
+      setPointsEarn(c.pointsEarn);
+    });
     let mounted = true;
     tokenStorage.getToken().then((t) =>
       getUserWtCoins(t)
@@ -203,6 +207,7 @@ const StoreCheckout: React.FC = () => {
     ((totalWithShipping * shipAndTax.tax) / 100).toFixed(2),
   );
   const toPay = parseFloat((totalWithShipping + taxAmount).toFixed(2));
+  const beansEarned = Math.round(toPay * pointsEarn / 100);
 
   // Show the one-time coupon-applied modal when a coupon is set.
   React.useEffect(() => {
@@ -372,10 +377,11 @@ const StoreCheckout: React.FC = () => {
           useCoins={useCoins}
           coinBalance={coinBalance}
           pointsToAed={pointsToAed}
+          beansEarned={beansEarned}
         />
       </IonContent>
 
-      <IonFooter style={{ background: addressReady ? '#6C7A5F' : '#B0BAA8' }}>
+      <IonFooter>
         <PayContainer
           total={toPay}
           disabled={!addressReady}

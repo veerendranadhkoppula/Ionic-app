@@ -12,6 +12,7 @@ interface Props {
   useCoins: boolean;
   coinBalance: number;
   pointsToAed?: number;
+  beansEarned?: number;
 }
 
 const TotalPay = ({
@@ -24,6 +25,7 @@ const TotalPay = ({
   useCoins,
   coinBalance,
   pointsToAed = 10,
+  beansEarned = 0,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -58,7 +60,10 @@ const TotalPay = ({
       <div className={styles.MainContainer}>
         <div className={styles.Top}>
           <div className={styles.TopLeft}>
-            <p>To Pay</p>
+            <p>Payment Summary</p>
+            {beansEarned > 0 && (
+              <h5>You are earning {beansEarned} WM beans!</h5>
+            )}
           </div>
           <div className={styles.TopRight} onClick={toggleAccordion}>
             <p>AED {toPay.toFixed(2)}</p>
@@ -112,7 +117,7 @@ const TotalPay = ({
             </div>
             <div className={styles.line}></div>
             <div className={styles.totalpayPrice}>
-              <h4>To Pay</h4>
+              <h4>Payment Summary</h4>
               <h5>AED {toPay.toFixed(2)}</h5>
             </div>
           </div>

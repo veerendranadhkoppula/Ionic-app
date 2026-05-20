@@ -66,9 +66,13 @@ const SubScriptionCheckout: React.FC<Props> = ({
     emirateCharges: {},
   });
   const [pointsToAed, setPointsToAed] = useState<number>(10);
+  const [pointsEarn, setPointsEarn] = useState<number>(10);
   useEffect(() => {
     getShipAndTax().then(setShipAndTax);
-    getWtCoinsConfig().then((c) => setPointsToAed(c.pointsToAed));
+    getWtCoinsConfig().then((c) => {
+      setPointsToAed(c.pointsToAed);
+      setPointsEarn(c.pointsEarn);
+    });
   }, []);
 
   const [deliveryState, setDeliveryState] = useState<DeliveryState>({
@@ -119,6 +123,7 @@ console.log("unitPrice:", unitPrice);
       (itemTotal + deliveryCharge + taxAmount - coinsDiscount).toFixed(2),
     ),
   );
+  const beansEarned = Math.round(total * pointsEarn / 100);
 
   const addressReady =
     deliveryState.deliveryMode === "ship"
@@ -234,21 +239,16 @@ console.log("unitPrice:", unitPrice);
           taxAmount={taxAmount}
           coinsDiscount={coinsDiscount}
           total={total}
+          beansEarned={beansEarned}
         />
       </IonContent>
 
-      <IonFooter style={{ background: addressReady ? '#6C7A5F' : '#B0BAA8' }}>
+      <IonFooter>
           {/* Transient login toast removed — guests are redirected directly to /auth when they tap Pay */}
  <PayContainer
           total={total}
           onPay={handlePay}
-          disabled={
-            !(deliveryState.deliveryMode === "ship"
-              ? !!deliveryState.shippingAddress
-              : deliveryState.deliveryMode === "pickup"
-              ? !!deliveryState.billingAddress
-              : false)
-          }
+          disabled={!addressReady}
         />
         <div id="subscription-checkout-footer-overlays" style={{ position: "relative", width: "100%", height: 0 }} />
         

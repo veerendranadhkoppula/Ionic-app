@@ -238,18 +238,14 @@ const PayContainer = () => {
           <p style={{ color: "#A83434", fontFamily: "var(--lato)", fontSize: 12, margin: 0 }}>{error}</p>
         </div>
       )}
-      <div
-        className={styles.main}
-        onClick={handlePay}
-        style={{ cursor: canCheckout ? "pointer" : "not-allowed", opacity: canCheckout ? 1 : 0.6 }}
-      >
-        <div className={styles.MainCoantiner}>
-          <div className={styles.left}>
-            <h4>{isLoading ? "Preparing..." : "Pay now"}</h4>
-          </div>
-          <div className={styles.right}>
-            <h4>AED {toPay.toFixed(2)}</h4>
-          </div>
+      <div className={styles.footer}>
+        <div
+          className={`${styles.btn} ${!canCheckout ? styles.disabled : ""}`}
+          onClick={handlePay}
+          style={{ cursor: canCheckout ? "pointer" : "not-allowed" }}
+        >
+          <h4>{isLoading ? "Preparing..." : "Pay now"}</h4>
+          <h4>AED {toPay.toFixed(2)}</h4>
         </div>
       </div>
     </>

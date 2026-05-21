@@ -393,18 +393,18 @@ const OrderResultsDetail: React.FC<Props> = ({
             <div className={styles.OrderCalculations}>
               <div className={styles.ItemsTotal}>
                 <p>Item Total</p>
-                <h5>AED {orderData.calculations.itemTotal}</h5>
+                <h5>AED {Number(orderData.calculations.itemTotal).toFixed(2)}</h5>
               </div>
 
               <div className={styles.Taxes}>
                 <p>Taxes</p>
-                <h5>AED {orderData.calculations.taxes}</h5>
+                <h5>AED {Number(orderData.calculations.taxes).toFixed(2)}</h5>
               </div>
 
               {orderData.calculations.wtCoinsDiscount > 0 && (
                 <div className={styles.Taxes}>
                   <p>Beans Used</p>
-                  <h5>- AED {orderData.calculations.wtCoinsDiscount}</h5>
+                  <h5>- AED {Number(orderData.calculations.wtCoinsDiscount).toFixed(2)}</h5>
                 </div>
               )}
 
@@ -415,7 +415,7 @@ const OrderResultsDetail: React.FC<Props> = ({
                     <h5>"{orderData.calculations.couponCode}"</h5>
                   </div>
                   <div className={styles.CouponsRight}>
-                    <h5>- AED {orderData.calculations.discount}</h5>
+                    <h5>- AED {Number(orderData.calculations.discount).toFixed(2)}</h5>
                   </div>
                 </div>
               )}
@@ -423,7 +423,7 @@ const OrderResultsDetail: React.FC<Props> = ({
 
             <div className={styles.OrderTotal}>
               <p>Your total</p>
-              <h5>AED {orderData.calculations.total}</h5>
+              <h5>AED {Number(orderData.calculations.total).toFixed(2)}</h5>
             </div>
           </div>
 

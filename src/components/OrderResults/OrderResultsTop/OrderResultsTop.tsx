@@ -30,7 +30,7 @@ const OrderResultsTop: React.FC<Props> = ({ orderStatus, orderId }) => {
   const isCancelled = orderStatus === "cancelled";
 
   const titleText = isCancelled ? "Order Cancelled" : "Order Confirmed!";
-  const subText   = isCancelled ? "Your order has been cancelled" : "Thankyou for placing the order";
+  const subText   = isCancelled ? "Your order has been cancelled" : "Thank you for placing the order";
   const icon      = isCancelled ? wrongicon : tickicon;
   const displayId = orderId ? `#WMANTIS${orderId}` : null;
 

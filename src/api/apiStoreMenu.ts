@@ -109,6 +109,9 @@ export interface StoreProduct {
   inStock: boolean;
   stockQuantity: number | null;
 
+  isLatest: boolean;
+  isBestseller: boolean;
+
   hasVariantOptions: boolean;
   variants: StoreVariant[];
 
@@ -301,6 +304,9 @@ function mapDocToProduct(doc: Record<string, unknown>): StoreProduct {
 
     inStock: Boolean(d.inStock ?? true),
     stockQuantity: d.stockQuantity != null ? Number(d.stockQuantity) : null,
+
+    isLatest: Boolean(d.isLatest ?? false),
+    isBestseller: Boolean(d.isBestseller ?? false),
 
     hasVariantOptions: Boolean(d.hasVariantOptions ?? false),
     variants,

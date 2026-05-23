@@ -509,9 +509,24 @@ const StoreMain = ({
                           </div>
                         </div>
                       )}
-                      {!isOut && hasDiscount && (
-                        <div className={styles.offerbadge}>
-                          <p>OFFER</p>
+                      {(product.isLatest || product.isBestseller) && (
+                        <div className={styles.badgesContainer}>
+                          {product.isLatest && (
+                            <div className={styles.newArrivalBadge}>
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.62806 5.08295L5.89235 2.30213C5.7856 1.89943 5.2144 1.89922 5.10765 2.30192L4.37194 5.08295C4.35363 5.1523 4.31727 5.21556 4.26657 5.2663C4.21587 5.31703 4.15264 5.35343 4.0833 5.3718L1.30203 6.1075C0.899323 6.21425 0.899323 6.78565 1.30203 6.89239L4.08289 7.6281C4.15223 7.64641 4.21549 7.68277 4.26623 7.73347C4.31696 7.78417 4.35337 7.8474 4.37173 7.91673L5.10744 10.698C5.21419 11.1007 5.7856 11.1007 5.89235 10.698L6.62806 7.91694C6.64637 7.84759 6.68273 7.78434 6.73343 7.7336C6.78413 7.68287 6.84736 7.64646 6.9167 7.6281L9.69797 6.89219C10.1007 6.78544 10.1007 6.21404 9.69797 6.10729L6.91691 5.37159C6.84756 5.35327 6.7843 5.31692 6.73356 5.26622C6.68283 5.21552 6.64642 5.15229 6.62806 5.08295Z" fill="white" stroke="white" strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              <span>New arrival</span>
+                            </div>
+                          )}
+                          {product.isBestseller && (
+                            <div className={styles.bestsellerBadge}>
+                              <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7.91 2.2651L6.2825 6.14939L2.12625 6.51216L5.285 9.29044L4.34 13.3871L7.91 11.2193V12.2457L3.0275 15.2186L4.305 9.60012L0 5.81316L5.67875 5.30882L7.91 0V2.2651Z" fill="white"/>
+                              </svg>
+                              <span>Bestseller</span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

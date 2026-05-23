@@ -145,21 +145,42 @@
   cursor: pointer;
   line-height: 24px;
 }
-.offerbadge {
+.badgesContainer {
   position: absolute;
   top: 0px;
   left: 0px;
-  background-color: #d0892f;
-  border-radius: 4px;
-  color: #ffffff;
-  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 10;
 }
-.offerbadge p {
+.newArrivalBadge {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #6c7a5f;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+.newArrivalBadge span {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 400;
   color: #ffffff;
   font-family: var(--lato);
-  margin: 0;
+}
+.bestsellerBadge {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #d0892f;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+.bestsellerBadge span {
+  font-size: 12px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: var(--lato);
 }
 .indexFilterBookConatiner {
   position: fixed;

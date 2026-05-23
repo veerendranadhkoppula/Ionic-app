@@ -118,12 +118,59 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         return local;
       }
       const cart = await fetchStoreCart();
-     
+
       if (cart && cart.origin === "cafe") {
         setStoreCart(null);
         return null;
       }
       setStoreCart(cart);
+      // Heal any items whose unitPrice was lost (backend stored null) — display only, not written back.
+      // Mirrors the guest enrichment pattern above.
+      (async () => {
+        try {
+          if (!cart || !cart.items || cart.items.length === 0) return;
+          const needsPrice = cart.items.filter((it) => !it.unitPrice);
+          console.log(`[StoreCartContext] heal check — total items=${cart.items.length} missing unitPrice=${needsPrice.length}`, needsPrice.map(it => ({ id: it.id, productId: it.productId, variantId: it.variantId ?? "NONE" })));
+          if (needsPrice.length === 0) return;
+          let changed = false;
+          const enrichedItems = await Promise.all(
+            cart.items.map(async (it) => {
+              if (it.unitPrice) return it;
+              try {
+                const prod = await getStoreProductById(it.productId);
+                console.log(`[StoreCartContext] heal item productId=${it.productId} variantId="${it.variantId ?? "NONE"}" prod found=${!!prod} hasVariantOptions=${prod?.hasVariantOptions} variants=`, prod?.variants.map(v => ({ id: v.id, salePrice: v.variantSalePrice, regularPrice: v.variantRegularPrice })));
+                if (!prod) return it;
+                let resolvedPrice: number | undefined;
+                if (prod.hasVariantOptions && it.variantId) {
+                  const variant = prod.variants.find(
+                    (v) => String(v.id) === String(it.variantId),
+                  );
+                  console.log(`[StoreCartContext] heal variant match for variantId="${it.variantId}" → found=${!!variant}`, variant ?? "NO MATCH");
+                  if (variant) {
+                    resolvedPrice =
+                      variant.variantSalePrice > 0
+                        ? variant.variantSalePrice
+                        : variant.variantRegularPrice || undefined;
+                  }
+                }
+                if (resolvedPrice == null) {
+                  resolvedPrice = prod.salePrice ?? prod.regularPrice ?? undefined;
+                }
+                console.log(`[StoreCartContext] heal result productId=${it.productId} variantId="${it.variantId ?? "NONE"}" → resolvedPrice=${resolvedPrice}`);
+                if (resolvedPrice != null) {
+                  changed = true;
+                  return { ...it, unitPrice: resolvedPrice };
+                }
+              } catch (e) {
+                console.error(`[StoreCartContext] heal error for productId=${it.productId}`, e);
+              }
+              return it;
+            }),
+          );
+          console.log(`[StoreCartContext] heal done — changed=${changed}`);
+          if (changed) setStoreCart({ ...cart, items: enrichedItems });
+        } catch (e) { console.error("[StoreCartContext] heal block error", e); }
+      })();
       return cart;
     } catch (err) {
       console.error("StoreCartContext: refreshStoreCart failed", err);
@@ -189,6 +236,32 @@ export const StoreCartProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             }
             if (cart.origin !== "store") cart.origin = "store";
             setStoreCart(cart);
+            // Heal items missing unitPrice (same logic as in refreshStoreCart)
+            (async () => {
+              try {
+                const needsPrice = cart.items.filter((it) => !it.unitPrice);
+                if (needsPrice.length === 0) return;
+                let changed = false;
+                const enrichedItems = await Promise.all(
+                  cart.items.map(async (it) => {
+                    if (it.unitPrice) return it;
+                    try {
+                      const prod = await getStoreProductById(it.productId);
+                      if (!prod) return it;
+                      let resolvedPrice: number | undefined;
+                      if (prod.hasVariantOptions && it.variantId) {
+                        const variant = prod.variants.find((v) => String(v.id) === String(it.variantId));
+                        if (variant) resolvedPrice = variant.variantSalePrice > 0 ? variant.variantSalePrice : variant.variantRegularPrice || undefined;
+                      }
+                      if (!resolvedPrice) resolvedPrice = prod.salePrice ?? prod.regularPrice ?? undefined;
+                      if (resolvedPrice) { changed = true; return { ...it, unitPrice: resolvedPrice }; }
+                    } catch { /* ignore per-item */ }
+                    return it;
+                  }),
+                );
+                if (changed) setStoreCart({ ...cart, items: enrichedItems });
+              } catch { /* ignore */ }
+            })();
             return cart;
           }
           console.warn(`🟢 [addToStoreCart] cart was null — doing fresh fetchStoreCart`);

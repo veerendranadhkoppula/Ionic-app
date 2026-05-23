@@ -276,10 +276,10 @@ export function normalizeStoreCart(raw: unknown): StoreCartShape | null {
           ? rawImage
           : `${MEDIA_BASE}${rawImage}`
         : undefined;
-      const unitPrice =
-        item.unitPrice != null ? Number(item.unitPrice) :
-        item.price != null ? Number(item.price) :
-        undefined;
+      const rawUnitPrice = item.unitPrice != null ? Number(item.unitPrice) : item.price != null ? Number(item.price) : undefined;
+      const unitPrice = rawUnitPrice && rawUnitPrice > 0 ? rawUnitPrice : undefined;
+
+      console.log(`[fetchStoreCart] item id=${id} productId=${pid} vId="${item.vId ?? "NONE"}" raw.unitPrice=${JSON.stringify(item.unitPrice)} raw.price=${JSON.stringify(item.price)} → resolved unitPrice=${unitPrice}`);
 
       const productHighlights: SelectedProductHighlight[] | undefined =
         Array.isArray(item.productHighlights) && item.productHighlights.length > 0
@@ -545,6 +545,9 @@ export async function addStoreCartItem(
           base.vId = String(variantId);
           if (variantName) base.variantName = variantName;
           if (productHighlights && productHighlights.length > 0) base.productHighlights = toPayloadHighlights(productHighlights);
+          // Always re-apply the original unitPrice here — the fetched value (it.unitPrice) can be
+          // undefined if the backend didn't echo it back after POST, which caused AED 0 in cart.
+          if (unitPrice != null) base.unitPrice = unitPrice;
         } else {
           if (it.variantId) base.vId = it.variantId;
           if (it.variantName) base.variantName = it.variantName;

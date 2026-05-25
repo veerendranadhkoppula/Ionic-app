@@ -56,9 +56,6 @@ type MenuCategory = {
   items: MenuItem[];
 };
 
-type MenuShape = Record<string, MenuCategory[]>;
-
-const TAB_ORDER = ["BEVERAGES", "BAKERY"] as const;
 
 const VegIcon = () => (
   <svg width="12" height="11" viewBox="0 0 12 11" fill="none">
@@ -71,7 +68,10 @@ const VegIcon = () => (
 
 const NonVegIcon = () => (
   <svg width="12" height="11" viewBox="0 0 12 11" fill="none">
-    <path d="M0 10.3325V0H11.3632V10.3325H0Z" fill="#A83434" />
+    <path
+      d="M0 10.3325V0H11.3632V10.3325H0ZM1.26258 9.1844H10.1007V1.14805H1.26258V9.1844ZM5.68162 7.46233C4.9872 7.46233 4.39274 7.2375 3.89822 6.78785C3.40371 6.33819 3.15646 5.79765 3.15646 5.16623C3.15646 4.5348 3.40371 3.99426 3.89822 3.54461C4.39274 3.09495 4.9872 2.87013 5.68162 2.87013C6.37604 2.87013 6.97051 3.09495 7.46502 3.54461C7.95953 3.99426 8.20679 4.5348 8.20679 5.16623C8.20679 5.79765 7.95953 6.33819 7.46502 6.78785C6.97051 7.2375 6.37604 7.46233 5.68162 7.46233Z"
+      fill="#A83434"
+    />
   </svg>
 );
 
@@ -142,11 +142,8 @@ const CafeMenu: React.FC = () => {
   );
 
   const [selected] = useState<VegType | null>(null);
-  const [MENU, setMENU] = useState<ApiMenuShape>({
-    BEVERAGES: [],
-    BAKERY: [],
-  });
-  const [activeTab, setActiveTab] = useState<keyof MenuShape>("BEVERAGES");
+  const [MENU, setMENU] = useState<ApiMenuShape>({ BEVERAGES: [], BAKERY: [] });
+  const [activeTab, setActiveTab] = useState<string>("BEVERAGES");
   const [cartPreloaded, setCartPreloaded] = useState(false);
   const [menuLoaded, setMenuLoaded] = useState(false);
   const [menuImagesPreloaded, setMenuImagesPreloaded] = useState(false);
@@ -154,7 +151,7 @@ const CafeMenu: React.FC = () => {
 const [rewardShaking, setRewardShaking] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [shopId, setShopId] = useState<number | null>(null);
-  const beveragesRef = useRef<HTMLDivElement | null>(null);
+
   const menuScrollRef = useRef<HTMLDivElement | null>(null);
   const productObserver = useRef<IntersectionObserver | null>(null);
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -486,13 +483,15 @@ const [rewardShaking, setRewardShaking] = useState(false);
           }));
 
         setMENU({
-          BEVERAGES: markBestSellers(
-            structuredMenu.BEVERAGES || [],
-          ) as ApiMenuShape["BEVERAGES"],
-          BAKERY: markBestSellers(
-            structuredMenu.BAKERY || [],
-          ) as ApiMenuShape["BAKERY"],
-        });
+          BEVERAGES: [],
+          BAKERY: [],
+          ...Object.fromEntries(
+            Object.entries(structuredMenu).map(([key, cats]) => [
+              key,
+              markBestSellers(cats as MenuCategory[]),
+            ]),
+          ),
+        } as ApiMenuShape);
         // Preload cafe menu images so UI only shows once images are ready (or timeout)
         (async () => {
           try {
@@ -505,8 +504,7 @@ const [rewardShaking, setRewardShaking] = useState(false);
                 }
               }
             };
-            gather(structuredMenu.BEVERAGES || ([] as any));
-            gather(structuredMenu.BAKERY || ([] as any));
+            Object.values(structuredMenu).forEach((cats) => gather(cats as any));
 
             // make unique
             const uniq = Array.from(new Set(urls.filter(Boolean)));
@@ -609,7 +607,7 @@ const [rewardShaking, setRewardShaking] = useState(false);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const tab = params.get("tab");
-    if (tab === "BEVERAGES" || tab === "BAKERY") {
+    if (tab) {
       setActiveTab(tab);
       isProgrammaticScrollRef.current = true; // ADD
       if (programmaticScrollTimerRef.current)
@@ -668,7 +666,7 @@ const [rewardShaking, setRewardShaking] = useState(false);
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const tab = entry.target.getAttribute("data-tab");
-          if (tab) setActiveTab(tab as keyof MenuShape);
+          if (tab) setActiveTab(tab);
         });
       },
       {
@@ -680,6 +678,12 @@ const [rewardShaking, setRewardShaking] = useState(false);
 
     return () => productObserver.current?.disconnect();
   }, [menuLoaded]);
+
+  const tabOrder = React.useMemo(() => {
+    const known = ["BEVERAGES", "BAKERY"];
+    const extra = Object.keys(MENU).filter((k) => !known.includes(k)).sort();
+    return [...known, ...extra];
+  }, [MENU]);
 
   const flattenCategories = (categories?: MenuCategory[]) => {
     if (!categories) return [];
@@ -782,7 +786,7 @@ const [rewardShaking, setRewardShaking] = useState(false);
                   {/* <Banner currentPage="Cafe" /> */}
 
                   <div className={styles.MiddleBottom}>
-                    {TAB_ORDER.filter((t) =>
+                    {tabOrder.filter((t) =>
                       Object.prototype.hasOwnProperty.call(MENU, t),
                     ).map((tab) => (
                       <button
@@ -831,8 +835,8 @@ const [rewardShaking, setRewardShaking] = useState(false);
                 </div>
               </div>
               <div className={styles.Bottom} ref={menuScrollRef}>
-                <div ref={beveragesRef}>
-                  {MENU.BEVERAGES.length === 0 ? (
+                <div>
+                  {!(MENU.BEVERAGES?.length) ? (
                     <div
                       className={styles.ComingSoon}
                       data-tab="BEVERAGES"
@@ -1466,6 +1470,184 @@ if (isNowWishlisted) {
                     })
                   )}
                 </div>
+                {Object.keys(MENU)
+                  .filter((k) => k !== "BEVERAGES" && k !== "BAKERY")
+                  .sort()
+                  .map((tabKey) => {
+                    const categories = MENU[tabKey] || [];
+                    return (
+                      <div key={tabKey}>
+                        {categories.length === 0 ? (
+                          <div
+                            className={styles.ComingSoon}
+                            data-tab={tabKey}
+                            ref={(el) => {
+                              if (el && productObserver.current) {
+                                productObserver.current.observe(el);
+                              }
+                            }}
+                          >
+                            <h2>Coming Soon</h2>
+                            <p>We're brewing something special for you</p>
+                          </div>
+                        ) : (
+                          flattenCategories(categories).map((cat, catIndex) => {
+                            const filteredItems = cat.items.filter(
+                              (item) => !selected || item.vegType === selected,
+                            );
+                            if (filteredItems.length === 0) return null;
+                            const CatClass =
+                              catIndex === 0
+                                ? styles.CatOne
+                                : catIndex === 1
+                                ? styles.CatTwo
+                                : styles.CatThree;
+                            return (
+                              <div
+                                key={`${tabKey}-${catIndex}`}
+                                className={CatClass}
+                                data-tab={tabKey}
+                                ref={(el) => {
+                                  if (el && productObserver.current && catIndex === 0) {
+                                    productObserver.current.observe(el);
+                                  }
+                                }}
+                              >
+                                <div
+                                  className={styles.TopHeading}
+                                  data-tab={tabKey}
+                                  ref={(el) => {
+                                    categoryRefs.current[cat.title] = el;
+                                    if (el && productObserver.current) {
+                                      productObserver.current.observe(el);
+                                    }
+                                  }}
+                                >
+                                  <h3>{cat.title}</h3>
+                                </div>
+                                <div className={styles.Items}>
+                                  {filteredItems.map((item: MenuItem, index: number) => (
+                                    <React.Fragment key={index}>
+                                      <div
+                                        className={`${styles.ItemCard} ${!item.inStock ? styles.OutOfStock : ""} ${shopClosed ? styles.ShopClosed : ""}`}
+                                        data-tab={tabKey}
+                                        ref={(el) => {
+                                          if (el && productObserver.current && index === 0) {
+                                            productObserver.current.observe(el);
+                                          }
+                                        }}
+                                      >
+                                        <div
+                                          className={styles.ItemCardLeft}
+                                          onClick={() => { if (!item.inStock) return; openProduct(item); }}
+                                        >
+                                          <img src={item.image || placeholderimage} alt={item.name} />
+                                          {item.originalPrice && item.discountedPrice && (
+                                            <div className={styles.Offerbadge}><p>OFFER</p></div>
+                                          )}
+                                        </div>
+                                        <div className={styles.ItemCardRight}>
+                                          <div className={styles.ItemCardRightTopvee}>
+                                            <div className={styles.ItemCardRightTop}>
+                                              <div className={styles.badges}>
+                                                <div className={styles.VegandNonVegBadge}>
+                                                  <VegTypeIcon type={item.vegType} />
+                                                </div>
+                                                {item.bestseller && (
+                                                  <div className={styles.BestSellerBadge}>
+                                                    <BestSellerIcon />
+                                                  </div>
+                                                )}
+                                              </div>
+                                              <h2 onClick={() => openProduct(item)}>{item.name}</h2>
+                                              <p>{item.tagline || item.desc}</p>
+                                            </div>
+                                            {isLoggedIn && (
+                                              <div
+                                                className={styles.WishListIcon}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  if (!item.id) { console.warn("⚠️ Missing item.id", item); return; }
+                                                  console.log("❤️ Clicking wishlist for product:", item.id);
+                                                  toggleWishlist(Number(item.id));
+                                                  const el = e.currentTarget;
+                                                  const isNowWishlisted = !wishlistItems.includes(item.id);
+                                                  if (isNowWishlisted) {
+                                                    el.classList.remove(styles.animateHearts);
+                                                    void el.offsetWidth;
+                                                    el.classList.add(styles.animateHearts);
+                                                  }
+                                                }}
+                                              >
+                                                <svg width="22" height="20" viewBox="-1 -1 22 20" preserveAspectRatio="xMidYMid meet">
+                                                  <path
+                                                    d="M12.8225 0.162502C13.9681 -0.112739 15.1716 -0.0369827 16.2727 0.379481C17.3737 0.796003 18.3203 1.53404 18.9861 2.49459C19.6513 3.4543 20.005 4.59101 19.9999 5.75377L19.9954 5.97792C19.8997 8.2785 18.3472 9.96547 17.0049 11.2903L16.9967 11.2984L11.8977 16.1661C11.6649 16.4206 11.3825 16.6263 11.0665 16.7695C10.7367 16.9189 10.3783 16.9977 10.0154 17C9.65262 17.0022 9.29326 16.9282 8.96164 16.783C8.63969 16.6419 8.35092 16.4367 8.11317 16.1805L3.00326 11.2975L2.99509 11.2903C1.65337 9.96607 0.100309 8.28752 0.00454214 5.97881L0 5.75377C2.1614e-05 4.59275 0.357267 3.45841 1.0238 2.50176C1.69032 1.54527 2.63536 0.811087 3.73364 0.39562C4.83197 -0.0198101 6.03215 -0.096816 7.17567 0.175054C8.25275 0.431183 9.23198 0.984995 9.99907 1.77012C10.7642 0.980134 11.7438 0.421646 12.8225 0.162502Z"
+                                                    fill={item.id && wishlistItems.includes(item.id) ? "#E53935" : "transparent"}
+                                                    stroke={item.id && wishlistItems.includes(item.id) ? "#E53935" : "#BDBDBD"}
+                                                    strokeWidth="1.5"
+                                                  />
+                                                </svg>
+                                                <div className={styles.heartsBurst}>
+                                                  {[...Array(5)].map((_, i) => <span key={i} className={styles.heart}></span>)}
+                                                </div>
+                                              </div>
+                                            )}
+                                          </div>
+                                          <div className={styles.ItemCardRightBottomveee}>
+                                            <div className={styles.ItemCardRightBottom}>
+                                              {item.originalPrice && item.discountedPrice ? (
+                                                <div className={styles.priceDetailsss}>
+                                                  <span style={{ textDecoration: "line-through", color: "#8C8C8C", fontSize: "12px", fontWeight: 500, fontFamily: "var(--lato)" }}>
+                                                    AED {item.originalPrice}
+                                                  </span>
+                                                  <h2>AED {item.discountedPrice}</h2>
+                                                </div>
+                                              ) : (
+                                                <h2>AED {item.price}</h2>
+                                              )}
+                                            </div>
+                                            <div className={styles.AddToCartButton}>
+                                              {item.inStock ? (
+                                                <>
+                                                  {item.customizations && item.customizations.length > 0 && <p>Customizable</p>}
+                                                  {(() => {
+                                                    const pidNum = Number(item.id);
+                                                    const matching = (cart?.items || []).filter((ci: any) => {
+                                                      const pid = Number(ci?.productId ?? ci?.product?.id ?? ci?.product?.value?.id);
+                                                      return pid === pidNum;
+                                                    });
+                                                    const totalQty = matching.reduce((acc: number, it: any) => acc + (it.quantity || 0), 0);
+                                                    if (totalQty > 0) {
+                                                      const entry = matching[matching.length - 1];
+                                                      return (
+                                                        <div className={styles.QuantitySelector}>
+                                                          <button onClick={() => handleDecrementClick(entry)}>-</button>
+                                                          <span>{totalQty}</span>
+                                                          <button onClick={() => handleIncrementClick(entry)}>+</button>
+                                                        </div>
+                                                      );
+                                                    }
+                                                    return <button onClick={() => handleAddClick(item)}>ADD +</button>;
+                                                  })()}
+                                                </>
+                                              ) : (
+                                                <button className={styles.OutOfStockButton} disabled>Out of stock</button>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className={styles.Line}></div>
+                                    </React.Fragment>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>

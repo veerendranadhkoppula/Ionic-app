@@ -22,8 +22,8 @@ const Connect = () => {
 
             <p>
               Contact Us –{" "}
-              <a href="tel:+971589535337" className={styles.InfoSpam}>
-                058 953 5337
+              <a href="tel:+971501261243" className={styles.InfoSpam}>
+                +971 50 126 1243
               </a>
             </p>
           </div>

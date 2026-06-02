@@ -309,7 +309,7 @@ export async function getSingleShop(): Promise<PayloadShop> {
 export async function getShopMenu(
   shopId: number
 ): Promise<RawMenuItem[]> {
-  const url = `${API_BASE}/shop/${shopId}/menu-items`;
+  const url = `${API_BASE}/shop/${shopId}/menu-items?limit=100`;
 
   console.log("🌍 Calling NEW Menu API:", url);
 

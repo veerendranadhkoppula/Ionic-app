@@ -1,0 +1,72 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 24px 24px 24px;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+.Block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.Heading {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b3827;
+  margin: 0;
+}
+
+.PointsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: clamp(16px, 6vw, 42px);
+  row-gap: 16px;
+}
+
+.PointTitle {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #4b3827;
+  margin: 0;
+}
+
+.PointDescription {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+.EverySession {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #6c7a5f;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 11.5px;
+  box-sizing: border-box;
+}
+
+.EverySessionHeading {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.EverySessionDescription {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #ffffff;
+  margin: 0;
+}

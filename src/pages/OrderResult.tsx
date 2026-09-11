@@ -7,7 +7,7 @@ import OrderResultsDetail from "../components/OrderResults/OrderResultsDetail/Or
 
 import { useIonRouter } from "@ionic/react";
 import { App } from "@capacitor/app";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 type OrderType = "takeaway" | "dinein" | "take-away" | "dine-in";
 type OrderStatus = "confirmed" | "cancelled" | "succeeded" | "requires_capture";
 
@@ -17,6 +17,13 @@ interface OrderResultState {
   orderStatus  ?: OrderStatus | string;
   cartSnapshot ?: unknown[];  // enriched cart items passed from Express after payment
 }
+
+// Written by CafePay.tsx/Express.tsx right before navigating here. Read in
+// preference to router `state` because getting here now goes through
+// ionRouter.push(path, "root", "replace") — which resets Ionic's own
+// navigation stack (so back-navigation can't land back on the payment
+// screen) but, unlike history.push/replace, has no way to carry state.
+const SS_CAFE_ORDER_RESULT = "cafepay_order_result";
 
 /** Normalise the various status strings Stripe / backend can return */
 function resolveStatus(raw: string | undefined): "confirmed" | "cancelled" {
@@ -34,12 +41,20 @@ function resolveType(raw: string | undefined): "takeaway" | "dinein" {
 
 const OrderResults: React.FC = () => {
   const location = useLocation<OrderResultState>();
+  const [sessionState] = useState<OrderResultState>(() => {
+    try {
+      const raw = sessionStorage.getItem(SS_CAFE_ORDER_RESULT);
+      sessionStorage.removeItem(SS_CAFE_ORDER_RESULT);
+      if (raw) return JSON.parse(raw) as OrderResultState;
+    } catch { /* fall through to router state */ }
+    return {};
+  });
   const {
     orderId,
     orderType,
     orderStatus,
     cartSnapshot,
-  } = location.state ?? {};
+  } = { ...sessionState, ...(location.state ?? {}) };
 const ionRouter = useIonRouter();
 const listenerRef = useRef<any>(null);
   const status = resolveStatus(orderStatus);

@@ -1,0 +1,67 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 24px 32px 24px;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.Heading {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b3827;
+  margin: 0;
+}
+
+.Faqs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.FaqRow {
+  cursor: pointer;
+  background: transparent;
+  border-bottom: 1px solid #4b382733;
+  overflow: hidden;
+}
+
+.FaqHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0 15px 4px;
+}
+
+.FaqHeader span {
+  font-size: 12px;
+  font-family: var(--lato);
+  font-weight: 400;
+  color: #4b3827;
+}
+
+.Arrow {
+  flex-shrink: 0;
+  transition: transform 0.35s ease;
+}
+
+.Rotate {
+  transform: rotate(180deg);
+}
+
+.FaqBody {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.FaqBody p {
+  margin: 0;
+  padding: 0 16px 16px 7.5px;
+  font-size: 12px;
+  font-family: var(--lato);
+  color: #4b3827;
+}

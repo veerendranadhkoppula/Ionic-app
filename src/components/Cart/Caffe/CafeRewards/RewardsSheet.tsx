@@ -2,6 +2,7 @@
 import React from "react";
 import styles from "./RewardsSheet.module.css";
 import type { StampRewardProduct } from "../../../../api/apiStamps";
+import { SHOW_DIETARY_BADGES } from "../../../../utils/featureFlags";
 
 // Re-export for any consumer that still imports RewardItem from here
 export type { StampRewardProduct as RewardItem };
@@ -30,6 +31,7 @@ const RewardsSheet: React.FC<Props> = ({
 
   // Dietary type icon — matches the same visual pattern used across the app
   const DietaryIcon = ({ type }: { type: StampRewardProduct["dietaryType"] }) => {
+    if (!SHOW_DIETARY_BADGES) return null;
     const isVeg = type === "veg" || type === "vegan";
     // Veg / Vegan → green border + green filled circle
     // Non-veg / Egg → brown/red border + brown filled circle
@@ -106,6 +108,8 @@ const RewardsSheet: React.FC<Props> = ({
                           <img
                             src={reward.image || "/12.gif"}
                             alt={reward.title || "reward"}
+                            loading="lazy"
+                            decoding="async"
                             onError={(e) => {
                               // Fallback to a placeholder image if the reward image fails
                               try {

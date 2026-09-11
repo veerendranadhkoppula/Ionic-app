@@ -122,7 +122,7 @@ const Login: React.FC = () => {
           lastName: String(u.lastName ?? (u as any).family_name ?? "").trim(),
         });
       } else {
-        history.replace("/home");
+        ionRouter.push("/home", "root", "replace"); // was history.replace() — didn't clear Ionic's nav stack, so back/swipe-back after login could land back on this screen
       }
     } catch (error) {
       console.error("Google login failed:", error);
@@ -149,7 +149,7 @@ const Login: React.FC = () => {
         lastName: String(u.lastName ?? "").trim(),
       });
     } else {
-      history.replace("/home");
+      ionRouter.push("/home", "root", "replace"); // was history.replace() — didn't clear Ionic's nav stack, so back/swipe-back after login could land back on this screen
     }
   };
 
@@ -203,7 +203,7 @@ const Login: React.FC = () => {
       navigateAfterApple(pendingAppleResult);
       setPendingAppleResult(null);
     } else {
-      history.replace("/home");
+      ionRouter.push("/home", "root", "replace"); // was history.replace() — didn't clear Ionic's nav stack, so back/swipe-back after login could land back on this screen
     }
   };
 
@@ -219,7 +219,7 @@ const onSkip = () => {
 
   window.dispatchEvent(new Event("auth-changed"));
 
-  history.replace("/home");
+  ionRouter.push("/home", "root", "replace"); // was history.replace() — didn't clear Ionic's nav stack, so back/swipe-back after login could land back on this screen
 };
   return (
     <IonPage>
@@ -350,7 +350,7 @@ const onSkip = () => {
                           );
                         }
 
-                        history.replace("/home");
+                        ionRouter.push("/home", "root", "replace"); // was history.replace() — didn't clear Ionic's nav stack, so back/swipe-back after login could land back on this screen
                       } catch (err) {
                         console.error("[Login] google login failed", err);
                       }

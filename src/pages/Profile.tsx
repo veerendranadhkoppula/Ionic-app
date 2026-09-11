@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import React, { useState } from "react";
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, useIonRouter } from "@ionic/react";
 import styles from "./Profile.module.css";
 import noprofile from "./nop.png";
 import { useHistory } from "react-router-dom";
@@ -18,6 +18,7 @@ const Profile: React.FC = () => {
   >(null);
 
   const history = useHistory();
+  const ionRouter = useIonRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
@@ -140,7 +141,7 @@ const Profile: React.FC = () => {
         const token = await tokenStorage.getToken();
         if (!token) {
           console.log("Token missing, redirecting");
-          history.replace("/auth");
+          ionRouter.push("/auth", "root", "replace");
           return;
         }
 
@@ -204,7 +205,7 @@ const Profile: React.FC = () => {
         setCurrentUser(updatedUser);
       } catch (err) {
         console.error("Profile load failed", err);
-        history.replace("/auth");
+        ionRouter.push("/auth", "root", "replace");
       } finally {
         setLoading(false);
       }

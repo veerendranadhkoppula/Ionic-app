@@ -772,20 +772,6 @@ export async function getOrderById(
   const rawItems: any[] = Array.isArray(doc?.items) ? doc.items : [];
   const shopIdForMenu = typeof doc?.shop === "object" ? (doc.shop?.id ?? 1) : 1;
 
-  
-  const stampRewardPidCount = new Map<number, number>();
-  const rawStampRewards: any[] = Array.isArray(doc?.stampRewards) ? doc.stampRewards : [];
-  for (const sr of rawStampRewards) {
-    const pid =
-      typeof sr === "number" ? sr :
-      typeof sr === "object" && sr !== null ? (sr?.id ?? sr?.value?.id ?? null) :
-      null;
-    if (pid != null) {
-      stampRewardPidCount.set(Number(pid), (stampRewardPidCount.get(Number(pid)) ?? 0) + 1);
-    }
-  }
-  console.log("📦 stampRewardPidCount:", [...stampRewardPidCount.entries()]);
-
   const productFetches = rawItems.map(async (item: any) => {
     const productId = typeof item?.product === "number" ? item.product :
                       typeof item?.product === "object" ? (item.product?.id ?? null) : null;
@@ -821,12 +807,21 @@ export async function getOrderById(
       `Item ${idx + 1}`;
 
     // Price per unit — prefer salePrice, then regularPrice
+    // Bug fix: salePrice/regularPrice are `text` fields on ShopMenu (e.g.
+    // "35.00", a string), not numbers — without Number(...), the `:number`
+    // annotation below was cosmetic only. `effectiveUnitPrice + custExtraPerUnit`
+    // further down then string-concatenated instead of adding (e.g.
+    // "35.00" + 8 -> "35.008"), which is why a +8 add-on showed as 35.01
+    // and a +15 add-on showed as barely anything (70.00 for qty 2, i.e. no
+    // add-on at all) instead of the correct 43.00 / 100.00.
     const unitPrice: number =
-      productDoc?.salePrice     ??
-      productDoc?.regularPrice  ??
-      productDoc?.discountPrice ??
-      productDoc?.price         ??
-      0;
+      Number(
+        productDoc?.salePrice     ??
+        productDoc?.regularPrice  ??
+        productDoc?.discountPrice ??
+        productDoc?.price         ??
+        0,
+      ) || 0;
 
     const qty = item?.quantity ?? 1;
 
@@ -848,14 +843,16 @@ export async function getOrderById(
       typeof item?.product === "object" ? (item.product?.id ?? undefined) :
       undefined;
 
-    // Stamp reward items are FREE — always show AED 0 regardless of the product's menu price.
-    // Consume one reward count per item so that if the user also bought the same product
-    // at full price in the same order, only the reward quantity is zeroed out.
-    const remainingRewardCount = resolvedProductId != null ? (stampRewardPidCount.get(resolvedProductId) ?? 0) : 0;
-    const isRewardItem = remainingRewardCount > 0;
-    if (isRewardItem && resolvedProductId != null) {
-      stampRewardPidCount.set(resolvedProductId, remainingRewardCount - 1);
-    }
+    // Stamp reward items are FREE — always show AED 0 regardless of the
+    // product's menu price. Detected via a synthetic
+    // { __rewardRedemption: true } marker tagged server-side
+    // (cafe-checkout/route.ts) inside this exact row's own customizations —
+    // unambiguous regardless of row order. This used to be guessed instead
+    // by counting doc.stampRewards entries and consuming one per matching
+    // productId encountered, which breaks the moment the same product is
+    // both bought AND redeemed in one order (whichever row came first won
+    // the "free" slot, which may not have been the actual reward row).
+    const isRewardItem = validCusts.some((c: any) => c?.__rewardRedemption === true);
     const effectiveUnitPrice = isRewardItem ? 0 : unitPrice;
     const price: number = parseFloat(((effectiveUnitPrice + (isRewardItem ? 0 : custExtraPerUnit)) * qty).toFixed(2));
 

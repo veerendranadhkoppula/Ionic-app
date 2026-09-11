@@ -176,6 +176,8 @@ React.useEffect(() => {
                             <img
                               src={avatarSrc}
                               alt={barista.name}
+                              loading="lazy"
+                              decoding="async"
                               onError={(e) => {
                                 (e.currentTarget as HTMLImageElement).src =
                                   baristaimage as string;

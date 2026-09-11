@@ -30,7 +30,12 @@ if (loading || sorted.length === 0) return null;
             <div className={styles.BlogCard} key={blog.id}>
               <div className={styles.BlogCardTop}>
                 <div className={styles.BlogImage}>
-                  <img src={blog.image} alt={blog.title} />
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
 
                 {blog.isFeatured && (

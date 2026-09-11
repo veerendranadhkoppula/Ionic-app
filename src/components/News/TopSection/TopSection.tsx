@@ -5,14 +5,26 @@ import { useLocation } from "react-router-dom";
 type LocationState = {
   from?: string;
 };
+// StickBar.tsx now navigates tabs via ionRouter.push(), which can't carry
+// route state the way history.replace's second argument could — it writes
+// the "came from" path here instead.
+const SS_TAB_FROM = "stickbar_tab_from";
 const TopSection: React.FC = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const handleBack = () => {
-  if (location.state?.from) {
-    history.replace(location.state.from); 
+  let from: string | null = location.state?.from ?? null;
+  if (!from) {
+    try {
+      from = sessionStorage.getItem(SS_TAB_FROM);
+    } catch {
+      from = null;
+    }
+  }
+  if (from) {
+    history.replace(from);
   } else {
-    history.replace("/home"); 
+    history.replace("/home");
   }
 };
   return (

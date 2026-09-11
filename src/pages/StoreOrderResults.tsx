@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IonContent, IonPage } from "@ionic/react";
 import { useLocation } from "react-router-dom";
 import "./Home.css";
@@ -47,9 +47,24 @@ export interface StoreOrderResultsState {
   subBillingAddress   ?: { name: string; address: string; phone: string } | null;
 }
 
+// Written by StorePay.tsx/Express.tsx right before navigating here. Read in
+// preference to router `state` because getting here now goes through
+// ionRouter.push(path, "root", "replace") — which resets Ionic's own
+// navigation stack (so back-navigation can't land back on the payment
+// screen) but, unlike history.push/replace, has no way to carry state.
+const SS_STORE_ORDER_RESULT = "storepay_order_result";
+
 const StoreOrderResults: React.FC = () => {
   const location = useLocation<StoreOrderResultsState>();
-  const s = location.state ?? {};
+  const [sessionState] = useState<StoreOrderResultsState>(() => {
+    try {
+      const raw = sessionStorage.getItem(SS_STORE_ORDER_RESULT);
+      sessionStorage.removeItem(SS_STORE_ORDER_RESULT);
+      if (raw) return JSON.parse(raw) as StoreOrderResultsState;
+    } catch { /* fall through to router state */ }
+    return {};
+  });
+  const s = { ...sessionState, ...(location.state ?? {}) };
   const ionRouter = useIonRouter();
 const backListenerRef = useRef<any>(null);
   console.log("📋 [StoreOrderResults] state received:", JSON.stringify({

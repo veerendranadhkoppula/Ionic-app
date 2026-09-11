@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IonContent, IonPage, useIonViewWillEnter } from "@ionic/react";
+import { IonContent, IonPage, useIonViewWillEnter, useIonRouter } from "@ionic/react";
 import { useLocation, useHistory } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import { loadStripe } from "@stripe/stripe-js";
@@ -7,8 +7,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import './Home.css'
 import TopSection from "../components/CafePay/TopSection/TopSection";
 import Express from "../components/CafePay/Express/Express";
-import { CafeCheckoutItem, cafeCafeCheckout, patchOrderCustomizations } from "../api/apiCafe";
-import { deductStampReward } from "../api/apiStamps";
+import { CafeCheckoutItem, cafeCafeCheckout } from "../api/apiCafe";
 import { getWebOrderById } from "../api/apiStoreOrders";
 import tokenStorage from "../utils/tokenStorage";
 import { useCart } from "../context/useCart";
@@ -44,6 +43,7 @@ export interface CafePayState {
 const CafePay: React.FC = () => {
   const location = useLocation<CafePayState>();
   const history = useHistory();
+  const ionRouter = useIonRouter();
   const state = location.state ?? {} as CafePayState;
 
   const { clearCart } = useCart();
@@ -151,28 +151,41 @@ const CafePay: React.FC = () => {
           sessionStorage.setItem(SS_ORDER_ID, String(id));
           setOrderId(id as string | number);
 
-          const rewardsUsed = Array.isArray(state.stampRewards)
-            ? (state.stampRewards as unknown[]).filter((v): v is number => typeof v === "number").length
-            : 0;
+          // Removed the deductStampReward() call that used to run here. It
+          // fired right after order creation — BEFORE the user even
+          // confirmed the Stripe payment sheet below — so a cancelled or
+          // failed payment would still have deducted the customer's reward
+          // for a purchase that never completed. It was also a direct
+          // customer-writable PATCH to their own stampReward balance,
+          // which `WTStamps.ts`'s `update: () => false` already rejects
+          // outright — so in practice this call always failed anyway (see
+          // the console warning it always logged). The real, authoritative
+          // deduction already happens server-side in the Stripe webhook
+          // (deductStampRewards in appPaymentIntentSucceeded.ts, gated on
+          // payment actually succeeding, with proper locking against
+          // concurrent redemptions) — matching how Surge already handles
+          // this (its own deductStampReward() was removed for the same
+          // reason: never actually reachable, and the backend already
+          // blocks the write).
 
-          if (rewardsUsed > 0) {
-            deductStampReward(authToken, id as string | number, rewardsUsed).catch((e) => {
-              console.warn("⚙️ deductStampReward failed (non-fatal):", e);
-            });
-          }
-
-          patchOrderCustomizations(
-            authToken,
-            id as string | number,
-            state.items,
-
-            Array.isArray(state.stampRewards)
-              ? (state.stampRewards as unknown[]).filter((v): v is number => typeof v === "number")
-              : [],
-          ).catch((patchErr) => {
-            // Non-fatal: display still works via cartSnapshot in OrderResultsDetail
-            console.warn("⚙️ patchOrderCustomizations failed (non-fatal):", patchErr);
-          });
+          // Removed the patchOrderCustomizations() call that used to run here.
+          // items/customizations/financials/stampRewards are already set
+          // correctly on the order by cafe-checkout itself, computed
+          // server-side from the cart + canonical menu data (including
+          // customization pricing) BEFORE the Stripe PaymentIntent is
+          // created — so the PaymentIntent's amount already matches the
+          // order's true total. This client-side patch used to re-add the
+          // same customization total AFTER the fact, directly PATCHing
+          // financials.subtotal/total over the REST API as the customer.
+          // Two problems: it ran (harmlessly) redundant once the backend
+          // fix landed — but before that, it was "correcting" the order's
+          // displayed total to match the real customization price *after*
+          // Stripe had already charged the card for the old, wrong (lower)
+          // amount, leaving the order record showing a total the customer
+          // was never actually charged. That's now blocked at the field
+          // level on the backend too (an owner can no longer rewrite their
+          // own order's items/financials/rewards), so the PATCH was removed
+          // rather than left to silently no-op or double-count.
         }
         setIsPreparing(false);
       } catch (e: unknown) {
@@ -275,17 +288,28 @@ const CafePay: React.FC = () => {
 
         await handlePaymentSuccess();
 
-        history.push("/OrderResult", {
-          orderId,
-          orderType  : state.orderType ?? "take-away",
-          orderStatus: "succeeded",
-          cartSnapshot: (() => {
-            try {
-              const raw = sessionStorage.getItem("cafe_cart_snapshot");
-              return raw ? JSON.parse(raw) : undefined;
-            } catch { return undefined; }
-          })(),
-        });
+        // Plain history.push() here never cleared Ionic's own internal
+        // navigation stack (LocationHistory), which is what native
+        // swipe-back actually reads — so dragging/pressing back from the
+        // results screen landed back on this payment screen instead of
+        // Home. ionRouter.push(path, "root", "replace") resets that stack,
+        // but can't carry route state the way history.push's second
+        // argument could, so the result payload goes through sessionStorage
+        // instead — read back by OrderResult.tsx.
+        try {
+          sessionStorage.setItem("cafepay_order_result", JSON.stringify({
+            orderId,
+            orderType  : state.orderType ?? "take-away",
+            orderStatus: "succeeded",
+            cartSnapshot: (() => {
+              try {
+                const raw = sessionStorage.getItem("cafe_cart_snapshot");
+                return raw ? JSON.parse(raw) : undefined;
+              } catch { return undefined; }
+            })(),
+          }));
+        } catch { /* non-fatal — OrderResult.tsx falls back gracefully */ }
+        ionRouter.push("/OrderResult", "root", "replace");
       } else if (paymentResult === PaymentSheetEventsEnum.Canceled) {
         setNativeState("canceled");
       } else {

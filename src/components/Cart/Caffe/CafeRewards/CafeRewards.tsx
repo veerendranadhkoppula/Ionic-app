@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import styles from "./CafeRewards.module.css";
+import { SHOW_DIETARY_BADGES } from "../../../../utils/featureFlags";
 
 interface Props {
   openSheet: () => void;
@@ -86,18 +87,20 @@ const CafeRewards: React.FC<Props> = ({
 
               <div className={styles.addedRewardDetails}>
                 <div className={styles.adedveganiconandTitle}>
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 10V0H10V10H0ZM1.11111 8.88889H8.88889V1.11111H1.11111V8.88889ZM5 7.22222C4.38889 7.22222 3.86574 7.00463 3.43056 6.56944C2.99537 6.13426 2.77778 5.61111 2.77778 5C2.77778 4.38889 2.99537 3.86574 3.43056 3.43056C3.86574 2.99537 4.38889 2.77778 5 2.77778C5.61111 2.77778 6.13426 2.99537 6.56944 3.43056C7.00463 3.86574 7.22222 4.38889 7.22222 5C7.22222 5.61111 7.00463 6.13426 6.56944 6.56944C6.13426 7.00463 5.61111 7.22222 5 7.22222Z"
-                      fill="#34A853"
-                    />
-                  </svg>
+                  {SHOW_DIETARY_BADGES && (
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 10 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 10V0H10V10H0ZM1.11111 8.88889H8.88889V1.11111H1.11111V8.88889ZM5 7.22222C4.38889 7.22222 3.86574 7.00463 3.43056 6.56944C2.99537 6.13426 2.77778 5.61111 2.77778 5C2.77778 4.38889 2.99537 3.86574 3.43056 3.43056C3.86574 2.99537 4.38889 2.77778 5 2.77778C5.61111 2.77778 6.13426 2.99537 6.56944 3.43056C7.00463 3.86574 7.22222 4.38889 7.22222 5C7.22222 5.61111 7.00463 6.13426 6.56944 6.56944C6.13426 7.00463 5.61111 7.22222 5 7.22222Z"
+                        fill="#34A853"
+                      />
+                    </svg>
+                  )}
 
                   <h4>{selectedReward.title}</h4>
                 </div>

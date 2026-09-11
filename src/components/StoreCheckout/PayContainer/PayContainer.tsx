@@ -14,7 +14,7 @@ const PayContainer = ({ total, onProceed, label = "Pay now", disabled = false }:
       <div
         className={`${styles.btn} ${disabled ? styles.disabled : ""}`}
         style={{ cursor: disabled ? "not-allowed" : "pointer" }}
-        onClick={onProceed}
+        onClick={disabled ? undefined : onProceed}
       >
         <h4>{label}</h4>
         <h4>AED {total.toFixed(2)}</h4>

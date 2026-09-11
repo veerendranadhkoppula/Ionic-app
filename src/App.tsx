@@ -65,7 +65,11 @@ import SubscriptionDetail from "./pages/SubscriptionDetail.tsx";
 import Subscription from "./pages/Subscription.tsx";
 import News from "./pages/News.tsx";
 import NewsDetail from "./pages/NewsDetail.tsx";
+import Experience from "./pages/Experience.tsx";
 import CafePay from "./pages/CafePay.tsx";
+import EventPay from "./pages/EventPay.tsx";
+import EventOrderResult from "./pages/EventOrderResult.tsx";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary.tsx";
 
 setupIonicReact();
 
@@ -221,6 +225,9 @@ const App: React.FC = () => {
             <News />
           </Route>
           <Route path="/news/:id" component={NewsDetail} exact />
+          <Route exact path="/Experience">
+            <Experience />
+          </Route>
           <Route exact path="/NeedHelp">
             <NeedHelp />
           </Route>
@@ -233,6 +240,16 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/CafePay">
             <CafePay />
+          </Route>
+          <Route exact path="/EventPay">
+            <ErrorBoundary fallbackTitle="Couldn't load checkout">
+              <EventPay />
+            </ErrorBoundary>
+          </Route>
+          <Route exact path="/EventOrderResult">
+            <ErrorBoundary fallbackTitle="Couldn't load booking confirmation">
+              <EventOrderResult />
+            </ErrorBoundary>
           </Route>
           <Route exact path="/referral">
             <Referrals />

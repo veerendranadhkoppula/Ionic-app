@@ -1,0 +1,214 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 24px 32px 24px;
+  gap: 16px;
+}
+
+.Heading {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b3827;
+  margin: 0;
+}
+
+.Body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+.CalendarBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0.5px solid rgba(47, 54, 42, 0.3);
+  border-radius: 8px;
+  padding: 14px 10px 10px 10px;
+  gap: 16px;
+}
+
+/* Slots step reuses .CalendarBox but needs its own bottom padding. */
+.CalendarBoxSlots {
+  padding-bottom: 18px;
+}
+
+.EmptyState {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 13px;
+  color: #8c8c8c;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+}
+
+.CalendarHeader {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+  align-items: center;
+}
+
+.ArrowBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ArrowBtn:disabled {
+  cursor: default;
+}
+
+.MonthLabel {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 14px;
+  color: #4b3827;
+  text-align: center;
+  margin: 0;
+}
+
+.WeekRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.WeekRow span {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 14px;
+  color: #4b3827;
+  text-align: center;
+}
+
+.DayGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 6px;
+  column-gap: 0;
+  justify-items: center;
+}
+
+.DayCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--lato);
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.DayCell:disabled {
+  cursor: default;
+}
+
+.DayCellMuted {
+  color: rgba(47, 54, 42, 0.3);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.DayCellBookable {
+  color: #6c7a5f;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.DaySelected {
+  background-color: #6c7a5f;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.NextRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.NextBtn {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #6c7a5f;
+  border: none;
+  padding: 8px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.NextBtn:disabled {
+  background-color: #6c7a5f;
+  opacity: 0.4;
+  cursor: default;
+}
+
+.SelectedDateLabel {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 18px;
+  color: #4b3827;
+  text-align: center;
+  margin: 0;
+}
+
+.SlotsGrid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+}
+
+.SlotBtn {
+  box-sizing: border-box;
+  min-width: 220px;
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 20px;
+  color: #4b3827;
+  background-color: transparent;
+  border: 1px solid #2F362A4D;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.SlotBtnSelected {
+  background-color: #6c7a5f;
+  border-color: #6c7a5f;
+  color: #ffffff;
+}
+
+.StepFooterRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.BackBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}

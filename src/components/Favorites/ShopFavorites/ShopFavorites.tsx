@@ -199,6 +199,8 @@ const ShopFavorites = () => {
                     src={item.imageUrl}
                     alt={item.name}
                     className={styles.productImage}
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "/fallback.png";
                     }}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import { useHistory } from "react-router-dom";
+import { useIonRouter } from "@ionic/react";
 import styles from "./Express.module.css";
 import tokenStorage from "../../../utils/tokenStorage";
 import { appendNotifications } from "../../../api/apiCafeNotifications";
@@ -19,6 +20,7 @@ const Express: React.FC<ExpressProps> = ({ toPay, orderId, orderType, onPaymentS
   const stripe   = useStripe();
   const elements = useElements();
   const history  = useHistory();
+  const ionRouter = useIonRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError]         = useState<string | null>(null);
@@ -129,19 +131,25 @@ localStorage.setItem("active_cafe_order", JSON.stringify({
         window.dispatchEvent(new Event("cafe_order_placed"));
       }
 
-      history.push("/OrderResult", {
-        orderId,
-        orderType  : orderType ?? "take-away",
-        orderStatus: paymentIntent?.status ?? "confirmed",
-
-        cartSnapshot: (() => {
-          try {
-            const raw = sessionStorage.getItem("cafe_cart_snapshot");
-            if (raw) return JSON.parse(raw);
-          } catch { /* ignore */ }
-          return undefined;
-        })(),
-      });
+      // See CafePay.tsx for why this is ionRouter.push + sessionStorage
+      // instead of history.push(path, state) — the latter never cleared
+      // Ionic's internal navigation stack, so swipe/press back from the
+      // results screen landed back on this payment screen instead of Home.
+      try {
+        sessionStorage.setItem("cafepay_order_result", JSON.stringify({
+          orderId,
+          orderType  : orderType ?? "take-away",
+          orderStatus: paymentIntent?.status ?? "confirmed",
+          cartSnapshot: (() => {
+            try {
+              const raw = sessionStorage.getItem("cafe_cart_snapshot");
+              if (raw) return JSON.parse(raw);
+            } catch { /* ignore */ }
+            return undefined;
+          })(),
+        }));
+      } catch { /* non-fatal — OrderResult.tsx falls back gracefully */ }
+      ionRouter.push("/OrderResult", "root", "replace");
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Payment failed. Please try again.";
       console.error("❌ Express handleContinue error:", msg);

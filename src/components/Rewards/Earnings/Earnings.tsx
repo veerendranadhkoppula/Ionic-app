@@ -97,9 +97,16 @@ const Earnings = () => {
                 </div>
 
                 <p>
-                  {getCurrentUser()?.id
-                    ? `reward_user_${getCurrentUser()?.id}`
-                    : ""}
+                  {(() => {
+                    const current = getCurrentUser();
+                    if (!current) return "";
+                    return (
+                      current.name?.trim() ||
+                      `${current.firstName ?? ""} ${current.lastName ?? ""}`.trim() ||
+                      current.email ||
+                      ""
+                    );
+                  })()}
                 </p>
               </div>
             </div>

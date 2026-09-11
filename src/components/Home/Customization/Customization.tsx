@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Customization.module.css";
+import { SHOW_DIETARY_BADGES } from "../../../utils/featureFlags";
 
 type VegType = "Veg" | "NonVeg" | "Egg" | "Vegan";
 
@@ -30,6 +31,7 @@ const VeganIcon = () => (
 );
 
 const VegTypeIcon = ({ type }: { type?: VegType }) => {
+  if (!SHOW_DIETARY_BADGES) return null;
   switch (type) {
     case "NonVeg": return <NonVegIcon />;
     case "Egg":    return <EggIcon />;

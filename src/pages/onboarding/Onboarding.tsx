@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styles from "./Onboarding1/Onboarding1.module.css";
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, useIonRouter } from "@ionic/react";
 
 import { App } from "@capacitor/app";
 
@@ -42,7 +42,7 @@ const onboardingSteps = [
 ];
 
 const Onboarding: React.FC = () => {
-  const history = useHistory();
+  const ionRouter = useIonRouter();
   const location = useLocation();
 
   const parseInitial = () => {
@@ -97,14 +97,17 @@ const Onboarding: React.FC = () => {
     setStep(nextStep);
   };
 
+  // ionRouter.push(path, "root", "replace") — not history.replace() — so
+  // Ionic's own navigation stack is actually cleared; otherwise onboarding
+  // stays reachable via back/swipe-back from the auth screen.
   const skip = async () => {
     await setHasSeenOnboardingAsync();
-    history.replace("/auth");
+    ionRouter.push("/auth", "root", "replace");
   };
 
   const finishAndRoute = async () => {
     await setHasSeenOnboardingAsync();
-    history.replace("/auth");
+    ionRouter.push("/auth", "root", "replace");
   };
 
   const onNext = () => {

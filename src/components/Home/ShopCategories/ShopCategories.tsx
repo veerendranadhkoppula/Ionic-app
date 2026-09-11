@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./ShopCategories.module.css";
 import one from "./1.png";
 import two from "./2.png";
-import three from "./3.png";
+import three from "./33.png";
 import { useIonRouter } from "@ionic/react";
 
 const ShopCategories = () => {

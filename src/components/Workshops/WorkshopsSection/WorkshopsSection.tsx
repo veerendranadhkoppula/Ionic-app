@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import styles from "./WorkshopsSection.module.css";
 import workshopimg from "./1.png";
 import { getWorkshops } from "../../../api/apiWorkshops";
@@ -6,6 +7,7 @@ import type { Workshop } from "../../../api/apiWorkshops";
 import NoState from "../../NoState/NoState";
 
 const WorkshopsSection = () => {
+  const history = useHistory();
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -232,15 +234,34 @@ const WorkshopsSection = () => {
                       <div className={styles.CardInfoLeft}>
                         <h4>{workshop.startDate}</h4>
                         <p>{workshop.startTime}</p>
+                        {workshop.price > 0 && (
+                          <p className={styles.PriceLine}>
+                            AED {workshop.price.toFixed(2)}
+                            {workshop.capacity > 0 &&
+                              workshop.bookedCount < workshop.capacity && (
+                                <span className={styles.SeatsLeft}>
+                                  {" "}
+                                  &middot; {workshop.capacity - workshop.bookedCount} seat(s) left
+                                </span>
+                              )}
+                          </p>
+                        )}
                       </div>
 
-                      <a
-                        href={workshop.calendlyLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <button className={styles.BookNowcta}>Book Now</button>
-                      </a>
+                      {workshop.capacity > 0 && workshop.bookedCount >= workshop.capacity ? (
+                        <button className={styles.SoldOutCta} disabled>
+                          Sold Out
+                        </button>
+                      ) : (
+                        <button
+                          className={styles.BookNowcta}
+                          onClick={() =>
+                            history.push("/EventPay", { eventId: workshop.id })
+                          }
+                        >
+                          Book Now
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -18,6 +18,7 @@ import styles from "./CafeMenu.module.css";
 import ProductDetailSheet from "../components/ProductDetailSheet.tsx";
 import { IonPage, IonContent, IonFooter } from "@ionic/react";
 import useNetworkStatus from "../hooks/useNetworkStatus";
+import { SHOW_DIETARY_BADGES } from "../utils/featureFlags";
 import OfflineOverlay from "../components/OfflineOverlay/OfflineOverlay";
 import StickBar from "../components/Home/StickBar/StickBar.tsx";
 import { getCurrentUser } from "../utils/authStorage.ts";
@@ -91,6 +92,7 @@ const VeganIcon = () => (
 );
 
 const VegTypeIcon = ({ type }: { type: VegType }) => {
+  if (!SHOW_DIETARY_BADGES) return null;
   switch (type) {
     case "Veg":
       return <VegIcon />;
@@ -908,6 +910,8 @@ const [rewardShaking, setRewardShaking] = useState(false);
                                       <img
                                         src={item.image || placeholderimage}
                                         alt={item.name}
+                                        loading="lazy"
+                                        decoding="async"
                                       />
                                       {item.originalPrice &&
                                         item.discountedPrice && (
@@ -1236,6 +1240,8 @@ if (isNowWishlisted) {
                                       <img
                                         src={item.image || placeholderimage}
                                         alt={item.name}
+                                        loading="lazy"
+                                        decoding="async"
                                       />
                                       {item.originalPrice &&
                                         item.discountedPrice && (
@@ -1541,7 +1547,7 @@ if (isNowWishlisted) {
                                           className={styles.ItemCardLeft}
                                           onClick={() => { if (!item.inStock) return; openProduct(item); }}
                                         >
-                                          <img src={item.image || placeholderimage} alt={item.name} />
+                                          <img src={item.image || placeholderimage} alt={item.name} loading="lazy" decoding="async" />
                                           {item.originalPrice && item.discountedPrice && (
                                             <div className={styles.Offerbadge}><p>OFFER</p></div>
                                           )}

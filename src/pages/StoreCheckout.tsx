@@ -153,11 +153,24 @@ const StoreCheckout: React.FC = () => {
 
   
 
+  // A shallow `!!address` check passes for ANY non-null object, even one
+  // missing real field values — so Pay Now could report "ready" without
+  // anything meaningful actually being filled in. Require the fields the
+  // order actually needs to be non-empty strings.
+  const isAddressComplete = (addr: StoreCheckoutAddress | null): boolean =>
+    !!addr &&
+    !!addr.addressFirstName?.trim() &&
+    !!addr.addressLastName?.trim() &&
+    !!addr.street?.trim() &&
+    !!addr.city?.trim() &&
+    !!addr.emirates?.trim() &&
+    !!addr.phoneNumber?.trim();
+
   const addressReady =
     deliveryMode === "ship"
-      ? !!shippingAddress
+      ? isAddressComplete(shippingAddress)
       : deliveryMode === "pickup"
-      ? !!billingAddress
+      ? isAddressComplete(billingAddress)
       : false;
 
   //  Derive order

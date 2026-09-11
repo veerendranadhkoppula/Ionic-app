@@ -167,6 +167,17 @@ console.log("unitPrice:", unitPrice);
       alert("Please select a shipping address.");
       return;
     }
+    // Pickup mode had no equivalent guard here at all — Pay Now's disabled
+    // state was the only thing stopping a pickup checkout with no billing
+    // address from submitting; this adds the same defense-in-depth check
+    // ship mode already had.
+    if (
+      deliveryState.deliveryMode === "pickup" &&
+      !deliveryState.billingAddress
+    ) {
+      alert("Please select a billing address.");
+      return;
+    }
 
     const shippingAddr = deliveryState.shippingAddress
       ? mapToSubscriptionAddress(deliveryState.shippingAddress)

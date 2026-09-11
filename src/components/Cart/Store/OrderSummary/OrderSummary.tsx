@@ -38,7 +38,12 @@ const OrderSummary = ({ items, onIncrement, onDecrement, onRemove }: Props) => {
               <div className={styles.prodleft}>
                 <div className={styles.prodimg}>
                   {item.productImage && (
-                    <img src={item.productImage} alt={item.name} />
+                    <img
+                      src={item.productImage}
+                      alt={item.name}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   )}
                 </div>
                 <div className={styles.proddetails}>

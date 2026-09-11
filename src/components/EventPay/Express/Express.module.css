@@ -1,0 +1,72 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #ffffffff;
+  padding: 27px 24px 32px 24px;
+}
+.MainConatiner {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  gap: 32px;
+}
+.Bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  gap: 32px;
+}
+.BottomTop {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  gap: 4px;
+}
+.BottomTop h4 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b3827;
+  font-family: var(--lato);
+  margin: 0;
+}
+.BottomTop p {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6e736a;
+  font-family: var(--lato);
+  margin: 0;
+}
+.PayBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px 10px;
+  background-color: #6c7a5f;
+  color: #ffffff;
+  border: 1px solid #6c7a5f;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--lato);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.disabledBtn {
+  background-color: #a4a79d;
+  border: 1px solid #a4a79d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.errorBanner {
+  background: #fff3f3;
+  border: 1px solid #e74c3c;
+  border-radius: 8px;
+  color: #c0392b;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+}

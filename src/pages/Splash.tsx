@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { IonPage, IonContent } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import { IonPage, IonContent, useIonRouter } from "@ionic/react";
 import "./Splash.css";
 import { getHasSeenOnboardingAsync } from "../utils/onboardingStorage";
 
 const Splash: React.FC = () => {
-  const history = useHistory();
+  const ionRouter = useIonRouter();
   // Track whether the splash navigation has already been triggered so that
   // any re-render / history-reference change cannot fire a second redirect.
   const hasNavigated = useRef(false);
@@ -29,10 +28,14 @@ const Splash: React.FC = () => {
 
       hasNavigated.current = true;
 
+      // ionRouter.push(path, "root", "replace") — not history.replace() —
+      // so Ionic's own navigation stack is actually cleared here too;
+      // otherwise the splash screen (and whatever launched it) stays
+      // reachable via back/swipe-back from Home or Onboarding.
       if (seen) {
-        history.replace("/home");
+        ionRouter.push("/home", "root", "replace");
       } else {
-        history.replace("/onboarding");
+        ionRouter.push("/onboarding", "root", "replace");
       }
     };
 

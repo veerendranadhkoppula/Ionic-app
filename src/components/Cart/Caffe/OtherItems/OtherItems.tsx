@@ -6,6 +6,7 @@ import { useCart } from "../../../../context/useCart";
 import type { CartItem } from "../../../../context/CartContext";
 import { getSingleMenuItem } from "../../../../api/apiCafe";
 import { useShopId } from "../../../../context/useShopId";
+import { SHOW_DIETARY_BADGES } from "../../../../utils/featureFlags";
 
 interface OtherItemsProps {
   items?: CartItem[];
@@ -149,12 +150,14 @@ const OtherItems: React.FC<OtherItemsProps> = ({ items = [], onEdit }) => {
                           src={productImage || noStateImg}
                           alt="prod"
                           style={{ opacity: product?.inStock ? 1 : 0.4 }}
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
 
                       <div className={styles.prodDetails}>
                         <div className={styles.prodTitleRow}>
-                          {product?.isVeg === true ? (
+                          {SHOW_DIETARY_BADGES && (product?.isVeg === true ? (
                             <svg
                               width="10"
                               height="10"
@@ -180,7 +183,7 @@ const OtherItems: React.FC<OtherItemsProps> = ({ items = [], onEdit }) => {
                                 fill="#A83434"
                               />
                             </svg>
-                          )}
+                          ))}
 
                           <h4
                             style={{

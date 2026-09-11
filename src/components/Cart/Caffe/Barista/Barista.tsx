@@ -6,6 +6,7 @@ import noStateImg from "../../../../pages/nostatesimg.png";
 import type { CartItem } from "../../../../context/CartContext";
 import { getSingleMenuItem } from "../../../../api/apiCafe";
 import { useShopId } from "../../../../context/useShopId";
+import { SHOW_DIETARY_BADGES } from "../../../../utils/featureFlags";
 
 
 interface BaristaProps {
@@ -250,12 +251,14 @@ const Barista: React.FC<BaristaProps> = ({
                         src={(product && product.image) || noStateImg}
                         alt="prod"
                         style={{ opacity: product?.inStock ? 1 : 0.4 }}
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
 
                     <div className={styles.proditemDetails}>
                       <div className={styles.proditemName}>
-                        {product?.isVeg === true ? (
+                        {SHOW_DIETARY_BADGES && (product?.isVeg === true ? (
                           <svg
                             width="10"
                             height="10"
@@ -281,7 +284,7 @@ const Barista: React.FC<BaristaProps> = ({
                               fill="#A83434"
                             />
                           </svg>
-                        )}
+                        ))}
 
                         <h3 style={{ opacity: product?.inStock ? 1 : 0.5 }}>
                           {product?.title}

@@ -14,6 +14,7 @@ import { useStoreCart } from "../context/useStoreCart";
 import { generateCafeTakeawayInvoice, generateCafeDineInInvoice } from "../utils/generateInvoicePdf";
 import { downloadPdf } from "../utils/downloadPdf";
 import CartConflictModal from "../components/StoreMenu/CartConflictModal/CartConflictModal";
+import { SHOW_DIETARY_BADGES } from "../utils/featureFlags";
 
 const POLL_MS = 2500;
 
@@ -362,17 +363,15 @@ const base64 = order.orderType === "dine-in"
                     <div className={styles.bybaristaprods}>
                       <h3>By Barista : {order.barista?.name ?? "—"}</h3>
                       {baristaItems.map((item) => {
-                        const custExtra = (item.customizations ?? []).reduce(
-                          (s, c) => s + (c?.price ?? 0),
-                          0,
-                        );
-                        const lineTotal =
-                          (item.unitPrice + custExtra) * item.quantity;
+                        // item.unitPrice already includes customization price
+                        // (apiCafeOrders.ts) — adding it again here would
+                        // double-count it.
+                        const lineTotal = item.unitPrice * item.quantity;
                         return (
                           <div className={styles.prods} key={item.id}>
                             <div className={styles.prodDtaisl}>
                               <div className={styles.PRodnameLeft}>
-                                {item.isVeg ? <VegIcon /> : <NonVegIcon />}
+                                {SHOW_DIETARY_BADGES && (item.isVeg ? <VegIcon /> : <NonVegIcon />)}
                                 <h4>
                                   {item.quantity} x {item.productName}
                                 </h4>
@@ -433,17 +432,15 @@ const base64 = order.orderType === "dine-in"
                       <h3>Other items</h3>
                       <div className={styles.OtherItemlist}>
                         {otherItems.map((item) => {
-                          const custExtra = (item.customizations ?? []).reduce(
-                            (s, c) => s + (c?.price ?? 0),
-                            0,
-                          );
-                          const lineTotal =
-                            (item.unitPrice + custExtra) * item.quantity;
+                          // item.unitPrice already includes customization
+                          // price (apiCafeOrders.ts) — adding it again here
+                          // would double-count it.
+                          const lineTotal = item.unitPrice * item.quantity;
                           return (
                             <div className={styles.prods} key={item.id}>
                               <div className={styles.prodDtaisl}>
                                 <div className={styles.PRodnameLeft}>
-                                  {item.isVeg ? <VegIcon /> : <NonVegIcon />}
+                                  {SHOW_DIETARY_BADGES && (item.isVeg ? <VegIcon /> : <NonVegIcon />)}
                                   <h4>
                                     {item.quantity} x {item.productName}
                                   </h4>

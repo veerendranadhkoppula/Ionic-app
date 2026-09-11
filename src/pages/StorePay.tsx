@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { IonContent, IonPage, useIonViewWillEnter } from "@ionic/react";
+import { IonContent, IonPage, useIonViewWillEnter, useIonRouter } from "@ionic/react";
 import { useLocation, useHistory } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import { loadStripe } from "@stripe/stripe-js";
@@ -29,6 +29,7 @@ const SS_ORDER_AMOUNT   = "storepay_order_amount";
 const StorePay: React.FC = () => {
   const location = useLocation<StorePayState | SubscriptionPayState>();
   const history  = useHistory();
+  const ionRouter = useIonRouter();
   const state    = location.state ?? {} as StorePayState;
   const isSub    = (state as SubscriptionPayState).isSubscription === true;
   const subState = isSub ? (state as SubscriptionPayState) : null;
@@ -315,53 +316,67 @@ const StorePay: React.FC = () => {
               phone  : a.phoneNumber,
             };
           };
-          history.push("/StoreOrderResults", {
-            isSubscription  : true,
-            subscriptionId  : numericSubId,
-            productName     : subState.productName,
-            variantName     : subState.variantName,
-            freqLabel       : subState.freqLabel,
-            quantity        : subState.quantity,
-            unitPrice       : subState.unitPrice,
-            bagAmount       : subState.bagAmount,
-            shippingCharge  : resolvedShipping,
-            coinsDiscount   : subState.coinsDiscount,
-            taxAmount       : subTax,
-            total           : resolvedTotal,
-            orderType       : subState.deliveryOption,
-            email           : state.userEmail,
-            userEmail       : state.userEmail,
-            subShippingAddress: fmtAddr(subState.shippingAddress),
-            subBillingAddress : fmtAddr(subState.billingAddress),
-            cardLast4       : null,
-            cardBrand       : null,
-          });
+          // Plain history.push() here never cleared Ionic's own internal
+          // navigation stack (LocationHistory), which is what native
+          // swipe-back actually reads — so dragging/pressing back from the
+          // results screen landed back on this payment screen instead of
+          // Home. ionRouter.push(path, "root", "replace") resets that
+          // stack, but can't carry route state the way history.push's
+          // second argument could, so the result payload goes through
+          // sessionStorage instead — read back by StoreOrderResults.tsx.
+          try {
+            sessionStorage.setItem("storepay_order_result", JSON.stringify({
+              isSubscription  : true,
+              subscriptionId  : numericSubId,
+              productName     : subState.productName,
+              variantName     : subState.variantName,
+              freqLabel       : subState.freqLabel,
+              quantity        : subState.quantity,
+              unitPrice       : subState.unitPrice,
+              bagAmount       : subState.bagAmount,
+              shippingCharge  : resolvedShipping,
+              coinsDiscount   : subState.coinsDiscount,
+              taxAmount       : subTax,
+              total           : resolvedTotal,
+              orderType       : subState.deliveryOption,
+              email           : state.userEmail,
+              userEmail       : state.userEmail,
+              subShippingAddress: fmtAddr(subState.shippingAddress),
+              subBillingAddress : fmtAddr(subState.billingAddress),
+              cardLast4       : null,
+              cardBrand       : null,
+            }));
+          } catch { /* non-fatal — StoreOrderResults.tsx falls back gracefully */ }
+          ionRouter.push("/StoreOrderResults", "root", "replace");
         } else {
           const s = state as StorePayState;
           const taxRate = s.taxRate ?? 0;
-          history.push("/StoreOrderResults", {
-            orderId,
-            orderStatus    : "succeeded",
-            deliveryMode   : s.deliveryMode ?? "ship",
-            shippingAddress: s.shippingAddress,
-            billingAddress : s.billingAddress,
-            userEmail      : state.userEmail,
-            toPay          : state.toPay,
-            items          : (s.items ?? []).map((it) => ({
-              name       : it.productName ?? `Product #${it.productId}`,
-              variantName: it.variantName,
-              quantity   : it.quantity,
-              unitPrice  : it.unitPrice ?? 0,
-            })),
-            couponDiscount : s.couponDiscount ?? 0,
-            shippingCharge : s.shippingCharge ?? 0,
-            beansDiscount  : s.beansDiscount ?? 0,
-            taxAmount      : taxRate > 0
-              ? parseFloat(((state.toPay * taxRate) / (100 + taxRate)).toFixed(2))
-              : 0,
-            cardLast4: null,
-            cardBrand: null,
-          });
+          try {
+            sessionStorage.setItem("storepay_order_result", JSON.stringify({
+              orderId,
+              orderStatus    : "succeeded",
+              deliveryMode   : s.deliveryMode ?? "ship",
+              shippingAddress: s.shippingAddress,
+              billingAddress : s.billingAddress,
+              userEmail      : state.userEmail,
+              toPay          : state.toPay,
+              items          : (s.items ?? []).map((it) => ({
+                name       : it.productName ?? `Product #${it.productId}`,
+                variantName: it.variantName,
+                quantity   : it.quantity,
+                unitPrice  : it.unitPrice ?? 0,
+              })),
+              couponDiscount : s.couponDiscount ?? 0,
+              shippingCharge : s.shippingCharge ?? 0,
+              beansDiscount  : s.beansDiscount ?? 0,
+              taxAmount      : taxRate > 0
+                ? parseFloat(((state.toPay * taxRate) / (100 + taxRate)).toFixed(2))
+                : 0,
+              cardLast4: null,
+              cardBrand: null,
+            }));
+          } catch { /* non-fatal — StoreOrderResults.tsx falls back gracefully */ }
+          ionRouter.push("/StoreOrderResults", "root", "replace");
         }
       } else if (paymentResult === PaymentSheetEventsEnum.Canceled) {
         setNativeState("canceled");

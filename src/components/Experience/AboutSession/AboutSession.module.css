@@ -1,0 +1,49 @@
+.main {
+  display: flex;
+  width: 100%;
+  padding: 0 24px 24px 24px;
+  box-sizing: border-box;
+}
+
+.Box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px 12px 15px 12px;
+  gap: 16px;
+}
+
+.Heading {
+  font-family: var(--lato);
+  font-weight: 500;
+  font-size: 16px;
+  color: #4b3827;
+  margin: 0;
+}
+
+.DetailsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: clamp(16px, 10vw, 42px);
+  row-gap: 16px;
+}
+
+.Label {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #4b3827;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.Value {
+  font-family: var(--lato);
+  font-weight: 400;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}

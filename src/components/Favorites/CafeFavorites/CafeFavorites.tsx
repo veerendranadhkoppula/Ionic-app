@@ -9,6 +9,7 @@ import Customization from "../../Home/Customization/Customization";
 import RepeatCustomization from "../../CafeMenu/RepeatCustomization/RepeatCustomization";
 import { getSingleMenuItem, getSingleShop, isShopOpen } from '../../../api/apiCafe';
 import { useCart } from "../../../context/useCart";
+import { SHOW_DIETARY_BADGES } from "../../../utils/featureFlags";
 
 
 const CafeFavorites = () => {
@@ -164,6 +165,8 @@ return {
   src={item.image || "/fallback.png"}
   alt={item.title}
   className={styles.ProductImage}
+  loading="lazy"
+  decoding="async"
   onError={(e) => {
     (e.target as HTMLImageElement).src = "/fallback.png";
   }}
@@ -172,7 +175,7 @@ return {
 
               <div className={styles.CardRight}>
                 <div className={styles.ProductInfo}>
-                 {item.isVeg && (
+                 {SHOW_DIETARY_BADGES && item.isVeg && (
   <div className={styles.veganBadge}>
     <svg
       width="10"

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { IonPage, IonContent, IonText } from "@ionic/react";
+import { IonPage, IonContent, IonText, useIonRouter } from "@ionic/react";
 
 import { useHistory, useLocation } from "react-router-dom";
 import styles from "./Otp.module.css";
@@ -13,6 +13,7 @@ import { saveUser, setCurrentUser } from "../../utils/authStorage";
 
 const Otp: React.FC = () => {
   const history = useHistory();
+  const ionRouter = useIonRouter();
   const location = useLocation<{ email?: string; mode?: "login" | "signup" }>();
   const state = location.state || {};
   const params = new URLSearchParams(location.search);
@@ -90,7 +91,10 @@ const Otp: React.FC = () => {
       }
 
       if (!resp.isNewUser) {
-        history.replace("/home");
+        // ionRouter.push(root, replace) — not history.replace() — so
+        // Ionic's own nav stack is actually cleared and back/swipe-back
+        // after verifying can't land back on this OTP screen.
+        ionRouter.push("/home", "root", "replace");
       } else {
         history.replace(
           `/auth/almost?email=${encodeURIComponent(email || "")}`,

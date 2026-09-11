@@ -266,11 +266,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
 
+  // Bug fix: this used to expand EVERY server row for a product using ALL
+  // ledger entries stored for that product id — which made sense back when
+  // the server could only ever return ONE (wrongly merged) row per product,
+  // needing the local ledger to split it back into the customizations that
+  // were actually added. Now that addToCart's matching bug is fixed, the
+  // server correctly returns one row PER customization on its own. Without
+  // this guard, a product with 2 real server rows (2 customizations) each
+  // got expanded using the SAME full ledger (2 entries) — 2 rows × 2 ledger
+  // entries = 4 displayed rows for something the user only added twice.
+  // Only fall back to ledger-expansion for a row that genuinely has no
+  // customization data of its own (legacy carts saved before this fix) —
+  // a row the backend already populated correctly is trusted as-is.
   const expandCartItems = React.useCallback((backendItems: CartItem[]): CartItem[] => {
     const result: CartItem[] = [];
     for (const item of backendItems) {
       const pid = String(item.productId ?? "");
-      const variants = pid ? variantStoreRef.current.get(pid) : undefined;
+      const hasOwnCustomizations = Array.isArray(item.customizations) && item.customizations.length > 0;
+      const variants = (!hasOwnCustomizations && pid) ? variantStoreRef.current.get(pid) : undefined;
 
       if (variants && variants.size > 0) {
        
@@ -485,11 +498,25 @@ if (existing) {
         }
 
         // Authenticated path: find backend row & call server (existing behavior)
+        //
+        // Bug fix: this used to match an existing row by productId ALONE —
+        // so adding a second customization of the same product (e.g. Filter
+        // Coffee with a different bean selection) found the FIRST row
+        // (wrong customization) and just PATCHed its quantity up, instead
+        // of creating a new row for the new selection. The Cart screen kept
+        // looking correct because the local variant ledger (variantMap
+        // above) tracks each customization separately and re-expands the
+        // display from it — but the SERVER's cart (the one checkout and the
+        // saved order actually use) only ever had the one, wrong-customization
+        // row with an inflated quantity. Matching by customization too
+        // means a different selection now correctly becomes its own row on
+        // the server, matching what was already true on screen.
         const currentItems = cartRef.current?.items || [];
+        const newCustKey = buildCustomizationKey(normalized);
         let backendItemId: string | null = null;
         for (const ci of currentItems) {
           const ciPid = String(ci.productId ?? "");
-          if (ciPid === pid) {
+          if (ciPid === pid && buildCustomizationKey(ci.customizations) === newCustKey) {
             const { backendId } = parseVirtualId(ci.id);
             backendItemId = backendId;
             break;

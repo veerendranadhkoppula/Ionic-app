@@ -193,19 +193,6 @@ async function mapOrder(
     ? (doc.items as Record<string, unknown>[])
     : [];
 
-  const stampRewardPidCount = new Map<number, number>();
-  const rawStampRewards: unknown[] = Array.isArray(doc.stampRewards)
-    ? (doc.stampRewards as unknown[])
-    : [];
-  for (const sr of rawStampRewards) {
-    const pid =
-      typeof sr === "number" ? sr :
-      typeof sr === "object" && sr !== null
-        ? Number((sr as Record<string, unknown>).id ?? 0) || null
-        : null;
-    if (pid) stampRewardPidCount.set(pid, (stampRewardPidCount.get(pid) ?? 0) + 1);
-  }
-
   // ── Fetch all product details in parallel ─────────────────────────────────
   const productIds: number[] = rawItems.map((item) =>
     typeof item.product === "number" ? item.product :
@@ -240,6 +227,22 @@ async function mapOrder(
     const custRaw: Record<string, unknown>[] = Array.isArray(item.customizations)
       ? (item.customizations as Record<string, unknown>[]).filter(Boolean)
       : [];
+
+    // Reward-redeemed rows are tagged server-side (cafe-checkout/route.ts,
+    // when it adds the redeemed product as its own order line) with a
+    // synthetic { __rewardRedemption: true } marker stuffed into the same
+    // freeform `customizations` JSON blob — the order's `items` schema has
+    // no dedicated isReward/price column of its own, so this is the one
+    // unambiguous per-row signal available. This used to be guessed instead,
+    // by matching doc.stampRewards' product id against a row whose price
+    // looked "empty" (item.price/unitPrice is never actually persisted on
+    // an order item at all, so that check was always vacuously true) —
+    // whichever row for that product happened to come first in the array
+    // won the "free" slot, which silently broke the moment a customer both
+    // bought AND redeemed the same product in one order. The marker makes
+    // this exact, regardless of row order or how many other rows share the
+    // same product.
+    const isRewardItem = custRaw.some((c) => c && (c as Record<string, unknown>).__rewardRedemption === true);
     const customizations = custRaw
       .filter((c) => c.selectedOptionId || c.selectedOptionLabel || c.label)
       .map((c) => ({
@@ -249,11 +252,17 @@ async function mapOrder(
         price               : Number(c.price ?? 0),
       }));
 
-    const rawItemPrice = Number(item.price ?? item.unitPrice ?? -1);
-    const remainingRewardCount = productId > 0 ? (stampRewardPidCount.get(productId) ?? 0) : 0;
-    const isRewardItem = remainingRewardCount > 0 && (rawItemPrice === 0 || rawItemPrice < 0);
-    if (isRewardItem) stampRewardPidCount.set(productId, remainingRewardCount - 1);
-    const unitPrice = isRewardItem ? 0 : baseUnitPrice;
+    // BUG FIX: this used to be just the menu's base price (baseUnitPrice),
+    // completely ignoring any paid customization/add-on — so every row for
+    // a product showed the same unit price regardless of what was actually
+    // selected. This is what the order-results screen, the order-details
+    // screen, and the PDF/text invoice all read for their "Unit Price"/
+    // "Amount" columns — one fix here covers all three. computedSubtotal
+    // below and OrderDetailsCafe.tsx's own line-total calculations
+    // separately re-added this same customization price on top, which is
+    // now double-counting — fixed those too.
+    const customizationExtra = customizations.reduce((s, c) => s + Number(c.price ?? 0), 0);
+    const unitPrice = isRewardItem ? 0 : baseUnitPrice + customizationExtra;
 
     return {
       id            : String(item.id ?? _idx),
@@ -268,47 +277,18 @@ async function mapOrder(
     } satisfies CafeOrderItem;
   });
 
-  try {
-    const byPid = new Map<number, CafeOrderItem[]>();
-    items.forEach((it) => {
-      const pid = it.productId ?? 0;
-      if (!byPid.has(pid)) byPid.set(pid, []);
-      byPid.get(pid)!.push(it);
-    });
+  // NOTE: this used to "redistribute customizations across items with the
+  // same productId" here — it grouped all order items by product, pooled
+  // every non-empty customizations array into a queue, and reassigned them
+  // back out by array position. That's exactly backwards: it assumed the
+  // backend sometimes attaches a line's customizations to the wrong row and
+  // tried to fix that up client-side by shuffling them — which just as
+  // easily swaps two genuinely-different rows' customizations (e.g. two
+  // separate "Latte" lines, one plain and one with oat milk) whenever more
+  // than one row shares a product id. Each order item's customizations are
+  // now correctly scoped to that exact row by the backend (see
+  // beforeCartChange.ts), so there is nothing to redistribute — removed.
 
-  for (const [pid, group] of byPid.entries()) {
-      if (pid === 0) continue;
-      const custQueue: Array<Array<Record<string, unknown>>> = [];
-      group.forEach((it) => {
-        if ((it.customizations?.length ?? 0) > 0) {
-          custQueue.push(it.customizations as Array<Record<string, unknown>>);
-          it.customizations = [];
-        }
-      });
-
-      if (custQueue.length === 0) continue;
-
-
-      for (const it of group) {
-        if ((it.customizations?.length ?? 0) === 0 && !it.isReward && custQueue.length > 0) {
-          it.customizations = custQueue.shift() as Array<Record<string, unknown>>;
-        }
-      }
-
-      for (const it of group) {
-        if ((it.customizations?.length ?? 0) === 0 && custQueue.length > 0) {
-          it.customizations = custQueue.shift() as Array<Record<string, unknown>>;
-        }
-      }
-      if (custQueue.length > 0) {
-        console.log(`[mapOrder] leftover customizations for pid=${pid}`, custQueue.length);
-      }
-    }
-  } catch (err) {
-    console.warn("[mapOrder] failed to redistribute customizations:", err);
-  }
-
- 
   const fin = (
     typeof doc.financials === "object" && doc.financials ? doc.financials : {}
   ) as Record<string, unknown>;
@@ -320,11 +300,10 @@ async function mapOrder(
       : undefined) ??
     (fin.couponCode as string | undefined) ?? "";
 
+  // unitPrice already includes each item's customization price (fixed
+  // above) — adding customizations' price again here would double-count it.
   const computedSubtotal = parseFloat(
-    items.reduce((s, it) => {
-      const custTotal = it.customizations.reduce((cs, c) => cs + (c.price ?? 0), 0);
-      return s + (it.unitPrice + custTotal) * it.quantity;
-    }, 0).toFixed(2),
+    items.reduce((s, it) => s + it.unitPrice * it.quantity, 0).toFixed(2),
   );
   const subtotal       = Number(fin.subtotal ?? 0) > 0 ? Number(fin.subtotal) : computedSubtotal;
   const couponDiscount = Number(fin.couponDiscount ?? 0);

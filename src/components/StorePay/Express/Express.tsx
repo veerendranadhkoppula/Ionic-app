@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import { useHistory } from "react-router-dom";
+import { useIonRouter } from "@ionic/react";
 import styles from "./Express.module.css";
 import tokenStorage from "../../../utils/tokenStorage";
 import type { StoreCheckoutAddress } from "../../../api/apiStoreCart";
@@ -61,6 +62,7 @@ const Express: React.FC<ExpressProps> = ({
   const stripe   = useStripe();
   const elements = useElements();
   const history  = useHistory();
+  const ionRouter = useIonRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError]         = useState<string | null>(null);
@@ -154,46 +156,55 @@ const Express: React.FC<ExpressProps> = ({
         const numericIdMatch = rawSubId.match(/\d+/);
         const numericSubId = numericIdMatch ? numericIdMatch[0] : "";
 
-  history.push("/StoreOrderResults", {
-          isSubscription : true,
-          // pass only the digits so StoreOrderResults can consistently render #WMS-<digits>
-          subscriptionId : numericSubId,
-          productName    : subscriptionData.productName,
-          variantName    : subscriptionData.variantName,
-          freqLabel      : subscriptionData.freqLabel,
-          quantity       : subscriptionData.quantity,
-          unitPrice      : subscriptionData.unitPrice,
-          bagAmount      : subscriptionData.bagAmount,
-          shippingCharge : resolvedShipping,
-          coinsDiscount  : subscriptionData.coinsDiscount,
-          taxAmount      : resolvedTaxAmount,
-          total          : resolvedTotal,
-          orderType      : subscriptionData.orderType,
-          email          : userEmail,
-          userEmail,
-          subShippingAddress: fmtSubAddr(subscriptionData.shippingAddr),
-          subBillingAddress : fmtSubAddr(subscriptionData.billingAddr),
-          cardLast4,
-          cardBrand,
-        });
+  // See StorePay.tsx for why this is ionRouter.push + sessionStorage
+  // instead of history.push(path, state) — the latter never cleared
+  // Ionic's internal navigation stack, so swipe/press back from the
+  // results screen landed back on this payment screen instead of Home.
+  try {
+          sessionStorage.setItem("storepay_order_result", JSON.stringify({
+            isSubscription : true,
+            // pass only the digits so StoreOrderResults can consistently render #WMS-<digits>
+            subscriptionId : numericSubId,
+            productName    : subscriptionData.productName,
+            variantName    : subscriptionData.variantName,
+            freqLabel      : subscriptionData.freqLabel,
+            quantity       : subscriptionData.quantity,
+            unitPrice      : subscriptionData.unitPrice,
+            bagAmount      : subscriptionData.bagAmount,
+            shippingCharge : resolvedShipping,
+            coinsDiscount  : subscriptionData.coinsDiscount,
+            taxAmount      : resolvedTaxAmount,
+            total          : resolvedTotal,
+            orderType      : subscriptionData.orderType,
+            email          : userEmail,
+            userEmail,
+            subShippingAddress: fmtSubAddr(subscriptionData.shippingAddr),
+            subBillingAddress : fmtSubAddr(subscriptionData.billingAddr),
+            cardLast4,
+            cardBrand,
+          }));
+        } catch { /* non-fatal — StoreOrderResults.tsx falls back gracefully */ }
+        ionRouter.push("/StoreOrderResults", "root", "replace");
       } else {
-       
-        history.push("/StoreOrderResults", {
-          orderId,
-          orderStatus : paymentIntent?.status ?? "confirmed",
-          deliveryMode: deliveryMode ?? "ship",
-          shippingAddress,
-          billingAddress,
-          userEmail,
-          toPay,
-          items,
-          couponDiscount,
-          shippingCharge,
-          beansDiscount,
-          taxAmount,
-          cardLast4,
-          cardBrand,
-        });
+        try {
+          sessionStorage.setItem("storepay_order_result", JSON.stringify({
+            orderId,
+            orderStatus : paymentIntent?.status ?? "confirmed",
+            deliveryMode: deliveryMode ?? "ship",
+            shippingAddress,
+            billingAddress,
+            userEmail,
+            toPay,
+            items,
+            couponDiscount,
+            shippingCharge,
+            beansDiscount,
+            taxAmount,
+            cardLast4,
+            cardBrand,
+          }));
+        } catch { /* non-fatal — StoreOrderResults.tsx falls back gracefully */ }
+        ionRouter.push("/StoreOrderResults", "root", "replace");
       }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Payment failed. Please try again.";

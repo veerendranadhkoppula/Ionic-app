@@ -475,6 +475,8 @@ const StoreMain = ({
                       <img
                         src={product.productImage?.url || ""}
                         alt={product.name}
+                        loading="lazy"
+                        decoding="async"
                       />
                       {isLoggedIn && (
                         <div

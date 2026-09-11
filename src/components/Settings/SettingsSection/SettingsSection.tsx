@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { IonModal } from "@ionic/react";
+import { IonModal, useIonRouter } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { setGuest } from "../../../utils/authStorage";
 import tokenStorage from "../../../utils/tokenStorage";
@@ -59,6 +59,7 @@ const SettingsSection = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const history = useHistory();
+  const ionRouter = useIonRouter();
 
   const [notifications, setNotifications] = useState(false);
   const [location, setLocation] = useState(false);
@@ -356,7 +357,10 @@ const SettingsSection = () => {
     try {
       await tokenStorage.clearAll();
       setGuest();
-      history.replace("/auth");
+      // ionRouter.push(root, replace) — not history.replace() — so back/
+      // swipe-back after logging out can't land back on the authenticated
+      // settings screen.
+      ionRouter.push("/auth", "root", "replace");
     } catch (err) {
       console.error("Logout failed", err);
     }
@@ -379,7 +383,7 @@ const SettingsSection = () => {
 
       await tokenStorage.clearAll();
       setGuest();
-      history.replace("/auth");
+      ionRouter.push("/auth", "root", "replace");
     } catch (err) {
       console.error("Delete account error:", err);
     }

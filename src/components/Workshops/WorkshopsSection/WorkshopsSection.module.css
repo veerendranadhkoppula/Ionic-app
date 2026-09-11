@@ -47,7 +47,7 @@
     height: 100%;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    max-height: 250px;
+    max-height: 200px;
     object-fit: cover;
 }
 .CardDetails{
@@ -87,6 +87,7 @@
 .CardInfo{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-direction: row;
 }
 .CardInfoLeft{
@@ -121,6 +122,32 @@
     border-radius: 8px;
     cursor: pointer;
     margin: 0;
+    border: none;
+}
+.SoldOutCta{
+    display: flex;
+    justify-content: right;
+    padding: 7px 22.5px;
+    background-color: #E5E5E5;
+    color: #8C8C8C;
+    font-family: var(--lato);
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: not-allowed;
+    margin: 0;
+}
+.PriceLine{
+    font-family: var(--lato);
+    color: #4B3827;
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0;
+}
+.SeatsLeft{
+    color: #8C8C8C;
+    font-weight: 400;
 }
 .CardInfo a{
     text-decoration: none;

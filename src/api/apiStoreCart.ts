@@ -421,11 +421,28 @@ export async function addStoreCartItem(
   const cart = await fetchStoreCart();
   console.log(`🛒 [addStoreCartItem] current cart:`, cart ? `${cart.items.length} items, origin=${cart.origin}, cartId=${cart.cartId}` : "null (empty)");
 
+  // Bug fix: this used to match an existing row by productId + variantId
+  // ONLY, ignoring productHighlights entirely — so adding the same
+  // product/variant again with a DIFFERENT highlight selection found the
+  // FIRST row (wrong highlight) and just incremented its quantity instead
+  // of creating a new row, exactly the same class of bug already fixed for
+  // Cafe's customizations. Matching highlights too (same pattern Surge
+  // already uses) means a different selection correctly becomes its own row.
+  const hlKey = (arr: SelectedProductHighlight[] | undefined) =>
+    (arr ?? [])
+      .map((h) => `${h?.sectionTitle ?? ""}:${h?.selectedPoint ?? ""}`)
+      .sort()
+      .join("|");
+  const incomingHlKey = hlKey(productHighlights);
   const findExisting = (c: StoreCartShape | null) =>
     (c?.items ?? []).find((it) => {
       if (it.productId !== productId) return false;
-      if (variantId) return String(it.variantId ?? "") === String(variantId);
-      return !it.variantId;
+      if (variantId) {
+        if (String(it.variantId ?? "") !== String(variantId)) return false;
+      } else if (it.variantId) {
+        return false;
+      }
+      return hlKey(it.productHighlights) === incomingHlKey;
     }) ?? null;
 
   const existingItem = findExisting(cart);

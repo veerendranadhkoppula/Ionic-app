@@ -9,12 +9,17 @@ import Customization from "../../Home/Customization/Customization";
 import RepeatCustomization from "../../CafeMenu/RepeatCustomization/RepeatCustomization";
 import { getSingleMenuItem, getSingleShop, isShopOpen } from '../../../api/apiCafe';
 import { useCart } from "../../../context/useCart";
+import { useStoreCart } from "../../../context/useStoreCart";
+import CartConflictModal from "../../StoreMenu/CartConflictModal/CartConflictModal";
 import { SHOW_DIETARY_BADGES } from "../../../utils/featureFlags";
 
 
 const CafeFavorites = () => {
   const { rawWishlist, toggleWishlist, loading: wishlistLoading } = useWishlist();
   const { cart, addToCart, decrementItem, shopId } = useCart();
+  // Store cart — only needed here to detect a Store-vs-Cafe origin conflict
+  // before a fresh add, same pattern ShopFavorites/CafeMenu already use.
+  const { storeCart, clearStoreCartAll } = useStoreCart();
 
   const [favorites, setFavorites] = React.useState<any[]>([]);
   const [openMenuId, setOpenMenuId] = React.useState<number | null>(null);
@@ -36,9 +41,43 @@ const CafeFavorites = () => {
   const [repeatProductSubtitle, setRepeatProductSubtitle] = React.useState<string>("");
   const [repeatProductVegType, setRepeatProductVegType] = React.useState<"Veg" | "NonVeg" | "Egg" | "Vegan">("Veg");
 
-  /** Opens RepeatCustomization sheet — mirrors CafeMenu handleIncrementClick */
-  const handleIncrementClick = (entry: any, item: any) => {
+  // Store-vs-Cafe conflict modal — only ever needed on a FRESH add (product
+  // not yet in the cafe cart). Once a cafe item is already in the cart the
+  // backend guarantees the store cart is empty, so the increment/repeat
+  // paths above can never hit this — no check needed there.
+  const [conflictVisible, setConflictVisible] = React.useState(false);
+  const pendingAddRef = React.useRef<any | null>(null);
+
+  /** Actually performs a fresh add: opens the customization sheet if the
+   * product has options, otherwise adds directly. Extracted so both the
+   * normal "ADD +" tap and the conflict modal's "Replace" can reuse it. */
+  const performAdd = (detailed: any) => {
+    if (detailed.customizations && detailed.customizations.length > 0) {
+      setCustomizingProduct(detailed);
+      setIsCustomizationOpen(true);
+      return;
+    }
+    addToCart(detailed.id).catch((err) => console.error("Add to favorites cart failed", err));
+  };
+
+  /** Opens RepeatCustomization sheet — mirrors CafeMenu handleIncrementClick.
+   * Only relevant when the product actually HAS customization options to
+   * choose between; for a plain product (no customizations at all) there is
+   * nothing to ask about, so "+" should just increment directly instead of
+   * popping the "I'll Choose / Repeat Last" sheet. */
+  const handleIncrementClick = async (entry: any, item: any) => {
     const pid = Number(entry?.productId ?? entry?.product?.id ?? entry?.product?.value?.id);
+
+    if (!item?.customizations || item.customizations.length === 0) {
+      if (!pid) return;
+      try {
+        await addToCart(pid);
+      } catch (err) {
+        console.error("CafeFavorites: direct increment failed", err);
+      }
+      return;
+    }
+
   setRepeatProductId(pid || null);
   setRepeatLastCustomizations((entry as any).customizations ?? (entry as any).customization ?? null);
     setRepeatProductName(item?.title ?? "");
@@ -345,15 +384,16 @@ return {
                                 return;
                               }
 
-                              // if product has customizations -> open customization sheet (pass full numeric-price product)
-                              if (detailed.customizations && detailed.customizations.length > 0) {
-                                setCustomizingProduct(detailed);
-                                setIsCustomizationOpen(true);
+                              // Store cart already has items — this would be
+                              // this cart's first Cafe item, so check for a
+                              // conflict before adding anything.
+                              if ((storeCart?.items?.length ?? 0) > 0) {
+                                pendingAddRef.current = detailed;
+                                setConflictVisible(true);
                                 return;
                               }
 
-                              // direct add with canonical id
-                              await addToCart(detailed.id);
+                              performAdd(detailed);
                             } catch (err) {
                               console.error("Add to favorites cart failed", err);
                             }
@@ -449,6 +489,31 @@ return {
             }
           }}
         />
+
+        {/* Store-vs-Cafe conflict modal — same component/behavior ShopFavorites
+            and CafeMenu already use elsewhere in the app */}
+        {conflictVisible && (
+          <CartConflictModal
+            existingOrigin="store"
+            incomingOrigin="cafe"
+            onCancel={() => {
+              setConflictVisible(false);
+              pendingAddRef.current = null;
+            }}
+            onReplace={async () => {
+              setConflictVisible(false);
+              const pending = pendingAddRef.current;
+              pendingAddRef.current = null;
+              if (!pending) return;
+              try {
+                await clearStoreCartAll();
+                performAdd(pending);
+              } catch (err) {
+                console.error("CafeFavorites: failed to clear store cart before adding", err);
+              }
+            }}
+          />
+        )}
       </>
   );
 };

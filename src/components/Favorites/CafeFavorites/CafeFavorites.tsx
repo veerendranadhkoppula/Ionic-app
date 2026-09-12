@@ -41,10 +41,10 @@ const CafeFavorites = () => {
   const [repeatProductSubtitle, setRepeatProductSubtitle] = React.useState<string>("");
   const [repeatProductVegType, setRepeatProductVegType] = React.useState<"Veg" | "NonVeg" | "Egg" | "Vegan">("Veg");
 
-  // Store-vs-Cafe conflict modal — only ever needed on a FRESH add (product
-  // not yet in the cafe cart). Once a cafe item is already in the cart the
-  // backend guarantees the store cart is empty, so the increment/repeat
-  // paths above can never hit this — no check needed there.
+  // Store-vs-Cafe conflict modal. Mainly needed on a fresh add (product not
+  // yet in the cafe cart); also defensively checked on the no-customization
+  // increment path below (matches CafeMenu's guardCafeAdd) in case the store
+  // cart picks up items from another tab between page load and the tap.
   const [conflictVisible, setConflictVisible] = React.useState(false);
   const pendingAddRef = React.useRef<any | null>(null);
 
@@ -70,6 +70,15 @@ const CafeFavorites = () => {
 
     if (!item?.customizations || item.customizations.length === 0) {
       if (!pid) return;
+      // Defensive guard (matches CafeMenu's guardCafeAdd on this same path):
+      // in the normal case this is unreachable since an item already in the
+      // cafe cart means the store cart is guaranteed empty, but this covers
+      // the store cart picking up items from another tab in the meantime.
+      if ((storeCart?.items?.length ?? 0) > 0) {
+        pendingAddRef.current = { id: pid };
+        setConflictVisible(true);
+        return;
+      }
       try {
         await addToCart(pid);
       } catch (err) {

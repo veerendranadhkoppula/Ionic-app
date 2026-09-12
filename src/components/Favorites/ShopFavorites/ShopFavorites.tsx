@@ -65,6 +65,9 @@ const ShopFavorites = () => {
     variant: StoreVariant | null;
     unitPrice: number;
   } | null>(null);
+  // Pending "Buy Now" product — conflict was detected before the sheet ever
+  // opened (mirrors StoreMain.tsx's identical pendingBuyNowProductRef).
+  const pendingBuyNowProductRef = React.useRef<StoreProduct | null>(null);
 
   // ── handleAddToCart — same logic as StoreMain ──────────────────────────────
   const handleAddToCart = React.useCallback(
@@ -93,6 +96,17 @@ const ShopFavorites = () => {
   // ── handleConflictReplace — user tapped "Replace" ─────────────────────────
   const handleConflictReplace = React.useCallback(async () => {
     setConflictVisible(false);
+    // Buy Now path: conflict was caught before the sheet opened — open it
+    // now that the cafe cart is cleared.
+    if (pendingBuyNowProductRef.current) {
+      const product = pendingBuyNowProductRef.current;
+      pendingBuyNowProductRef.current = null;
+      await clearCafeCart();
+      setSelectedProduct(product);
+      setIsAddSheetOpen(true);
+      return;
+    }
+    // Add to Cart path: conflict was caught inside the sheet.
     const pending = pendingAddRef.current;
     pendingAddRef.current = null;
     if (!pending) return;
@@ -109,21 +123,39 @@ const ShopFavorites = () => {
   const handleConflictCancel = React.useCallback(() => {
     setConflictVisible(false);
     pendingAddRef.current = null;
+    pendingBuyNowProductRef.current = null;
   }, []);
 
-  // ── "Buy Now" tapped: fetch full product then open AddBottomSheet ──────────
+  // ── "Buy Now" tapped: fetch full product, check for a conflict BEFORE
+  // opening AddBottomSheet (matches StoreMain.tsx) — otherwise the sheet's
+  // own optimistic "✓ Added" flash shows before the conflict popup does. ──
   const handleBuyNow = React.useCallback(async (id: number) => {
     setLoadingId(id);
     try {
       const fullProduct = await getStoreProductById(id);
-      if (fullProduct) {
-        setSelectedProduct(fullProduct);
-        setIsAddSheetOpen(true);
+      if (!fullProduct) return;
+
+      const genuineCafeItems = (cafeCart?.items ?? []).filter((item) => {
+        const prod = item.product as Record<string, unknown> | undefined;
+        if (prod?.relationTo === "web-products") return false;
+        const storeIds = new Set((storeCart?.items ?? []).map((s) => s.id));
+        if (item.id && storeIds.has(item.id)) return false;
+        return true;
+      });
+      const storeAlreadyHasItems = (storeCart?.items ?? []).length > 0;
+
+      if (!storeAlreadyHasItems && genuineCafeItems.length > 0) {
+        pendingBuyNowProductRef.current = fullProduct;
+        setConflictVisible(true);
+        return;
       }
+
+      setSelectedProduct(fullProduct);
+      setIsAddSheetOpen(true);
     } finally {
       setLoadingId(null);
     }
-  }, []);
+  }, [cafeCart, storeCart]);
 
   // ── Build display list ─────────────────────────────────────────────────────
   const favorites = React.useMemo<ShopFavItem[]>(() => {
